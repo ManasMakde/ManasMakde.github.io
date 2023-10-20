@@ -186,8 +186,6 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 const observer = new IntersectionObserver((entries)=>{
   entries.forEach((el)=>{
 
-    console.log(el.target, el.isIntersecting)
-
     if (el.isIntersecting){
       el.target.classList.remove('animate_hidden')
       el.target.classList.add('animate_show')
