@@ -1155,16 +1155,10 @@
   padding-bottom: 5rem;
   min-height: 100vh;
   background-color: black;
-  /*&::after{
-    content: '';
-    display: block;
-    width: 100%;
-    background: white;
-    top: 0.5rem;
-    position: relative;
-    height: 0.35rem;
-  } */
+  display: flex;
+  flex-direction: column;
 }
+
 #projects_wrapper h1 {
   position: relative;
   margin-bottom: 5rem;
@@ -1185,6 +1179,7 @@
   position: relative;
   flex-flow: wrap;
   row-gap: 3rem;
+  flex:1;
 }
 
 .project_card {
