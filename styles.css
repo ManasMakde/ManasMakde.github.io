@@ -1560,8 +1560,8 @@
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
-  -webkit-mask-image: url("Images/Arrow.svg");
-  mask-image: url("Images/Arrow.svg");
+  -webkit-mask-image: url("Images/Arrow.png");
+  mask-image: url("Images/Arrow.png");
   mask-size: contain;
   -webkit-mask-size: contain;
   mask-repeat: no-repeat;
