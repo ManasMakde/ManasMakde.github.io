@@ -1,0 +1,103 @@
+@use './GLOBAL' as *;
+@use 'Components/menu';
+@use 'Components/intro';
+@use 'Components/about.scss';
+@use 'Components/skills';
+@use 'Components/projects';
+@use 'Components/exp';
+@use 'Components/contact';
+
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Work+Sans&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+:root {
+  --ham-width: 10vi;
+  --hamline-height: 0.25em;
+  --hamline-width: 2rem;
+  --hamline-color: white;
+  --hamline-border: 0.1rem;
+  --hamline-padding: 0.5rem;
+  --ham-left:1rem;
+
+  --theme_light_color: white;
+  --theme_dark_color: white;
+  --moon_clip_color: black;
+  --theme_switch_duration: 0.5s;
+  --sun_line_length: 0.5rem;
+  --sun_line_thickness: 0.25rem;
+  --sun_line_offset: 0.4rem;
+
+  --light_grad: transparent calc(50% - var(--sun_line_thickness)/2),
+    var(--theme_light_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px),
+    transparent calc(50% + var(--sun_line_thickness)/2);
+
+  --dark_grad: transparent calc(50% - var(--sun_line_thickness)/2),
+    var(--theme_dark_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px),
+    transparent calc(50% + var(--sun_line_thickness)/2);
+
+  --text_gradient: linear-gradient(210deg, #0062ff, rgb(255, 0, 0));
+  --rev_text_gradient: linear-gradient(210deg, rgb(255, 0, 0), #0062ff);
+
+  --arrow_size: 1rem;
+  --arrow_thickness: 0.2rem;
+  --arrow_color: rgba(255, 255, 255, 0.181);
+  --arrow_speed: 0.5s;
+
+  --shade_1:rgb(45, 45, 45);
+  --shade_2: rgb(40, 40, 40);
+  --light_text_shade:#6b6b6b;
+
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body,
+html {
+  width: 100%;
+  margin: 0;
+  font-family: 'Work Sans', sans-serif;
+}
+
+body {
+  width: 100%;
+  background-color: black;
+  display: flex;
+}
+
+
+/* RIGHT CONTENT */
+#right_content {
+  flex: 1;
+  position: relative;
+}
+
+.animate_hide{}
+
+.animate_show{}
+
+@media(prefers-reduced-motion){
+  .animate_hide{
+    transition:none !important;
+  }
+}
+
+@include MEDIUM{
+  :root {
+    --ham-width: 2.5rem;
+    --hamline-height: 0.25rem;
+    --hamline-width: 1.75rem;
+    --hamline-border: 0.1rem;
+    --hamline-padding: 0.5rem;
+  }
+
+  body{
+    display: block;
+  }
+}
