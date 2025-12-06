@@ -5,6 +5,7 @@ const cursorSpan = document.querySelector(".cursor");
 const textArray = ["// Hello there", "<!-- Hi -->", "/*  Greetings  */", "# Welcome", "-- Salutations"];
 const typingDelay = 125;
 const erasingDelay = 50;
+const expStartDate = "2019-01-01";
 const newTextDelay = 2000; // Delay between current and next text
 let textArrayIndex = 0;
 let charIndex = 0;
