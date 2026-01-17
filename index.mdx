@@ -1,226 +1,74 @@
 import { HTMLSkeleton } from "./utils.jsx"
+import { PluginHighlight } from "./highlights.jsx"
+import { STYLES } from "./style.jsx"
 
 
+{/* Properties */}
 export const NAME = "Manas R. Makde";
 export const DESCRIPTION = "Find out what Manas R. Makde is upto";
 export const SUB_HEADING = ""
-export const STYLES = <style>{`
-    :root {
-    --bg: #0f1115;
-    --surface: #151820;
-    --text: #e6e6e6;
-    --muted: #a0a4ab;
-    --border: #242832;
-    --accent: #7dd3fc;
-    }
-
-    * {
-    box-sizing: border-box;
-    }
-
-    body {
-    margin: 0;
-    font-family: "Inter", system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.7;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 2.75rem 1.25rem;
-    }
-    
-    header {
-    text-align: center;
-    margin-bottom: 2.75rem;
-    }
-
-    header h1 {
-    margin: 0;
-    font-size: 2.4rem;
-    font-weight: 600;
-    color: var(--text);
-    }
-
-    header p {
-    margin-top: 0.6rem;
-    font-size: 1.1rem;
-    color: var(--muted);
-    }
-
-    nav {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2.75rem;
-    }
-
-    nav a {
-    color: var(--text);
-    text-decoration: none;
-    font-weight: 500;
-    }
-
-    nav a:hover {
-    color: var(--accent);
-    }
-
-    .intro {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 1.75rem 0;
-    margin-bottom: 3rem;
-    font-size: 1.1rem;
-    color: var(--text);
-    }
-
-    section {
-    margin-bottom: 3.5rem;
-    }
-
-    section h2 {
-    font-size: 1.45rem;
-    margin-bottom: 1.2rem;
-    color: var(--accent);
-    font-weight: 500;
-    }
-
-    .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.1rem 1.2rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    }
-
-    ul {
-    padding-left: 1.2rem;
-    }
-
-    li {
-    margin-bottom: 0.85rem;
-    color: var(--text);
-    }
-
-    form input,
-    form textarea {
-    width: 100%;
-    padding: 0.7rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-    color: var(--text);
-    font-family: inherit;
-    }
-
-    form input::placeholder,
-    form textarea::placeholder {
-    color: var(--muted);
-    }
-
-    form button {
-    padding: 0.7rem 1.3rem;
-    background: var(--accent);
-    color: #0f1115;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    }
-
-    form button:hover {
-    opacity: 0.9;
-    }
-
-    .social {
-    margin-top: 1.25rem;
-    display: flex;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    }
-
-    .social a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 0.9rem;
-    }
-
-    .social a:hover {
-    color: var(--accent);
-    }
-
-    footer {
-    margin-top: 4.5rem;
-    font-size: 0.85rem;
-    text-align: center;
-    color: var(--muted);
-    }
-`}</style>
-
 
 
 <HTMLSkeleton title={NAME} description={DESCRIPTION} ExtendHead={STYLES}>
 
 {/* Header */}
 <header>
-<h1>{NAME}</h1>
-<p>Let's keep it simple!</p>
+<img id="header-pfp" src="static/pfp.png" />
+<h1 id="header-name">{NAME}</h1>
+<div id="header-motto">Let's keep it simple!</div>
 </header>
 
 
 {/* Navigation */}
 <nav>
-<a href="#projects">Projects</a>
-<a href="#code">Code</a>
 <a href="#blog">Blog</a>
+<a href="#projects">Projects</a>
+<a href="#experience">Experience</a>
+<a href="#contact">Contact</a>
 </nav>
 
 
 {/* Intro */}
 <section className="intro">
-<p>
-    I build things and write things. This site is intentionally small —
-    a place for projects, notes, and slow thoughts.
-</p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</section>
+
+
+{/* Highlights */}
+<section id="highlights">
+## Highlights
+<PluginHighlight/> 
+
+
+<div className="card highlight-card">
+    <img src="/static/pfp.png" alt="Highlight icon" />
+    <div className="highlight-text">
+    <h3>Personal Website</h3>
+    <p>
+        Designed and built a minimal personal website using pure HTML and CSS.
+    </p>
+    </div>
+</div>
+
+
 </section>
 
 
 {/* Projects */}
 <section id="projects">
-<h2>Highlights</h2>
-<div className="card">Project / Highlight One</div>
-<div className="card">Project / Highlight Two</div>
-<div className="card">Project / Highlight Three</div>
+## Projects
 </section>
 
 
-{/* Blog */}
-<section id="blog">
-<h2>Recent Notes</h2>
-<ul>
-    <li>Being happy is hard</li>
-    <li>I give up</li>
-    <li>When life cracks open</li>
-</ul>
+{/* Experience */}
+<section id="experience">
+## Experience
 </section>
 
 
 {/* Contact */}
 <section>
-<h2>Contact</h2>
-<form onSubmit={(e) => e.preventDefault()}>
-    <input type="text" placeholder="Your name" />
-    <textarea rows="4" placeholder="Your message" />
-    <button>Send</button>
-</form>
-
-<div className="social">
-    <a href="#">GitHub</a>
-    <a href="#">Twitter</a>
-    <a href="#">LinkedIn</a>
-    <a href="#">Email</a>
-</div>
+## Contact
 </section>
 
 
