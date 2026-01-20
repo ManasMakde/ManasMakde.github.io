@@ -25,6 +25,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/.github/workflows/*.yml'
 
+      - name: Create output directory
+        run: mkdir -p build
+
       - name: Build static HTML with host-mdx
         run: |
           npx host-mdx -c \
