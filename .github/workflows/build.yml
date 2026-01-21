@@ -30,7 +30,7 @@ jobs:
 
       - name: Build static HTML with host-mdx
         run: |
-          npx host-mdx -c \
+          npx host-mdx -c -v\
             --input-path="./" \
             --output-path="./build"
 
