@@ -1,9 +1,6 @@
 name: Build and Deploy MDX Site
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 permissions:
   contents: write
@@ -25,19 +22,22 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/.github/workflows/*.yml'
 
+      - name: Create input directory
+        run: mkdir -p $RUNNER_TEMP/input_path && cd $RUNNER_TEMP/input_path && git clone https://github.com/${{ github.repository }} code
+
       - name: Create output directory
-        run: mkdir -p $RUNNER_TEMP/build
+        run: mkdir -p $RUNNER_TEMP/output_path
 
       - name: Build static HTML with host-mdx
         run: |
-          npx host-mdx -c -v\
-            --input-path="./" \
-            --output-path="$RUNNER_TEMP/build"
+          node "$RUNNER_TEMP/input_path/index.js" -c -v\
+            --input-path="$RUNNER_TEMP/input_path" \
+            --output-path="$RUNNER_TEMP/output_path"
 
       - name: Deploy to site branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: site
-          publish_dir: $RUNNER_TEMP/build
+          publish_dir: $RUNNER_TEMP/output_path
           force_orphan: true
