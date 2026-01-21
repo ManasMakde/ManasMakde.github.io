@@ -26,18 +26,18 @@ jobs:
           cache-dependency-path: '**/.github/workflows/*.yml'
 
       - name: Create output directory
-        run: mkdir -p build
+        run: mkdir -p $RUNNER_TEMP/build
 
       - name: Build static HTML with host-mdx
         run: |
           npx host-mdx -c -v\
             --input-path="./" \
-            --output-path="./build"
+            --output-path="$RUNNER_TEMP/build"
 
       - name: Deploy to site branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: site
-          publish_dir: ./build
+          publish_dir: $RUNNER_TEMP/build
           force_orphan: true
