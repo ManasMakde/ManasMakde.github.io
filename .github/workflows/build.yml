@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: '**/.github/workflows/*.yml'
 
       - name: Create input directory
-        run: mkdir -p $RUNNER_TEMP/input_path && cd $RUNNER_TEMP/input_path && git clone -b code https://github.com/${{ github.repository }} .
+        run: mkdir -p $RUNNER_TEMP/input_path && cd $RUNNER_TEMP/input_path && git clone -b code https://github.com/${{ github.repository }} . && npm i
 
       - name: Create output directory
         run: mkdir -p $RUNNER_TEMP/output_path
