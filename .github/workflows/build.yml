@@ -27,15 +27,15 @@ jobs:
           cache-dependency-path: '**/.github/workflows/*.yml'
 
       - name: Create input directory
-        run: mkdir -p $RUNNER_TEMP/input_path && cd $RUNNER_TEMP/input_path && git clone -b code https://github.com/${{ github.repository }} . && npm i
+        run: ls && mkdir -p $RUNNER_TEMP/code_path && cd $RUNNER_TEMP/input_path && git clone -b code https://github.com/${{ github.repository }} . && npm i
 
       - name: Create output directory
         run: mkdir -p $RUNNER_TEMP/output_path
 
       - name: Build static HTML with host-mdx
         run: |
-          node "$RUNNER_TEMP/input_path/index.js" -c -v\
-            --input-path="$RUNNER_TEMP/input_path" \
+          ls && node "$RUNNER_TEMP/code_path/index.js" -c -v\
+            --input-path="./" \
             --output-path="$RUNNER_TEMP/output_path"
 
       - name: Deploy to site branch
