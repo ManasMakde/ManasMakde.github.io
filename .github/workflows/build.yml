@@ -2,8 +2,7 @@ name: Build and Deploy MDX Site
 
 on:
   push:
-    branches:
-      - main
+    branches: main
     
   workflow_dispatch:
 
