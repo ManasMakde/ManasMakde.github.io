@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Manas R. Makde | Portfolio</title><meta name="description" content="Find out what Manas R. Makde is upto"/><style>
+    /* Core */
+    :root {
+        --bg: #0f1115;
+        --surface: #151820;
+        --text: #e6e6e6;
+        --muted: #a0a4ab;
+        --border:rgb(68, 71, 81);
+        --accent: #7dd3fc;
+        --body-width: 680px;
+        --project-gaps: 10px;
+        --exp-item-margin: 1rem; 
+    }
+    body {
+        font-family: system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        max-width: var(--body-width);
+        margin: 0 auto;
+        padding: 2rem 1.5rem 0 2rem;
+    }
+    a {
+        color: var(--text);
+    }
+    a:hover {
+        color: var(--accent);
+    }
+    section {
+        margin-bottom: 3.5rem;
+    }
+    h2 {
+        font-size: 1.45rem;
+        color: var(--accent);
+        font-weight: 500;
+    }
+
+
+
+    /* Header */
+    header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 16px;
+        margin: 0 auto 2.75rem auto;
+        width: fit-content;
+    }
+    #header-pfp{
+        grid-row: 1 / span 2;
+        width: 4.5rem;
+        image-rendering: pixelated;
+    }
+    #header-name {
+        margin: 0;
+        font-size: 1.5rem;
+        color: var(--text);
+        align-self: end;
+    }
+    #header-motto {
+        font-size: 1.1rem;
+        color: var(--accent);
+    }
+
+
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2.75rem;
+        border-top: 2px solid var(--border);
+        border-bottom: 2px solid var(--border);
+        padding: 0.5rem 0;
+    }
+    nav a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+
+
+    /* Introduction */
+    .intro {
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+
+
+
+    /* Highlights */
+    .highlight-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.1rem 1.2rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+    }
+    .highlight-card {
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.1rem 1.2rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        min-height: 2.5rem;
+        display: flex;
+    }
+
+
+
+    /* Projects */
+    #projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+        gap: 16px;
+    }
+    .project-item {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: 1 / 1;
+        box-sizing: border-box;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    .project-item img {
+        flex: 1 1 0;
+        min-height: 0;
+        object-fit: cover;
+        width: 100%;
+    }
+    .project-item a {
+        height: 3rem;
+        flex-shrink: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        cursor: pointer;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+
+
+    /* Experience */
+    #experience {
+        margin-bottom: 2rem;
+    }
+    .exp-item {
+        position: relative;
+        padding-left: 3rem;
+        margin-bottom: var(--exp-item-margin);
+        box-sizing: border-box;
+    }
+    .exp-circle {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        width: 0.85rem;
+        height: 0.85rem;
+        background: var(--accent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+    .exp-line {
+        position: absolute;
+        left: 0.75rem;
+        width: 3px;
+        height: calc(100% + var(--exp-item-margin));
+        background: var(--accent);
+        transform: translateX(-50%);
+    }
+    .exp-item:first-child .exp-line {
+        height: calc(50% + var(--exp-item-margin));
+        top: 50%;
+    }
+    .exp-item:only-child .exp-line {
+        display: none;
+    }
+    .exp-item:last-child .exp-line {
+        height: 50%;
+    }
+    .exp-content {
+        background: var(--surface);
+        padding: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center; 
+        gap: 20px;
+    }
+    .exp-position {
+        margin: 0;
+    }
+    .exp-duration {
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+    #resume {
+        display: inline-flex;
+        gap: 5px;
+        margin-left:3rem;
+        background: rgba(0,0,0,0);
+        color: var(--muted);
+        border: 0;
+        font-size: 1rem;
+        cursor: pointer;
+        border: 1px solid var(--muted);
+        border-radius: 6px;
+        padding:0.5rem 0.75rem;
+        flex-wrap: wrap;
+        align-items: anchor-center;
+        text-decoration: none;
+    }
+    #resume i {
+        height: fit-content;
+    }
+    #resume:hover {
+        color: var(--accent);
+        border: 1px solid var(--accent);
+    }
+
+    
+
+    /* Footer */
+    footer {
+        margin-top: 4.5rem;
+        padding: 1rem 0 1rem 0;
+        border-top: 2px solid var(--border);
+        color: var(--muted);
+        text-align: center;
+    }
+    footer a {
+        color: var(--muted);
+    }
+    #contacts {
+        display: flex;
+        justify-content: center;
+        column-gap: 2rem;
+    }
+    #contacts a {
+        font-size: 2rem;
+    }
+    #invite-msg {
+        font-size: 0.8rem;
+        opacity: 0; 
+    }
+    #contacts:hover+#invite-msg {
+        opacity: 1;
+    }
+    #bottom-note {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+    }
+
+</style></head><body><header><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"/><img id="header-pfp" src="static/pfp.png"/><h1 id="header-name">Manas R. Makde</h1><div id="header-motto">Let's keep it dead simple!</div></header><nav><a href="https://sourcesnippet.github.io/" target="__blank">Blog</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contacts">Contact</a></nav><section class="intro"><p>Hi, I'm Manas Ravindra Makde &amp; I've been a developer for 7+ years, focusing on simplicity
+as it is the basis of everything good.</p><p>I use to be a web developer but I switched to game development because I believe that
+a game is a unique type of software that can convey meaningful stories &amp; experiences that become greater than just lines of code.</p><p>Though I'm usually developing games, I've often found myself developing prerequisite tools
+and while you'll rarely find me free I still take the time to learn new things &amp; contribute back to help others in their own dev journey.</p></section><h2>Highlights</h2><section id="highlights"><div class="highlight-card"><b>⭐ My blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> crossed <span id="plugin-download-count">1400</span>+ downloads!</b></div><div class="highlight-card"><b>✅ My <a href="https://stackoverflow.com/a/78506441/22302305">solution</a> on stackoverflow got accepted!</b></div><div class="highlight-card"><b>📦 Published my own npx cli tool <a href="https://www.npmjs.com/package/host-mdx">host-mdx</a> on npm!</b></div></section><h2>Projects</h2><section id="projects"><div class="project-item"><img src="static/ben-10-perplexaquest.png"/><a href="https://manas-makde.itch.io/ben-10-perplexaquest" target="_blank">Ben 10: Perplexaquest</a></div><div class="project-item"><img src="static/sprite-sheet-maker-banner.png"/><a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/" target="_blank">Sprite Sheet Maker</a></div><div class="project-item"><img src="static/turbo-tetris.png"/><a href="https://github.com/ManasMakde/Turbo-Tetris" target="_blank">Turbo Tetris</a></div><div class="project-item"><img src="static/virtual-bulletin-board.png"/><a href="https://manasmakde.github.io/Virtual-Bulletin-Board/" target="_blank">Virtual Bulletin Board</a></div><div class="project-item"><img src="static/deadsimple-calendar.jpg"/><a href="https://www.npmjs.com/package/react-native-deadsimple-calendar" target="_blank">Deadsimple Calendar</a></div><div class="project-item"><img src="static/root-maker.png"/><a href="https://extensions.blender.org/add-ons/root-maker/" target="_blank">Root Maker</a></div></section><h2>Experience</h2><section id="experience"><div class="exp-item"><span class="exp-circle"></span><span class="exp-line"></span><div class="exp-content"><img height="70" width="70" src="static/black-march-studios-logo.jpeg" class="exp-logo"/><div class="exp-info"><h3 class="exp-position">Game Developer</h3><div class="exp-company">Black March Studios</div><div class="exp-duration">Dec 2025 - Present</div></div></div></div><div class="exp-item"><span class="exp-circle"></span><span class="exp-line"></span><div class="exp-content"><img height="70" width="70" src="static/indie-logo.png" class="exp-logo"/><div class="exp-info"><h3 class="exp-position">Indie Game Developer</h3><div class="exp-company">Eye Slash Studios</div><div class="exp-duration">Oct 2023 - Dec 2025</div></div></div></div><div class="exp-item"><span class="exp-circle"></span><span class="exp-line"></span><div class="exp-content"><img height="70" width="70" src="static/sportzfy-logo.png" class="exp-logo"/><div class="exp-info"><h3 class="exp-position">Full Stack Engineer</h3><div class="exp-company">Sportzfy</div><div class="exp-duration">Sep 2023 - Oct 2023</div></div></div></div><div class="exp-item"><span class="exp-circle"></span><span class="exp-line"></span><div class="exp-content"><img height="70" width="70" src="static/rentux-logo.jpeg" class="exp-logo"/><div class="exp-info"><h3 class="exp-position">Full Stack Engineer</h3><div class="exp-company">Rentux</div><div class="exp-duration">Jan 2023 - Mar 2023</div></div></div></div><div class="exp-item"><span class="exp-circle"></span><span class="exp-line"></span><div class="exp-content"><img height="70" width="70" src="static/iit-indore-logo.jpeg" class="exp-logo"/><div class="exp-info"><h3 class="exp-position">Internship</h3><div class="exp-company">IIT Indore</div><div class="exp-duration">Sep 2022 - Oct 2022</div></div></div></div></section><a id="resume" href="https://drive.google.com/file/d/1L1Hd4A0dujbKC09UkHeZfjWXKTfqEEae/view?usp=sharing" target="_blank"><i class="fas fa-download"></i>Download Resume</a><footer><div id="contacts"><a href="https://github.com/ManasMakde"><i class="fab fa-github"></i></a><a href="https://www.stackoverflow.com/users/22302305/manas-r-makde"><i class="fab fa-stack-overflow"></i></a><a href="https://www.linkedin.com/in/manas-makde/"><i class="fab fa-linkedin"></i></a><a href="https://www.instagram.com/manas_makde/"><i class="fab fa-instagram"></i></a><a href="mailto:manasmakde@gmail.com"><i class="fa fa-envelope"></i></a></div><div id="bottom-note">This site was created using <a href="https://www.npmjs.com/package/host-mdx">host-mdx</a></div></footer></body></html>
