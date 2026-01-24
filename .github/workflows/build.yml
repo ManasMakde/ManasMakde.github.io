@@ -2,9 +2,9 @@ name: Build and Deploy MDX Site
 
 on:
   push:
-    branches: main
-    
-  workflow_dispatch:
+    branches:
+      - main
+      - code
 
 permissions:
   contents: write
@@ -26,17 +26,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/.github/workflows/*.yml'
 
-      - name: Create input directory
-        run: echo "$PWD" && ls && mkdir -p $RUNNER_TEMP/code_path && cd $RUNNER_TEMP/code_path && git clone -b code https://github.com/${{ github.repository }} . && npm i
-
       - name: Create output directory
         run: mkdir -p $RUNNER_TEMP/output_path
 
       - name: Build static HTML with host-mdx
-        run: |
-          ls && node "$RUNNER_TEMP/code_path/index.js" -c -v\
-            --input-path="./" \
-            --output-path="$RUNNER_TEMP/output_path"
+        run: npx host-mdx -c -v --output-path="$RUNNER_TEMP/output_path"
 
       - name: Deploy to site branch
         run: |
