@@ -14,6 +14,11 @@ export function HTMLSkeleton({ title = "", description = "", children, ExtendHea
         </html>
     </>)
 }
+export const HighlightCard = ({id, children}) => {
+     return (<div id={id} className="highlight-card">
+        <b>{children}</b>
+    </div>)   
+}
 export const Project = ({ imgSrc, text, link }) => {
     return (<div className="project-item">
         <img src={imgSrc} />
