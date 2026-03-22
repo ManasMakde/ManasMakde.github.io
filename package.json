@@ -1,24 +1,15 @@
 {
-  "name": "manasmakde.github.io",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ManasMakde/ManasMakde.github.io.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
-  "bugs": {
-    "url": "https://github.com/ManasMakde/ManasMakde.github.io/issues"
+  "scripts": {
+    "start": "npx host-mdx -t"
   },
-  "homepage": "https://github.com/ManasMakde/ManasMakde.github.io#readme",
   "dependencies": {
-    "host-mdx": "^2.3.1"
+    "esbuild": "^0.27.3",
+    "host-mdx": "^2.4.3",
+    "pagefind": "^1.4.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-mdx-code-props": "^3.0.1",
+    "remark-heading-id": "^1.0.1",
+    "sitemap": "^9.0.0"
   }
 }

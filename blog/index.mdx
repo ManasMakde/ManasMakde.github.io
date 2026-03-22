@@ -1,0 +1,34 @@
+import { Header} from "@/index/index.mdx"
+import { HTMLSkeleton } from "@/components.jsx";
+
+
+export function SearchBar({ id = "searchbar" }) {
+    return (<div id={id} className="search-wrapper">
+        <script src="/static/search.js" type="module"></script>
+        <input className="search-input" type="text" placeholder="Search..." />
+        <div className="search-dropdown">
+            <div className="search-results"></div>
+            <a href="#" className="search-more" style={"display:none"}>Show all results</a>
+            <a className="search-nonefound" style={"display:none"}>No results found</a>
+            <a className="search-loading" style={"display:none"}>Loading...</a>
+        </div>
+        <button className="search-btn" aria-label="Search Button"></button>
+    </div>)
+}
+
+
+<HTMLSkeleton>
+    <link rel="stylesheet" href="/styles.css" />
+
+
+    {/* Header */}
+    <Header style="margin-bottom:2rem" />
+
+    <SearchBar />
+
+    <hr />
+
+
+    ## Blog Posts
+
+</HTMLSkeleton>

@@ -1,10 +1,53 @@
-import { HTMLSkeleton, HighlightCard, Project, Experience, Contact } from "@/utils.jsx";
+import { HTMLSkeleton } from "@/components.jsx";
 
 
 {/* Properties */}
 export const NAME = "Manas R. Makde";
 export const DESCRIPTION = "Find out what Manas R. Makde is upto";
-export const MOTTO = "Let's keep it dead simple!"
+export const MOTTO = "Let's keep it dead simple!";
+
+
+{/* Components */}
+export const Header = ({ style }) => {
+    return (<header style={style}>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+        <img id="header-pfp" src="/static/pfp.png" />
+        <h1 id="header-name">{NAME}</h1>
+        <div id="header-motto">{MOTTO}</div>
+    </header>)
+}
+export const HighlightCard = ({ id, children }) => {
+    return (<div id={id} className="highlight-card">
+        <b>{children}</b>
+    </div>)
+}
+export const Project = ({ imgSrc, text, link }) => {
+    return (<div className="project-item">
+        <img src={imgSrc} />
+        <a href={link} target="_blank">{text}</a>
+    </div>)
+}
+export const Experience = ({ position, company, duration, logo }) => {
+    return (<div className="exp-item">
+
+        <span className="exp-circle"></span>
+        <span className="exp-line"></span>
+
+        <div className="exp-content">
+            <img className="exp-logo" height="70" width="70" src={logo} />
+            <div className="exp-info">
+                <h3 className="exp-position">{position}</h3>
+                <div className="exp-company">{company}</div>
+                <div className="exp-duration">{duration}</div>
+            </div>
+        </div>
+    </div>);
+}
+export const Contact = ({ className, link }) => {
+    return (<a href={link}>
+        <i className={className}></i>
+    </a>)
+}
 
 
 <HTMLSkeleton title={`${NAME} | Portfolio`} description={DESCRIPTION}>
@@ -12,12 +55,7 @@ export const MOTTO = "Let's keep it dead simple!"
 
 
     {/* Header */}
-    <header>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
-        <img id="header-pfp" src="static/pfp.png" />
-        <h1 id="header-name">{NAME}</h1>
-        <div id="header-motto">{MOTTO}</div>
-    </header>
+    <Header />
 
 
     {/* Navigation */}
@@ -46,7 +84,7 @@ export const MOTTO = "Let's keep it dead simple!"
     ## Highlights
     <section id="highlights">
         <HighlightCard id={"sprite-sheet-maker-highlight"}>
-            <>⭐ My blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> crossed <span id="plugin-download-count">2500</span>+ downloads!</>
+            ⭐ My blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> crossed <span id="plugin-download-count">3400</span>+ downloads!
         </HighlightCard>
 
         <HighlightCard id={"source-snippet-highlight"}>
