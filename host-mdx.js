@@ -3,6 +3,7 @@ import util from "util";
 import path from "path";
 import * as esbuild from "esbuild";
 import * as pagefind from "pagefind";
+import { parseHTML } from 'linkedom';
 import languages from "./static/js/languages.js";
 import rehypeHighlight from "rehype-highlight";
 import remarkHeadingId from "remark-heading-id";
@@ -12,6 +13,11 @@ import { SITE_DOMAIN } from "./static/js/global.js";
 
 
 // To-Set Properties
+const HOME_PAGE = "index.html";
+const BLOG_POSTS_SELECTOR = "#blog-posts-content";
+const BLOG_MORE_SELECTOR = "#blog-more";
+const SNIPPET_CARD_CLASS = "card";
+const BLOG_POSTS_COUNT = 3;
 const SNIPPETS_DIR = "/snippets/";
 const SNIPPETS_INDEX_FILE = "index.mdx";
 const SNIPPETS_PER_FILE = 500;
@@ -186,6 +192,71 @@ function createSnippetsData(outputPath) {
     }
     fs.writeFileSync(path.join(outputPath, SNIPPETS_DATA_DIR, SNIPPETS_STATS_FILE), JSON.stringify(stats));
 }
+function injectSnippetsToHome(outputPath, snippets) {
+
+    // Return if no home page found
+    const indexPath = path.join(outputPath, HOME_PAGE);
+    if (!fs.existsSync(indexPath)) {
+        console.warn(`${indexPath} not found for build-time snippet injection`);
+        return;
+    }
+
+
+    // Return if container for snippets not found
+    const html = fs.readFileSync(indexPath, 'utf8');
+    const { document } = parseHTML(html);
+    const container = document.querySelector(BLOG_POSTS_SELECTOR);
+    if (!container) {
+        return;
+    }
+
+
+    // Return if no snippets
+    if (snippets.length === 0) {
+        document.querySelector(BLOG_MORE_SELECTOR)?.setAttribute('style', 'display: none;');
+        fs.writeFileSync(indexPath, document.toString());
+        return;
+    }
+
+
+    // Clear the placeholder cards
+    container.innerHTML = "";
+
+
+    // Add first N snippets
+    const latestSnippets = snippets.slice(0, BLOG_POSTS_COUNT);
+    latestSnippets.forEach(snippet => {
+
+        // Get snippets data
+        const thumbnail = snippet?.thumbnail;
+        const imgUrl = path.join(snippet?.url, thumbnail);
+        const dateStr = snippet.createdOnDate ? new Date(snippet.createdOnDate).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }) : "";
+
+
+        // Insert Card
+        const card = document.createElement("div");
+        card.className = SNIPPET_CARD_CLASS;
+        card.innerHTML = `
+            <a href="${snippet.url || ""}" class="card-image-link">
+                <img src="${imgUrl || '/static/placeholder.png'}" alt="thumbnail" fetchpriority="high">
+            </a>
+            <div class="card-body">
+                <a class="card-title" href="${snippet.url || ""}">${snippet.title || "Untitled"}</a>
+                <span class="card-date">${dateStr}</span>
+                <p class="card-description">${snippet.description || ""}</p>
+            </div>`;
+
+        container.appendChild(card);
+    });
+
+
+    // Write into HTML file
+    fs.writeFileSync(indexPath, document.toString());
+}
 async function buildSearchIndex(outputPath) {
     // Add all records
     const { index } = await pagefind.createIndex();
@@ -321,6 +392,15 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
 
     // Create data.json & _stats.json file for all snippets
     createSnippetsData(outputPath);
+
+
+    // Inject blog posts in homepage 
+    const snippetsList = Object.values(snippetsMetaData).sort((a, b) => {
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        return dateB - dateA; // Sort Newest First
+    });
+    injectSnippetsToHome(outputPath, snippetsList);
 
 
     // Create a search index

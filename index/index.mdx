@@ -59,11 +59,9 @@ export const Experience = ({ position, company, duration, logo }) => {
     {/* Blog Posts */}
     ## Latest Posts
     <section id="blog-posts-content" style="margin-bottom:0rem">
-        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
-        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
-        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+        <div id="blog-posts-empty">No posts yet, Stay tuned!</div>
     </section>
-    <div class="blog-more">
+    <div id="blog-more">
         <a href="/blog">
             All Posts
             <span class="nav-arrow"></span>

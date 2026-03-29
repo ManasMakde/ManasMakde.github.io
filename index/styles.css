@@ -21,15 +21,20 @@
 }
 
 
-/* Blog more */
-.blog-more {
+/* Blog Posts */
+#blog-posts-empty {
+    color:var(--color-text-muted);
+    padding-left: 0.5rem;
+    margin-bottom: 3rem;
+}
+#blog-more {
     display: flex;
     width: 100%;
     max-width: var(--body-width);
     padding-left: 0.5rem;
     margin-bottom: 3rem;
 }
-.blog-more a {
+#blog-more a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -48,10 +53,10 @@
     background-color: var(--color-text);
     transition: background-color 0.2s ease-in-out;
 }
-.blog-more a:hover {
+#blog-more a:hover {
     color: var(--color-accent);
 }
-.blog-more a:hover .nav-arrow {
+#blog-more a:hover .nav-arrow {
     background-color: var(--color-accent);
 }
 

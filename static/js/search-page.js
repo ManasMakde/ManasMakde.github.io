@@ -6,6 +6,7 @@ const RESULTS_PER_PAGE = 2;
 const PAGE_QUERY = "page";
 const QUERY_BANNER_SELECTOR = "#query-banner";
 const SNIPPET_CARD_CONTAINER_SELECTOR = ".snippets-card-container";
+const SNIPPET_CARD_CLASS = "card";
 const SNIPPET_LOADING_CLASS = "is-loading";
 const PAGINATION_BAR_SELECTOR = "#pagination";
 const PAGINATION_PREV_BTN_SELECTOR = ".pagination-prev";
@@ -204,7 +205,7 @@ function updateSnippetCards(snippets, showDates = true) {
 
         // Create the anchor element directly
         const card = document.createElement("div");
-        card.className = `card ${SNIPPET_LOADING_CLASS}`;
+        card.className = `${SNIPPET_CARD_CLASS} ${SNIPPET_LOADING_CLASS}`;
 
 
         // Inject the inner structure
