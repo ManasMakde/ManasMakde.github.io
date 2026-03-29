@@ -70,7 +70,7 @@ export const NavBar = ({ }) => {
 }
 export function SearchBar({ id = "searchbar" }) {
     return (<div id={id} className="search-wrapper">
-        <script src="/static/js/search.js" type="module"></script>
+        <script src="/static/js/search-bar.js" type="module"></script>
         <input className="search-input" type="text" placeholder="Search..." />
         <div className="search-dropdown">
             <div className="search-results"></div>
@@ -133,7 +133,7 @@ export function Snippet({ metaData = {}, children }) {
     </>);
 
 
-    return (<HTMLSkeleton title={`${metaData?.title} | ${SITE_NAME}`} extendHead={[defaultHead, metaData?.extendHead]}>
+    return (<HTMLSkeleton title={`${metaData?.title}`} extendHead={[defaultHead, metaData?.extendHead]}>
 
         <Header />
         <SearchBar />

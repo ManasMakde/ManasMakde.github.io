@@ -1,9 +1,9 @@
-import { getSearchQueryFromUrl, getPageNumFromUrl, PAGE_QUERY } from "/static/js/global.js";
-import { fetchSnippets } from "/static/js/search.js";
+import { fetchSnippets, getSearchQueryFromUrl } from "./search.js";
 
 
 // Properties
 const RESULTS_PER_PAGE = 2;
+const PAGE_QUERY = "page";
 const QUERY_BANNER_SELECTOR = "#query-banner";
 const SNIPPET_CARD_CONTAINER_SELECTOR = ".snippets-card-container";
 const SNIPPET_LOADING_CLASS = "is-loading";
@@ -32,7 +32,7 @@ function formatDate(dateInput) {
     // Check if can be casted to Date type
     let checkDateInput = new Date(dateInput);
     if (isNaN(checkDateInput.getTime())) {
-        console.log("Invalid Datee")
+        console.warn("formatDate: invalid date input");
         return dateInput;
     }
 
@@ -45,6 +45,10 @@ function formatDate(dateInput) {
     });
 
     return formatter.format(checkDateInput);
+}
+function getPageNumFromUrl() {
+    const pageNumber = Number(new URLSearchParams(window.location.search).get(PAGE_QUERY)) || 1;
+    return Math.max(pageNumber, 1);
 }
 function buildPageUrl(pageNumber) {
     const url = new URL(window.location.href);
@@ -150,6 +154,7 @@ function assignQueryBanner(resultCount = 0, queries = {}) {
     // Return if banner not found
     let queryBannerElement = document.querySelector(QUERY_BANNER_SELECTOR);
     if (!queryBannerElement) {
+        console.warn("assignQueryBanner: query banner element not found");
         return;
     }
 
@@ -169,12 +174,14 @@ function assignQueryBanner(resultCount = 0, queries = {}) {
 function updateSnippetCards(snippets, showDates = true) {
     const container = document.querySelector(SNIPPET_CARD_CONTAINER_SELECTOR);
     if (!container) {
-        console.warn("updateSnippetCards container not found");
+        console.warn("updateSnippetCards: container not found");
         return;
     }
 
+
     // Clear existing cards
     container.innerHTML = "";
+
 
     // Add new cards
     let currentMonthYear = null;
@@ -182,6 +189,7 @@ function updateSnippetCards(snippets, showDates = true) {
         const snippet = snippets[i];
         const thumbnail = snippet?.thumbnail;
         const imgUrl = thumbnail ? new URL(thumbnail, window.location.origin + snippet?.url).href : "";
+
 
         // Insert month year heading when group changes
         const snippetDate = snippet?.createdOnDate ? new Date(snippet.createdOnDate) : null;
@@ -193,9 +201,11 @@ function updateSnippetCards(snippets, showDates = true) {
             container.appendChild(heading);
         }
 
+
         // Create the anchor element directly
         const card = document.createElement("div");
         card.className = `card ${SNIPPET_LOADING_CLASS}`;
+
 
         // Inject the inner structure
         card.innerHTML = `
@@ -211,11 +221,12 @@ function updateSnippetCards(snippets, showDates = true) {
                 <p class="card-description">${snippet?.description ?? ""}</p>
             </div>`;
 
+
         // Directly append to the container
         container.appendChild(card);
     }
 }
-async function main() {
+async function init() {
     // Get url queries 
     const urlQueries = {
         searchQuery: getSearchQueryFromUrl(),
@@ -246,4 +257,5 @@ async function main() {
     }
 }
 
-main();
+
+init();
