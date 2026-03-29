@@ -1,0 +1,17 @@
+:root {
+    --body-width: 680px;
+}
+
+h2 {
+    font-size: 1.45rem;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+
+/* Query banner */
+#query-banner {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text-muted)
+}

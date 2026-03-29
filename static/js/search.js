@@ -1,4 +1,4 @@
-import { getSearchQueryFromUrl, SEARCH_QUERY, PAGEFIND_PATH, STATS_FILE_PATH, DATA_FILE_PATH_PREFIX } from "/static/global.js";
+import { getSearchQueryFromUrl, SEARCH_QUERY, PAGEFIND_PATH, STATS_FILE_PATH, DATA_FILE_PATH_PREFIX } from "/static/js/global.js";
 
 
 // Properties
@@ -60,10 +60,10 @@ async function fetchDefaultSnippets(resultCount, skipCount = 0) {
         totalSnippets: totalSnippets   // Total available snippets
     };
 }
-export async function fetchSnippets(searchQuery, tags = [], resultCount, skipCount = 0) {
+export async function fetchSnippets(searchQuery, resultCount, skipCount = 0) {
 
     // fetch & return default snippets if no query is provided
-    if (!searchQuery && tags.length == 0) {
+    if (!searchQuery) {
         return fetchDefaultSnippets(resultCount, skipCount);
     }
 
@@ -73,25 +73,24 @@ export async function fetchSnippets(searchQuery, tags = [], resultCount, skipCou
 
 
     // Get all search results
-    let options = tags.length == 0 ? {} : {
-        filters: {
-            tags: { any: tags }
-        }
-    };
-    const search = await pf.search(searchQuery || null, options);  // Intentionally adding null otherwise results don't show up DO NOT CHANGE
+    const search = await pf.search(searchQuery || null, {});  // Intentionally adding null otherwise results don't show up DO NOT CHANGE
 
 
     // Iterate through search results 
     const resultRange = search.results.slice(skipCount, skipCount + resultCount);
     const snippets = await Promise.all(resultRange.map(async (res) => {
         const data = await res.data();
+        console.log(">>>", data);
         return {
             url: data?.url ?? "",
             title: data?.meta?.title ?? "",
-            thumbnail: data?.meta?.thumbnail ?? "",
-            tags: data?.meta?.tags?.split(",").filter(Boolean) ?? []
+            description: data?.meta?.description ?? "",
+            createdOnDate: data?.meta?.date ?? "",
+            thumbnail: data?.meta?.thumbnail ?? ""
         };
     }));
+
+    console.log(snippets)
 
 
     return { snippets, totalSnippets: search.results.length };
@@ -129,7 +128,7 @@ function populateSearchDropdown(searchResultContainer, searchMoreElement, search
 
     // Change display of "show all results"
     searchMoreElement.style.display = areMoreAvailable ? "" : "none";
-    searchMoreElement.href = `/?${SEARCH_QUERY}=${encodeURIComponent(query)}`;
+    searchMoreElement.href = `/blog/?${SEARCH_QUERY}=${encodeURIComponent(query)}`;
 
 
     // Change display of "No results found"
@@ -161,7 +160,7 @@ function setupQuickSearch(searchInput, searchResultContainer, searchMore, search
 
         // Get search results
         const query = searchInput.value;
-        const quickSearchResults = (query === "") ? [] : (await fetchSnippets(query, [], DEFAULT_QUICK_SEARCH_COUNT + 1)).snippets;
+        const quickSearchResults = (query === "") ? [] : (await fetchSnippets(query, DEFAULT_QUICK_SEARCH_COUNT + 1)).snippets;
         if (thisSearchId !== lastSearchId) {
             return;
         }
@@ -232,7 +231,7 @@ async function setupSearchBar(selectors) {
     // Creating search functionality
     const gotoSearchPage = () => {
         const query = searchInput.value;
-        window.location.href = query ? `/?${SEARCH_QUERY}=${encodeURIComponent(query)}` : window.location.pathname;
+        window.location.href = query ? `/blog/?${SEARCH_QUERY}=${encodeURIComponent(query)}` : window.location.pathname;
     };
     const quickSearch = setupQuickSearch(searchInput, searchResultContainer, searchMore, searchNonefound, searchLoading);
     const navigateSearchDropdown = setupNavigateSearchDropdown(searchInput, searchResultContainer, searchMore, gotoSearchPage)

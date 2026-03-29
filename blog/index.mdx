@@ -1,34 +1,51 @@
-import { Header} from "@/index/index.mdx"
-import { HTMLSkeleton } from "@/components.jsx";
+import { SITE_NAME, SITE_DOMAIN, SITE_DESCRIPTION, SITE_PREVIEW_IMG } from "@/static/js/global.js";
+import { HTMLSkeleton, Header, NavBar, SearchBar, SnippetCard, PaginationBar, Footer } from "@/components.jsx";
 
 
-export function SearchBar({ id = "searchbar" }) {
-    return (<div id={id} className="search-wrapper">
-        <script src="/static/search.js" type="module"></script>
-        <input className="search-input" type="text" placeholder="Search..." />
-        <div className="search-dropdown">
-            <div className="search-results"></div>
-            <a href="#" className="search-more" style={"display:none"}>Show all results</a>
-            <a className="search-nonefound" style={"display:none"}>No results found</a>
-            <a className="search-loading" style={"display:none"}>Loading...</a>
-        </div>
-        <button className="search-btn" aria-label="Search Button"></button>
-    </div>)
-}
+export const extendHead = (<>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <link rel="preload" href="/static/logo.png" as="image" />
+    <script rel="modulepreload" src="script.js" type="module"></script>
+
+    {/* Preview card*/}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:url" content={`${SITE_DOMAIN}/`} />
+    <meta property="og:title" content={`${SITE_NAME}`} />
+    <meta property="og:image" content={SITE_PREVIEW_IMG} />
+
+    <meta name="twitter:site" content={SITE_NAME} />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={`${SITE_DOMAIN}/`} />
+    <meta property="twitter:title" content={SITE_NAME} />
+    <meta property="twitter:image" content={SITE_PREVIEW_IMG} />
+</>);
 
 
-<HTMLSkeleton>
-    <link rel="stylesheet" href="/styles.css" />
+<HTMLSkeleton title={`Blog | ${SITE_NAME}`} extendHead={extendHead}>
+    <link rel="stylesheet" href="/static/css/global-styles.css" />
+    <link rel="stylesheet" href="styles.css" />
 
 
     {/* Header */}
-    <Header style="margin-bottom:2rem" />
-
+    <Header />
     <SearchBar />
+    <NavBar/>
 
-    <hr />
+
+    {/* Query Banner */}
+    <h2 id="query-banner" style="display:none"></h2>
 
 
-    ## Blog Posts
+    {/* Blog Posts */}
+    <main className="snippets-card-container">
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+    </main>
+    <PaginationBar style={"display:none"}/>
 
+
+    {/* Footer */}
+    <Footer/>
 </HTMLSkeleton>

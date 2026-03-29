@@ -1,0 +1,54 @@
+import { SITE_NAME } from "@/static/js/global.js";
+import { HTMLSkeleton, Header, SearchBar, NavBar, Footer } from "@/components.jsx";
+
+
+export const STYLES = (<>
+    <link rel="stylesheet" href="/static/css/global-styles.css" />
+    <link rel="stylesheet" href="/terms/styles.css" />
+</>);
+
+
+<HTMLSkeleton title={`Terms of Service | ${SITE_NAME}`} extendHead={STYLES}>
+    <Header />
+    <SearchBar />
+    <NavBar />
+
+    <article id="terms">
+        # Terms of Service
+
+        ## 1. Acceptance of Terms \{#acceptance-of-terms}
+        By accessing and using this website, you agree to comply with and be bound by the following terms and conditions. 
+        If you do not agree, please refrain from using the site or its resources.
+
+
+        ## 2. AI and Data Scraping Policy \{#ai-data-scraping-policy}
+
+        Automated data collection is strictly prohibited. You may not use any robots, spiders, crawlers, or other automated tools to scrape, harvest, or extract data from this website for any purpose, including the training of artificial intelligence (AI) models or machine learning algorithms.  
+        * **Search Engine Indexing:** Notwithstanding the above, standard search engine crawling is permitted solely for public search results and does not grant rights for AI training or data harvesting.
+        * **Permissions:** If you wish to use the data on this site for such purposes, you must obtain prior written consent from the site creator.
+
+
+        ## 3. Usage License \{#usage-License}
+        Unless otherwise stated, the code provided on this website is free to use for both personal and commercial projects.  
+        * **Modifications:** You are free to modify and redistribute the code as needed.  
+        * **Attribution:** Credit to this website or the author is not required, though it is greatly appreciated.
+
+
+        ## 4. Disclaimer of Liability \{#disclaimer-of-liability}
+        All code and content are provided "as is" without warranty of any kind, express or implied. The author shall not be held liable for any damages, losses, or issues arising from the use, inability to use, or performance of the code provided on this site. Use it at your own risk.
+
+
+        ## 5. Intellectual Property & Copyright Infringement \{#copyright-infringement}
+        We respect the intellectual property rights of others. If you believe that any material on this site infringes upon a copyright you own or control, please contact us immediately with proof of ownership so we can investigate and remove the content.
+
+
+        ## 6. Prohibited Use \{#prohibited-use}
+        You agree not to use the website or its code for any unlawful purpose or in any way that could damage, disable, or impair the website’s functionality.
+
+
+        ## 7. Changes to Terms \{#changes-to-terms}
+        We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting to this page. Your continued use of the site signifies your acceptance of the updated terms.
+    </article>
+
+    <Footer/>
+</HTMLSkeleton>

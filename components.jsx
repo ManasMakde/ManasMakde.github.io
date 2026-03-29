@@ -1,15 +1,12 @@
 import fs from "fs";
 import path from "path";
-import { SITE_NAME, SITE_DOMAIN, SITE_MOTTO, REPO_LINK, SITE_LOGO_PATH, PLACEHOLDER_IMG_PATH, TAGS_QUERY } from "@/static/global.js";
+import { SITE_NAME, SITE_DOMAIN, SITE_MOTTO, SITE_LOGO_PATH, PLACEHOLDER_IMG_PATH } from "@/static/js/global.js";
 
 
 // Properties
 export const DEFAULT_SNIPPET_STYLES_PATH = "styles.css";
 export const DEFAULT_SNIPPET_SCRIPT_PATH = "script.js";
 export const DEFAULT_CODE_TAB_STYLE = "max-height:31rem";
-
-
-// Internal Properties
 const languageClassPrefix = "hljs language-";
 const displayNameProp = "display-name";
 
@@ -41,7 +38,7 @@ function formatDate(dateInput) {
 
 
 // Components
-export function HTMLSkeleton({ title = "", extendHead = <></>, children }) {    // The "Boilerplate" html, Useful for cross device compatibility
+export function HTMLSkeleton({ title = "", extendHead = <></>, children }) {  // The "Boilerplate" html, Useful for cross device compatibility
     return (<>
         <html lang="en">
             <head>
@@ -56,7 +53,6 @@ export function HTMLSkeleton({ title = "", extendHead = <></>, children }) {    
         </html>
     </>)
 }
-
 export function Header() {
     return (<a id="site-header" href="/">
         <img id="site-logo" alt="logo" src={SITE_LOGO_PATH} />
@@ -64,10 +60,17 @@ export function Header() {
         <div id="site-motto">{SITE_MOTTO}</div>
     </a>)
 }
-
+export const NavBar = ({ }) => {
+    return (<nav id="navigation-bar">
+        <a href="/blog">Blog</a>
+        <a href="/#projects">Projects</a>
+        <a href="/#experience">Experience</a>
+        <a href="/#contacts">Contact</a>
+    </nav>)
+}
 export function SearchBar({ id = "searchbar" }) {
     return (<div id={id} className="search-wrapper">
-        <script src="/static/search.js" type="module"></script>
+        <script src="/static/js/search.js" type="module"></script>
         <input className="search-input" type="text" placeholder="Search..." />
         <div className="search-dropdown">
             <div className="search-results"></div>
@@ -78,57 +81,37 @@ export function SearchBar({ id = "searchbar" }) {
         <button className="search-btn" aria-label="Search Button"></button>
     </div>)
 }
-
-export function NavBar() {
-    return (<nav id="navbar">
-        <a href="/tags">Tags</a>
-        <a href="/about">About</a>
-        <a href="/terms">Terms</a>
-        <a href="/contact">Contact</a>
-    </nav>)
-}
-
-export function Tags({ tags, assignHref = true }) {
-
-    // Return empty fragment if no tags
-    if (!tags || tags?.length == 0) {
-        return (<></>)
-    }
-
-    return tags?.map((tag, index) => (<a className="tag" key={index} href={assignHref ? `/?${TAGS_QUERY}=${encodeURIComponent(tag.toLowerCase())}` : undefined}>{tag.toLowerCase()}</a>));
-}
-
-export function SnippetCard({ imgSrc, text, link, tags = [], isLoading = false, loadingClass = "is-loading" }) {
-    const removeLoadingFunction = isLoading ? `this.parentElement.classList.remove('${loadingClass}')` : ""
-    return (<div className="snippet-card">
-        <a href={link} className={`snippet-card-thumbnail ${isLoading ? loadingClass : ""}`} tabindex="-1">
-            <img src={imgSrc} onerror={`if(this.src!=='${PLACEHOLDER_IMG_PATH}')this.src='${PLACEHOLDER_IMG_PATH}';${removeLoadingFunction}`} onLoad={removeLoadingFunction} alt="thumbnail" fetchpriority="high" />
+export function SnippetCard({ id, imgSrc, title, date, description, link, isLoading = false, loadingClass = "is-loading" }) {
+    const removeLoadingFunction = isLoading ? `this.parentElement.classList.remove('${loadingClass}')` : "";
+    const errorFunction = `if(this.src!=='${PLACEHOLDER_IMG_PATH}')this.src='${PLACEHOLDER_IMG_PATH}';${removeLoadingFunction}`;
+    return (<div id={id} className={`card ${isLoading ? loadingClass : ""}`}>
+        <a href={link} className="card-image-link">
+            <img className={isLoading ? loadingClass : ""} src={imgSrc} onError={errorFunction} onLoad={removeLoadingFunction} alt="thumbnail" fetchPriority="high" />
         </a>
-        <a href={link} className={`snippet-card-title ${loadingClass ? loadingClass : ""}`} title={text}>
-            <div>{text}</div>
-        </a>
-        <div className={`snippet-card-tags ${loadingClass ? loadingClass : ""}`}>
-            <Tags tags={tags} assignHref={false} />
+
+        <div className="card-body">
+            <a href={link} className="card-title-link">
+                <h2 className="card-title">{title}</h2>
+            </a>
+            <span className="card-date">{date}</span>
+            <p className="card-description">{description}</p>
         </div>
     </div>)
 }
-
 export function Snippet({ metaData = {}, children }) {
-
 
     // Default styles Component
     const stylePathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_STYLES_PATH));
     const scriptPathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_SCRIPT_PATH));
-    const title = `${metaData?.title} | ${SITE_NAME}`;
+    const title = `${metaData?.title}`;
     const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
     const thumbnail = metaData?.thumbnail ? new URL(metaData?.thumbnail, url).href : "";
     const defaultHead = (<>
         <link rel="preload" href="/static/copy-done-icon.png" as="image" />
-        <link rel="stylesheet" href="/static/code-styles.css" />
-        <link rel="stylesheet" href="/static/global-styles.css" />
-        <script src="/static/snippets.js"></script>
+        <link rel="stylesheet" href="/static/css/code-styles.css" />
+        <link rel="stylesheet" href="/static/css/global-styles.css" />
+        <script src="/static/js/snippets.js"></script>
         <meta name="description" content={title} />
-        <meta name="keywords" content={metaData?.tags?.join(", ")} />
         <meta name="author" content={metaData?.author} />
         {stylePathExists && <link rel="stylesheet" href={DEFAULT_SNIPPET_STYLES_PATH} />}
         {scriptPathExists && <script src={DEFAULT_SNIPPET_SCRIPT_PATH} type="module"></script>}
@@ -140,6 +123,7 @@ export function Snippet({ metaData = {}, children }) {
         <meta property="og:url" content={url} />
         <meta property="og:title" content={title} />
         <meta property="og:image" content={thumbnail} />
+
 
         <meta name="twitter:site" content={SITE_NAME} />
         <meta property="twitter:card" content="summary_large_image" />
@@ -153,17 +137,15 @@ export function Snippet({ metaData = {}, children }) {
 
         <Header />
         <SearchBar />
-        <hr />
         <NavBar />
-        <hr style="margin-bottom: 2rem" />
 
         <div id="snippet-header">
             {metaData?.thumbnail && metaData?.thumbnail !== "" && <img id="snippet-thumbnail" src={metaData?.thumbnail} onerror={`if(this.src!=='${PLACEHOLDER_IMG_PATH}')this.src='${PLACEHOLDER_IMG_PATH}'`} alt="thumbnail" />}
             <div id="snippet-card-title-wrapper">
                 <h1 id="snippet-card-title">{metaData?.title ?? "Untitled"}</h1>
                 {metaData?.author && <a id="snippet-author" className={!metaData?.authorWebsite && "snippet-no-author"} href={metaData?.authorWebsite ? metaData?.authorWebsite : undefined}>By {metaData.author}</a>}
-                {metaData?.createdOnDate && <div id="snippet-creation-date">Posted On: {formatDate(metaData?.createdOnDate)}</div>}
-                {metaData?.editedOnDate && <div id="snippet-update-date">Updated On: {formatDate(metaData?.editedOnDate)}</div>}
+                {metaData?.createdOnDate && <div id="snippet-creation-date">Posted: {formatDate(metaData?.createdOnDate)}</div>}
+                {metaData?.editedOnDate && <div id="snippet-update-date">Updated: {formatDate(metaData?.editedOnDate)}</div>}
             </div>
         </div>
 
@@ -171,16 +153,10 @@ export function Snippet({ metaData = {}, children }) {
             {children}
         </article>
 
-        <div className="tag-container">
-            <Tags tags={metaData?.tags} />
-        </div>
-
-        <hr style="margin-top: 2rem" />
         <Footer showWarning={true} />
 
     </HTMLSkeleton>)
 }
-
 export function CodeTabs({ activeIndex = 0, dropdown = false, id = undefined, style = {}, childrenStyle = DEFAULT_CODE_TAB_STYLE, children }) {
 
     // Make sure children are in array format
@@ -290,31 +266,35 @@ export function CodeTabs({ activeIndex = 0, dropdown = false, id = undefined, st
         </div>
     </div>)
 }
-
 export function PaginationBar({ id = "pagination", style }) {
     return (<nav id={id} style={style}>
-        <button className="pagination-prev" aria-label="prev"></button>
-        <button className="pagination-item"></button>
+        <a className="pagination-prev" aria-label="prev"></a>
+        <a className="pagination-item"></a>
         <span className="pagination-dots">...</span>
-        <button className="pagination-item" ></button>
-        <button className="pagination-item" ></button>
-        <button className="pagination-item pagination-active" ></button>
-        <button className="pagination-item" ></button>
-        <button className="pagination-item" ></button>
+        <a className="pagination-item" ></a>
+        <a className="pagination-item" ></a>
+        <a className="pagination-item pagination-active" ></a>
+        <a className="pagination-item" ></a>
+        <a className="pagination-item" ></a>
         <span className="pagination-dots">...</span>
-        <button className="pagination-item" ></button>
-        <button className="pagination-next" aria-label="next"></button>
+        <a className="pagination-item" ></a>
+        <a className="pagination-next" aria-label="next"></a>
     </nav>)
 }
-
-export function Footer({ showWarning = false }) {
+export const Contact = ({ className, link }) => {
+    return (<a href={link}>
+        <i className={className}></i>
+    </a>)
+}
+export function Footer({ }) {
     return (<footer>
-        <a id="footer-logo-wrapper" href="/"><img id="footer-logo" alt="logo" src={SITE_LOGO_PATH} /></a>
-        <div id="footer-links" style={showWarning ? "margin-bottom: 2rem" : ""}>
-            <a href={REPO_LINK} target="_blank">Repository</a>
-            <hr />
-            <a href={`${REPO_LINK}/issues`} target="_blank">Report Bug</a>
+        <div id="contacts">
+            <a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a>
+            <a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a>
+            <a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a>
+            <a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a>
+            <a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a>
         </div>
-        {showWarning && <div id="footer-warning">Scraping data for AI training or any other purpose is strictly prohibited. <a href="/terms#ai-data-scraping-policy" aria-label="Learn more about scraping policy">View Terms</a></div>}
+        <div id="bottom-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div>
     </footer>)
 }

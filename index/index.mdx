@@ -1,26 +1,13 @@
-import { HTMLSkeleton } from "@/components.jsx";
+import { HTMLSkeleton, Header, SearchBar, NavBar, SnippetCard, Footer } from "@/components.jsx";
 
 
 {/* Properties */}
 export const NAME = "Manas R. Makde";
-export const DESCRIPTION = "Find out what Manas R. Makde is upto";
 export const MOTTO = "Let's keep it dead simple!";
+export const DESCRIPTION = "Find out what Manas R. Makde is upto";
 
 
 {/* Components */}
-export const Header = ({ style }) => {
-    return (<header style={style}>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
-        <img id="header-pfp" src="/static/pfp.png" />
-        <h1 id="header-name">{NAME}</h1>
-        <div id="header-motto">{MOTTO}</div>
-    </header>)
-}
-export const HighlightCard = ({ id, children }) => {
-    return (<div id={id} className="highlight-card">
-        <b>{children}</b>
-    </div>)
-}
 export const Project = ({ imgSrc, text, link }) => {
     return (<div className="project-item">
         <img src={imgSrc} />
@@ -43,67 +30,54 @@ export const Experience = ({ position, company, duration, logo }) => {
         </div>
     </div>);
 }
-export const Contact = ({ className, link }) => {
-    return (<a href={link}>
-        <i className={className}></i>
-    </a>)
-}
 
 
-<HTMLSkeleton title={`${NAME} | Portfolio`} description={DESCRIPTION}>
+<HTMLSkeleton title={`Portfolio | ${NAME}`} description={DESCRIPTION} extendHead={<script rel="modulepreload" src="script.js" type="module"></script>}>
+    <link rel="stylesheet" href="/static/css/global-styles.css" />
     <link rel="stylesheet" href="/styles.css" />
 
 
     {/* Header */}
     <Header />
-
-
-    {/* Navigation */}
-    <nav>
-        <a href="https://sourcesnippet.github.io/" target="__blank">Blog</a>
-        <a href="#projects">Projects</a>
-        <a href="#experience">Experience</a>
-        <a href="#contacts">Contact</a>
-    </nav>
+    <SearchBar/>
+    <NavBar />
 
 
     {/* Intro */}
     <section className="intro">
-    Hi, I'm Manas (pronounced similar to <a id="similar-name" href="https://en.wikipedia.org/wiki/Midas#:~:text=The%20most%20famous%20King%20Midas,touch%2C%20or%20the%20Midas%20touch.">Midas</a>) & I've been a developer for 7+ years, focusing on simplicity
-    as it is the basis of everything good.
+        Hi, I'm Manas (pronounced similar to <a id="similar-name" href="https://en.wikipedia.org/wiki/Midas#:~:text=The%20most%20famous%20King%20Midas,touch%2C%20or%20the%20Midas%20touch.">Midas</a>) & I've been a developer for 7+ years with focus on simplicity
+        with maximum functionality.
 
-    I use to be a web developer but I switched to game development because I believe that
-    a game is a unique type of software that can convey meaningful stories & experiences that become greater than just lines of code.
+        I use to be a web developer but I switched to game development because I believe that
+        a game is a unique type of software that can convey meaningful stories & experiences that become greater than just lines of code.
 
-    Though I'm usually developing games, I've often found myself developing prerequisite tools 
-    and while you'll rarely find me free I still take the time to learn new things & contribute back to help others in their own dev journey.
+        Though I'm usually developing games, I've often found myself developing prerequisite tools 
+        and while you'll rarely find me free I still take the time to learn new things & contribute back to help others in their own dev journey.
     </section>
 
 
-    {/* Highlights */}
-    ## Highlights
-    <section id="highlights">
-        <HighlightCard id={"sprite-sheet-maker-highlight"}>
-            ⭐ My blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> crossed <span id="plugin-download-count">3400</span>+ downloads!
-        </HighlightCard>
-
-        <HighlightCard id={"source-snippet-highlight"}>
-            🌍 Launched a new website <a href="https://sourcesnippet.com/">SourceSnippet.com</a>
-        </HighlightCard>
-
-        <HighlightCard id={"sprite-sheet-maker-highlight"}>
-            🚀 Updated my npm package <a href="https://www.npmjs.com/package/host-mdx">host-mdx</a> to version 2.3
-        </HighlightCard>
+    {/* Blog Posts */}
+    ## Latest Posts
+    <section id="blog-posts-content" style="margin-bottom:0rem">
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+        <SnippetCard isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
     </section>
+    <div class="blog-more">
+        <a href="/blog">
+            All Posts
+            <span class="nav-arrow"></span>
+        </a>
+    </div>
 
 
     {/* Projects */}
     ## Projects
     <section id="projects">
-        <Project text="SourceSnippet" imgSrc="static/source-snippet.png" link="https://sourcesnippet.com/" />
         <Project text="Ben 10: Perplexaquest" imgSrc="static/ben-10-perplexaquest.png" link="https://manas-makde.itch.io/ben-10-perplexaquest" />
         <Project text="Sprite Sheet Maker" imgSrc="static/sprite-sheet-maker-banner.png" link="https://extensions.blender.org/add-ons/sprite-sheet-maker/" />
-        <Project text="Turbo Tetris" imgSrc="static/turbo-tetris.png" link="https://github.com/ManasMakde/Turbo-Tetris" />
+        <Project text="Host-Mdx" imgSrc="static/host-mdx.jpeg" link="https://github.com/ManasMakde/Turbo-Tetris" />
+        <Project text="SourceSnippet" imgSrc="static/source-snippet.png" link="https://sourcesnippet.com/" />
         <Project text="Virtual Bulletin Board" imgSrc="static/virtual-bulletin-board.png" link="https://manasmakde.github.io/Virtual-Bulletin-Board/" />
         <Project text="Root Maker" imgSrc="static/root-maker.png" link="https://extensions.blender.org/add-ons/root-maker/" />
     </section>
@@ -112,7 +86,7 @@ export const Contact = ({ className, link }) => {
     {/* Experience */}
     ## Experience
     <section id="experience">
-        <Experience position={"Game Developer"} company={"Starlight forge Studios(Formerly Black March Studios)"} duration={"Dec 2025 - Present"} logo={"static/starlight-forge-studios.jpeg"} />
+        <Experience position={"Game Developer"} company={"Starlight forge Studios (Formerly Black March Studios)"} duration={"Dec 2025 - Present"} logo={"static/starlight-forge-studios.jpeg"} />
         <Experience position={"Indie Game Developer"} company={"Eye Slash Studios"} duration={"Oct 2023 - Dec 2025"} logo={"static/indie-logo.png"} />
         <Experience position={"Full Stack Engineer"} company={"Sportzfy"} duration={"Sep 2023 - Oct 2023"} logo={"static/sportzfy-logo.png"} />
         <Experience position={"Full Stack Engineer"} company={"Rentux"} duration={"Jan 2023 - Mar 2023"} logo={"static/rentux-logo.jpeg"} />
@@ -122,14 +96,5 @@ export const Contact = ({ className, link }) => {
 
 
     {/* Footer */}
-    <footer>
-        <div id="contacts">
-            <Contact className="fab fa-github" link="https://github.com/ManasMakde"/>
-            <Contact className="fab fa-stack-overflow" link="https://www.stackoverflow.com/users/22302305/manas-r-makde"/>
-            <Contact className="fab fa-linkedin" link="https://www.linkedin.com/in/manas-makde/"/>
-            <Contact className="fab fa-instagram" link="https://www.instagram.com/manas_makde/"/>
-            <Contact className="fa fa-envelope" link="mailto:manasmakde@gmail.com"/>
-        </div>
-        <div id="bottom-note">This site was created using [host-mdx](https://www.npmjs.com/package/host-mdx)</div>
-    </footer>
+    <Footer />
 </HTMLSkeleton>
