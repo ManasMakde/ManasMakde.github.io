@@ -62,7 +62,8 @@ export function Header() {
 }
 export const NavBar = ({ }) => {
     return (<nav id="navigation-bar">
-        <a href="/blog">Blog</a>
+        <a href="https://sourcesnippet.com/" target="_blank">Blog</a>
+        {/* <a href="/blog">Blog</a> */}
         <a href="/#projects">Projects</a>
         <a href="/#experience">Experience</a>
         <a href="/#contacts">Contact</a>

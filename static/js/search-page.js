@@ -2,12 +2,14 @@ import { fetchSnippets, getSearchQueryFromUrl } from "./search.js";
 
 
 // Properties
-const RESULTS_PER_PAGE = 2;
+const RESULTS_PER_PAGE = 10;
 const PAGE_QUERY = "page";
 const QUERY_BANNER_SELECTOR = "#query-banner";
 const SNIPPET_CARD_CONTAINER_SELECTOR = ".snippets-card-container";
 const SNIPPET_CARD_CLASS = "card";
 const SNIPPET_LOADING_CLASS = "is-loading";
+const EMPTY_SNIPPET_MESSAGE = "No posts yet, Stay tuned!";
+const EMPTY_CLASS = "empty-blog";
 const PAGINATION_BAR_SELECTOR = "#pagination";
 const PAGINATION_PREV_BTN_SELECTOR = ".pagination-prev";
 const PAGINATION_PAGE_1_SELECTOR = ".pagination-item:nth-of-type(2)";  // Intentionally not :nth-of-type(1) DO NOT CHANGE
@@ -173,15 +175,23 @@ function assignQueryBanner(resultCount = 0, queries = {}) {
     queryBannerElement.textContent = queryText;
 }
 function updateSnippetCards(snippets, showDates = true) {
+
+    // Return if no container
     const container = document.querySelector(SNIPPET_CARD_CONTAINER_SELECTOR);
     if (!container) {
         console.warn("updateSnippetCards: container not found");
         return;
     }
 
-
     // Clear existing cards
     container.innerHTML = "";
+
+
+    // Return if no snippets provided
+    if(snippets.length === 0){
+        container.innerHTML = `<div class="${EMPTY_CLASS}">${EMPTY_SNIPPET_MESSAGE}</div>`;
+        return;
+    }
 
 
     // Add new cards

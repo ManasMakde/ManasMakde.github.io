@@ -52,11 +52,11 @@ async function fetchDefaultSnippets(resultCount, skipCount = 0) {
         totalSnippets: totalSnippets   // Total available snippets
     };
 }
-export async function fetchSnippets(searchQuery, resultCount, skipCount = 0) {
+async function fetchSnippetsUnsafe(searchQuery, resultCount, skipCount) {
 
     // fetch & return default snippets if no query is provided
     if (!searchQuery) {
-        return fetchDefaultSnippets(resultCount, skipCount);
+        return await fetchDefaultSnippets(resultCount, skipCount);
     }
 
 
@@ -83,6 +83,14 @@ export async function fetchSnippets(searchQuery, resultCount, skipCount = 0) {
 
 
     return { snippets, totalSnippets: search.results.length };
+}
+export async function fetchSnippets(searchQuery, resultCount, skipCount = 0) {
+    try {
+        return await fetchSnippetsUnsafe(searchQuery, resultCount, skipCount);
+    }
+    catch {
+        return { snippets: [], totalSnippets: 0 };
+    }
 }
 
 

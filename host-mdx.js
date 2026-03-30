@@ -16,8 +16,8 @@ import { SITE_DOMAIN } from "./static/js/global.js";
 const HOME_PAGE = "index.html";
 const BLOG_POSTS_SELECTOR = "#blog-posts-content";
 const BLOG_MORE_SELECTOR = "#blog-more";
-const SNIPPET_CARD_CLASS = "card";
 const BLOG_POSTS_COUNT = 3;
+const SNIPPET_CARD_CLASS = "card";
 const SNIPPETS_DIR = "/snippets/";
 const SNIPPETS_INDEX_FILE = "index.mdx";
 const SNIPPETS_PER_FILE = 500;
@@ -192,7 +192,15 @@ function createSnippetsData(outputPath) {
     }
     fs.writeFileSync(path.join(outputPath, SNIPPETS_DATA_DIR, SNIPPETS_STATS_FILE), JSON.stringify(stats));
 }
-function injectSnippetsToHome(outputPath, snippets) {
+function injectSnippetsToHome(outputPath) {
+
+    // Get snippets
+    const snippets = Object.values(snippetsMetaData).sort((a, b) => {  // Sort Newest First
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        return dateB - dateA;
+    });
+
 
     // Return if no home page found
     const indexPath = path.join(outputPath, HOME_PAGE);
@@ -212,10 +220,14 @@ function injectSnippetsToHome(outputPath, snippets) {
 
 
     // Return if no snippets
-    if (snippets.length === 0) {
+    const latestSnippets = snippets.slice(0, BLOG_POSTS_COUNT);
+    if (latestSnippets.length === 0) {
         document.querySelector(BLOG_MORE_SELECTOR)?.setAttribute('style', 'display: none;');
         fs.writeFileSync(indexPath, document.toString());
         return;
+    }
+    else {
+        document.querySelector(BLOG_MORE_SELECTOR)?.removeAttribute('style');
     }
 
 
@@ -224,7 +236,6 @@ function injectSnippetsToHome(outputPath, snippets) {
 
 
     // Add first N snippets
-    const latestSnippets = snippets.slice(0, BLOG_POSTS_COUNT);
     latestSnippets.forEach(snippet => {
 
         // Get snippets data
@@ -384,6 +395,10 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
     moveUpContents(path.join(outputPath, INDEX_FOLDER));
 
 
+    // Inject blog posts in homepage 
+    injectSnippetsToHome(outputPath);
+
+
     // Return if no meta data has been changed
     if (!isMetaDataDirty) {
         return;
@@ -392,15 +407,6 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
 
     // Create data.json & _stats.json file for all snippets
     createSnippetsData(outputPath);
-
-
-    // Inject blog posts in homepage 
-    const snippetsList = Object.values(snippetsMetaData).sort((a, b) => {
-        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
-        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
-        return dateB - dateA; // Sort Newest First
-    });
-    injectSnippetsToHome(outputPath, snippetsList);
 
 
     // Create a search index

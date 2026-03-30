@@ -10,8 +10,10 @@ export const DESCRIPTION = "Find out what Manas R. Makde is upto";
 {/* Components */}
 export const Project = ({ imgSrc, text, link }) => {
     return (<div className="project-item">
-        <img src={imgSrc} />
-        <a href={link} target="_blank">{text}</a>
+        <a href={link} target="_blank" className="img-wrapper">
+            <img src={imgSrc} alt={text} />
+        </a>
+        <a href={link} target="_blank" className="project-link">{text}</a>
     </div>)
 }
 export const Experience = ({ position, company, duration, logo }) => {
@@ -30,16 +32,21 @@ export const Experience = ({ position, company, duration, logo }) => {
         </div>
     </div>);
 }
+export const HighlightCard = ({ id, children }) => {
+    return (<div id={id} className="highlight-card">
+        <b>{children}</b>
+    </div>)
+}
 
 
-<HTMLSkeleton title={`Portfolio | ${NAME}`} description={DESCRIPTION} extendHead={<script rel="modulepreload" src="script.js" type="module"></script>}>
+<HTMLSkeleton title={`Portfolio | ${NAME}`} description={DESCRIPTION}>
     <link rel="stylesheet" href="/static/css/global-styles.css" />
     <link rel="stylesheet" href="/styles.css" />
 
 
     {/* Header */}
     <Header />
-    <SearchBar/>
+    {/* <SearchBar/> */}
     <NavBar />
 
 
@@ -57,7 +64,7 @@ export const Experience = ({ position, company, duration, logo }) => {
 
 
     {/* Blog Posts */}
-    ## Latest Posts
+    {/* ## Latest Posts
     <section id="blog-posts-content" style="margin-bottom:0rem">
         <div id="blog-posts-empty">No posts yet, Stay tuned!</div>
     </section>
@@ -66,7 +73,24 @@ export const Experience = ({ position, company, duration, logo }) => {
             All Posts
             <span class="nav-arrow"></span>
         </a>
-    </div>
+    </div> */}
+
+
+    {/* Highlights */}
+    ## Highlights
+    <section id="highlights">
+        <HighlightCard id={"source-snippet-highlight"}>
+            🌍 Launched a new website <a href="https://sourcesnippet.com/">SourceSnippet.com</a>
+        </HighlightCard>
+
+        <HighlightCard id={"sprite-sheet-maker-highlight"}>
+            ⭐ My blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> crossed <span id="plugin-download-count">3600</span>+ downloads!
+        </HighlightCard>
+
+        <HighlightCard id={"sprite-sheet-maker-highlight"}>
+            🚀 Updated my npm package <a href="https://www.npmjs.com/package/host-mdx">host-mdx</a> to version 2.4
+        </HighlightCard>
+    </section>
 
 
     {/* Projects */}
@@ -90,7 +114,7 @@ export const Experience = ({ position, company, duration, logo }) => {
         <Experience position={"Full Stack Engineer"} company={"Rentux"} duration={"Jan 2023 - Mar 2023"} logo={"static/rentux-logo.jpeg"} />
         <Experience position={"Internship"} company={"IIT Indore"} duration={"Sep 2022 - Oct 2022"} logo={"static/iit-indore-logo.jpeg"} />
     </section>
-    <a id="resume" href="https://drive.google.com/file/d/1L1Hd4A0dujbKC09UkHeZfjWXKTfqEEae/view?usp=sharing" target="_blank"><i className="fas fa-download"></i>Download Resume</a>
+    <a id="resume" href="https://drive.google.com/file/d/1L1Hd4A0dujbKC09UkHeZfjWXKTfqEEae/view?usp=sharing" target="_blank"> <span class="download-icon"></span> Download Resume</a>
 
 
     {/* Footer */}
