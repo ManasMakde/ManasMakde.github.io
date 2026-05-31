@@ -18,7 +18,7 @@ const BLOG_POSTS_SELECTOR = "#blog-posts-content";
 const BLOG_MORE_SELECTOR = "#blog-more";
 const BLOG_POSTS_COUNT = 3;
 const SNIPPET_CARD_CLASS = "card";
-const SNIPPETS_DIR = "/snippets/";
+const SNIPPETS_DIR = "/blog/";
 const SNIPPETS_INDEX_FILE = "index.mdx";
 const SNIPPETS_PER_FILE = 500;
 const SNIPPETS_DATA_DIR = "/static/data/";
@@ -273,6 +273,11 @@ async function buildSearchIndex(outputPath) {
     const { index } = await pagefind.createIndex();
     for (const key in snippetsMetaData) {
         let snippet = snippetsMetaData[key];
+        let isUnlisted = snippet?.isUnlisted ?? false;
+        if(isUnlisted){
+            continue
+        }
+
         let title = snippet?.title ?? UNTITLED_NAME;
         let description = snippet?.description ?? "";
         let thumbnail = snippet?.thumbnail ?? "";
@@ -358,7 +363,7 @@ export async function onFileChangeEnd(inputPath, outputPath, inFilePath, outFile
     let absSnippetsDir = path.join(inputPath, SNIPPETS_DIR)
     let inputFileName = path.basename(inFilePath);
     let metaData = result?.exports?.metaData;
-    if (!metaData || inputFileName != SNIPPETS_INDEX_FILE || !isSubPath(absSnippetsDir, inFilePath)) {
+    if (metaData?.isUnlisted ||!metaData || inputFileName != SNIPPETS_INDEX_FILE || !isSubPath(absSnippetsDir, inFilePath)) {
         return;
     }
 
@@ -462,7 +467,9 @@ export function modMDXCode(inputPath, outputPath, inFilePath, outFilePath, code)
     // Return if not snippet file
     let absSnippetsDir = path.join(inputPath, SNIPPETS_DIR)
     let inputFileName = path.basename(inFilePath);
-    if (inputFileName != SNIPPETS_INDEX_FILE || !isSubPath(absSnippetsDir, inFilePath)) {
+    let inputDirName = path.dirname(inFilePath)
+    let isDirectChild = path.resolve(absSnippetsDir) == path.resolve(inputDirName)
+    if (isDirectChild || inputFileName != SNIPPETS_INDEX_FILE || !isSubPath(absSnippetsDir, inFilePath)) {
         return code;
     }
 
