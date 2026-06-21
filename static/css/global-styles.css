@@ -685,6 +685,10 @@ footer a {
     -webkit-mask-image: url("/static/email-icon.png");
     mask-image: url("/static/email-icon.png");
 }
+#buymeacoffee::after {
+    -webkit-mask-image: url("/static/buymeacoffee-icon.png");
+    mask-image: url("/static/buymeacoffee-icon.png");
+}
 #bottom-note {
     margin-top: 1rem;
     font-size: 0.8rem;

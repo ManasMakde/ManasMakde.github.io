@@ -295,6 +295,7 @@ export function Footer({ }) {
             <a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a>
             <a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a>
             <a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a>
+            <a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a>
         </div>
         <div id="bottom-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div>
     </footer>)
