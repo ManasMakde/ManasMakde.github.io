@@ -54,7 +54,7 @@
 }
 .article-preview-date {
     font-size: 0.8rem;
-    color: var(--muted);
+    color: var(--color-text-muted);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

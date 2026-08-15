@@ -42,9 +42,9 @@ export function HTMLSkeleton({ title = "", extendHead = <></>, children }) {  //
             <head>
                 <meta charSet="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>{title}</title>
+                <title>{title} - {SITE_NAME}</title>
                 <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?" />
-                <link rel="stylesheet" href="/static/css/base.css" />
+                <link rel="stylesheet" href="/static/css/global-styles.css" />
                 {extendHead}
             </head>
             <body>
@@ -70,7 +70,7 @@ export function NavBar({ }) {
             <a href="/blog">Blog</a>
             <a href="/snippets">Snippets</a>
             <a href="/#projects">Projects</a>
-            <a href="/#contacts">Contact</a>
+            <a href="/#site-contacts">Contact</a>
         </nav>
     </>)
 }
@@ -136,10 +136,9 @@ export function BlogArticle({ metadata = {}, children }) {
     const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
     const thumbnail = metadata?.thumbnail ? new URL(metadata?.thumbnail, url).href : "";
     const defaultHead = (<>
-        <link rel="stylesheet" href="/static/css/global-styles.css" />
         <link rel="stylesheet" href="/static/css/code-styles.css" />
         <link rel="stylesheet" href="/static/css/blog-article.css" />
-        <script src="/static/js/blog-article.js"></script>
+        <script src="/static/js/blog-article.js" type="module"></script>
         {stylePathExists && <link rel="stylesheet" href={DEFAULT_ARTICLE_STYLES_FILE} />}
         {scriptPathExists && <script src={DEFAULT_ARTICLE_SCRIPT_FILE} type="module"></script>}
 
@@ -166,7 +165,7 @@ export function BlogArticle({ metadata = {}, children }) {
     </>);
 
 
-    return (<HTMLSkeleton title={`${metadata?.title}`} extendHead={[defaultHead, metadata?.extendHead]}>
+    return (<HTMLSkeleton title={metadata?.title} extendHead={[defaultHead, metadata?.extendHead]}>
 
         <Header />
         <SearchBar />

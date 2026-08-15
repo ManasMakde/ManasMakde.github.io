@@ -16,7 +16,7 @@
     ```
 1. Run the start command & you will see the website on `localhost:3000`
    ```
-   npm run start
+   npm start
    ```
 
 

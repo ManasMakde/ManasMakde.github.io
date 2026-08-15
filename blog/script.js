@@ -1,7 +1,10 @@
-import { BLOG_DATA_DIR, BLOG_PAGEFIND, BLOG_DATA_PREFIX, BLOG_STATS_FILE, SEARCH_QUERY, PAGE_QUERY } from "/static/js/global.js"
+import { BLOG_DATA_DIR, BLOG_PAGEFIND, BLOG_DATA_PREFIX, BLOG_STATS_FILE, SEARCH_QUERY, PAGE_QUERY, getSearchQueryFromUrl, getPageNumFromUrl, formatDate } from "/static/js/global.js"
+import { fetchArticles, initPagefind, setupSearchBar } from "/static/js/blog-search.js"
 
 
+// Properties
 const RESULTS_PER_PAGE = 10;
+const FALLBACK_ARTICLE_THUMBNAIL = "/static/images/fallback-article-thumbnail.png"
 const ERROR_LOADING_ARTICLES = "Error loading articles"
 const NO_ARTICLES_MESSAGE = "No posts yet, Stay tuned!"
 const QUERY_BANNER_SELECTOR = "#query-banner";
@@ -12,136 +15,126 @@ const ARTICLE_PREVIEW_DATE_CLASS = "article-preview-date"
 const ARTICLE_PREVIEW_DESCRIPTION_CLASS = "article-preview-description"
 const ARTICLE_PREVIEW_TITLE_LINK_CLASS = "article-preview-title-link"
 const LOADING_CLASS = "loading"
-const DATE_PUBLISHED_LABEL = "Published: "
-const DATE_EDITED_LABEL = "Edited: "
-let pagefind;
-let pagefindPromise = null;
+const DATE_PUBLISHED_LABEL = "Posted: "
+const DATE_EDITED_LABEL = "Updated: "
 
 
-// Search Methods
-async function fetchDefaultArticles(resultCount, skipCount = 0) {
-
-    // Get stats
-    const statsResponse = await fetch(`${BLOG_DATA_DIR}${BLOG_STATS_FILE}`);
-    const stats = await statsResponse.json();
-
-
-    // Setup variables
-    const { totalArticles, articlesPerFile } = stats;
-    let articles = [];
-    let totalFiles = Math.ceil(totalArticles / articlesPerFile);
-    let remainderArticles = totalArticles % articlesPerFile;
-    remainderArticles = remainderArticles || articlesPerFile;  // Round back reminder 0 to articlesPerFile
-    let deficitArticles = articlesPerFile - remainderArticles;
-    let skipFiles = Math.trunc((skipCount + deficitArticles) / articlesPerFile);
-    let skipIndex = (skipCount + deficitArticles) % articlesPerFile;
+// Pagination Properties
+const PAGINATION_BAR_SELECTOR = "#paginationbar";
+const PAGINATION_PREV_BTN_SELECTOR = ".paginationbar-prev";
+const PAGINATION_PAGE_1_SELECTOR = ".paginationbar-item:nth-of-type(2)";  // Intentionally not :nth-of-type(1) DO NOT CHANGE
+const PAGINATION_START_DOTS_SELECTOR = ".paginationbar-dots:nth-of-type(1)";
+const PAGINATION_PAGE_4_SELECTOR = ".paginationbar-item:nth-of-type(3)";
+const PAGINATION_PAGE_5_SELECTOR = ".paginationbar-item:nth-of-type(4)";
+const PAGINATION_ACTIVE_BTN_SELECTOR = ".paginationbar-active";
+const PAGINATION_PAGE_7_SELECTOR = ".paginationbar-item:nth-of-type(6)";
+const PAGINATION_PAGE_8_SELECTOR = ".paginationbar-item:nth-of-type(7)";
+const PAGINATION_END_DOTS_SELECTOR = ".paginationbar-dots:nth-of-type(2)";
+const PAGINATION_PAGE_11_SELECTOR = ".paginationbar-item:nth-of-type(8)";
+const PAGINATION_NEXT_BTN_SELECTOR = ".paginationbar-next";
 
 
-    // Iterate and fetch articles
-    for (let i = totalFiles - skipFiles - 1; 0 <= i && articles.length < resultCount; i--) {
-
-        // Fetch articles
-        const dataResponse = await fetch(`${BLOG_DATA_DIR}${BLOG_DATA_PREFIX}${i}.json`);
-        const data = await dataResponse.json();
-
-
-        // Add fetched articles to list
-        for (let j = articlesPerFile - skipIndex - 1; 0 <= j && articles.length < resultCount; j--) {
-            articles.push(data.articles[j]);
-        }
-
-
-        // Reset skip index
-        skipIndex = 0;
-    }
-
-    return {
-        articles,  // Articles data within resultCount
-        totalArticles: totalArticles   // Total available articles
-    };
+// Pagination Methods
+function buildPageUrl(pageNumber) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(PAGE_QUERY, pageNumber);
+    return url.toString();
 }
-async function fetchArticlesUnsafe(searchQuery, resultCount, skipCount) {
+async function setupPaginationBar(currentPage, totalPages) {
 
-    // fetch & return default articles if no query is provided
-    if (!searchQuery) {
-        return await fetchDefaultArticles(resultCount, skipCount);
+    // Return & hide if only 1 page
+    if (totalPages == 1) {
+        paginationBar.style.visibility = "hidden";
+        return;
     }
 
 
-    // Wait for pagefind if not initialized
-    const pf = await initPagefind();
+
+    // Get pagination bar
+    let paginationBar = document.querySelector(PAGINATION_BAR_SELECTOR);
+    paginationBar.style.visibility = "visible";  // Ensure pagination bar is visible
 
 
-    // Get all search results
-    const search = await pf.search(searchQuery || null, {});  // Intentionally adding null otherwise results don't show up DO NOT CHANGE
+    // Get all elements in pagination bar
+    let prevBtn = paginationBar.querySelector(PAGINATION_PREV_BTN_SELECTOR);
+    let page1 = paginationBar.querySelector(PAGINATION_PAGE_1_SELECTOR);
+    let startDots = paginationBar.querySelector(PAGINATION_START_DOTS_SELECTOR);
+    let page4 = paginationBar.querySelector(PAGINATION_PAGE_4_SELECTOR);
+    let page5 = paginationBar.querySelector(PAGINATION_PAGE_5_SELECTOR);
+    let pageActiveBtn = paginationBar.querySelector(PAGINATION_ACTIVE_BTN_SELECTOR);
+    let page7 = paginationBar.querySelector(PAGINATION_PAGE_7_SELECTOR);
+    let page8 = paginationBar.querySelector(PAGINATION_PAGE_8_SELECTOR);
+    let endDots = paginationBar.querySelector(PAGINATION_END_DOTS_SELECTOR);
+    let page11 = paginationBar.querySelector(PAGINATION_PAGE_11_SELECTOR);
+    let nextBtn = paginationBar.querySelector(PAGINATION_NEXT_BTN_SELECTOR);
 
 
-    // Iterate through search results 
-    const resultRange = search.results.slice(skipCount, skipCount + resultCount);
-    const articles = await Promise.all(resultRange.map(async (res) => {
-        const data = await res.data();
-        return {
-            url: data?.url ?? "",
-            ...(data?.meta ?? {})
-        };
-    }));
+    // Prev Button
+    let toShowPrev = (currentPage != 1);
+    prevBtn.style.display = toShowPrev ? "" : "none"
+    prevBtn.href = buildPageUrl(currentPage - 1);
 
 
-    return { articles, totalArticles: search.results.length };
-}
-async function fetchArticles(searchQuery, resultCount, skipCount = 0) {
-    try {
-        return await fetchArticlesUnsafe(searchQuery, resultCount, skipCount);
-    }
-    catch (err) {
-        console.error("Failed to fetch articles:", err);
-        return null;
-    }
-}
-async function initPagefind() {
-    if (!pagefindPromise) {
-        pagefindPromise = (async () => {
-            pagefind = await import(BLOG_PAGEFIND);
-            await pagefind.init();
-            return pagefind;
-        })();
-    }
-    return pagefindPromise;
-}
+    // Page 1 button
+    let toShowPage1 = (4 <= currentPage);
+    page1.style.display = toShowPage1 ? "" : "none";
+    page1.href = buildPageUrl(1);
+    page1.textContent = toShowPage1 ? 1 : "-";
 
 
-// Utility Method
-function getSearchQueryFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(SEARCH_QUERY) ?? "";
-}
-function getPageNumFromUrl() {
-    const pageNumber = Number(new URLSearchParams(window.location.search).get(PAGE_QUERY)) || 1;
-    return Math.max(pageNumber, 1);
-}
-function formatDate(dateInput) {
-
-    // Return if invalid
-    if (dateInput === undefined || dateInput === null) {
-        return "";
-    }
+    // Start Dots 
+    let toShowStartDots = (5 <= currentPage);
+    startDots.style.display = toShowStartDots ? "" : "none";
 
 
-    // Check if can be casted to Date type
-    let checkDateInput = new Date(dateInput);
-    if (isNaN(checkDateInput.getTime())) {
-        return dateInput;
-    }
+    // Page 4 button
+    let toShowPage4 = (3 <= currentPage);
+    page4.style.display = toShowPage4 ? "" : "none";
+    page4.href = buildPageUrl(currentPage - 2);
+    page4.textContent = toShowPage4 ? currentPage - 2 : "-";
 
 
-    // Format if of Date type
-    const formatter = new Intl.DateTimeFormat('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-    });
+    // Page 5 button
+    let toShowPage5 = (2 <= currentPage);
+    page5.style.display = toShowPage5 ? "" : "none";
+    page5.href = buildPageUrl(currentPage - 1);
+    page5.textContent = toShowPage5 ? currentPage - 1 : "-";
 
-    return formatter.format(checkDateInput);
+
+    // Active button
+    pageActiveBtn.textContent = currentPage;
+
+
+    // Page 7 button
+    let toShowPage7 = (totalPages >= currentPage + 1);
+    page7.style.display = toShowPage7 ? "" : "none";
+    page7.href = buildPageUrl(currentPage + 1);
+    page7.textContent = toShowPage7 ? currentPage + 1 : "-";
+
+
+    // Page 8 button
+    let toShowPage8 = (totalPages >= currentPage + 2);
+    page8.style.display = toShowPage8 ? "" : "none";
+    page8.href = buildPageUrl(currentPage + 2);
+    page8.textContent = toShowPage8 ? currentPage + 2 : "-";
+
+
+    // Ending Dots
+    let toShowEndDots = (currentPage < totalPages - 3);
+    endDots.style.display = toShowEndDots ? "" : "none";
+
+
+    // Page 11 button
+    let toShowPage11 = (currentPage < totalPages - 2);
+    page11.style.display = toShowPage11 ? "" : "none";
+    page11.href = buildPageUrl(totalPages);
+    page11.textContent = toShowPage11 ? totalPages : "-";
+
+
+    // Next button
+    let toShowNext = (currentPage != totalPages);
+    nextBtn.style.display = toShowNext ? "" : "none";
+    nextBtn.href = buildPageUrl(currentPage + 1);
 }
 
 
@@ -167,17 +160,15 @@ function fillArticlePreview(preview, data) {
 
     // Assign image link
     const imageLink = preview.querySelector(`.${ARTICLE_PREVIEW_IMG_LINK_CLASS}`);
+    const imgUrl = data?.thumbnail ? new URL(data?.thumbnail, window.location.origin + data?.url).href : FALLBACK_ARTICLE_THUMBNAIL;
     imageLink.href = data?.url ?? "";
 
 
     // Assign image
     const img = preview.querySelector("img");
-    img.src = data?.thumbnail ? new URL(data?.thumbnail, window.location.origin + data?.url).href : "";
+    img.src = imgUrl
     img.setAttribute("fetchpriority", "high");
     img.onerror = function () {
-        if (this.src !== "") {
-            this.src = "";
-        }
         this.classList.remove(LOADING_CLASS);
     };
     img.onload = function () {
@@ -269,10 +260,7 @@ function updateArticlePreviews(previewTemplate, articleDataList, toShowDates = t
         insertAfterEl = preview;
     }
 }
-
-
-// Main
-async function init() {
+async function setupArticlePreviews() {
 
     // Get articles
     let searchQuery = getSearchQueryFromUrl()
@@ -309,11 +297,25 @@ async function init() {
     updateArticlePreviews(previewTemplate, articlesData.articles);
 
 
-    // // Setup pagination bar only if there are enough articles to paginate
-    // if (RESULTS_PER_PAGE < totalArticles) {
-    //     const totalPages = 0 < totalArticles ? Math.ceil(totalArticles / RESULTS_PER_PAGE) : 1;
-    //     setupPaginationBtns(urlQueries.pageNumber, totalPages);
-    // }
+    // Setup pagination bar
+    const totalPages = 0 < articlesData.totalArticles ? Math.ceil(articlesData.totalArticles / RESULTS_PER_PAGE) : 1;
+    setupPaginationBar(pageNumber, totalPages);
+}
+
+
+// Main
+async function init() {
+
+    // Setup page find
+    initPagefind();
+
+
+    // Setup article previews
+    setupArticlePreviews()
+
+
+    // Setup searchbar if present
+    setupSearchBar();
 }
 
 init();

@@ -77,6 +77,7 @@ function gdscript(hljs) {
     };
 }
 
+
 // exports
 export default {
     scala,

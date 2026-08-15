@@ -7,7 +7,7 @@ import rehypeHighlight from "rehype-highlight";
 import remarkHeadingId from "remark-heading-id";
 import languages from "./static/js/languages.js";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
-import { SitemapStream, streamToPromise } from "sitemap";
+import { SitemapStream, streamToPromise, XMLToSitemapIndexStream } from "sitemap";
 import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA, SITE_DOMAIN } from "./static/js/global.js"
 
 
@@ -20,7 +20,7 @@ const CNAME_FILE = "CNAME";
 
 // Blog Properties
 let articlesMetadata = {};  // Format { "abs/path/to/article" : { title, thumbnail, ... }, ... }
-let areArticlesDirty = false;
+let areArticlesDirty = true;
 
 
 // Utility Methods

@@ -16,6 +16,7 @@
     display: block;
     max-width: 500px;
     width: 100%;
+    background-color: var(--color-surface);
 }
 #blog-article-card-title-wrapper {
     display: flex;

@@ -6,13 +6,6 @@
     margin: 0 auto;
     margin-bottom: 5rem;
 }
-.paginationbar-active {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-bg);
-    cursor: default;
-    pointer-events: none;
-}
 .paginationbar-item,
 .paginationbar-dots,
 .paginationbar-prev,
@@ -63,4 +56,11 @@
 .paginationbar-next::before {
     border-width: 2px 2px 0 0;
     transform: translate(-70%, -50%) rotate(45deg);
+}
+.paginationbar-active {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+    cursor: default;
+    pointer-events: none;
 }
