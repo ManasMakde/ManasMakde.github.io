@@ -1,0 +1,24 @@
+#site-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    margin: 0 auto 1.5rem auto;
+    width: fit-content;
+}
+#site-logo {
+    grid-row: 1 / span 2;
+    width: 4.5rem;
+    image-rendering: pixelated;
+}
+#site-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-text);
+    align-self: end;
+}
+#site-motto {
+    font-size: 1.1rem;
+    color: var(--color-accent);
+}

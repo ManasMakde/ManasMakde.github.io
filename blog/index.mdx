@@ -1,0 +1,51 @@
+import { HTMLSkeleton, Header, SearchBar, NavBar, PaginationBar, Footer } from "@/components.jsx";
+
+
+export function ArticlePreview({ id, imgSrc, title, date, description, link, isLoading = false, loadingClass = "loading" }) {
+    const removeLoadingFunction = isLoading ? `this.parentElement.classList.remove('${loadingClass}')` : "";
+    const errorFunction = ``;
+    return (<div id={id} className={`article-preview ${isLoading ? loadingClass : ""}`}>
+        <a href={link} className="article-preview-image-link">
+            <img className={isLoading ? loadingClass : ""} src={imgSrc} onError={errorFunction} onLoad={removeLoadingFunction} alt="thumbnail" fetchPriority="high" />
+        </a>
+
+        <div className="article-preview-body">
+            <a href={link} className="article-preview-title-link">
+                <h2 className="article-preview-title">{title}</h2>
+            </a>
+            <span className="article-preview-date">{date}</span>
+            <p className="article-preview-description">{description}</p>
+        </div>
+    </div>)
+}
+
+
+<HTMLSkeleton title={`Blog | Manas R. Makde`}>
+    <link rel="stylesheet" href="/static/css/global-styles.css" />
+    <link rel="stylesheet" href="/blog/styles.css" />
+    <script rel="modulepreload" src="/blog/script.js" type="module"></script>
+
+
+    {/* Header */}
+    <Header/>
+    <SearchBar/>
+    <NavBar />
+
+
+    {/* Query Banner */}
+    <h2 id="query-banner" style="display:none"></h2>
+
+
+    {/* Articles */}
+    <ArticlePreview isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+    <ArticlePreview isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+    <ArticlePreview isLoading={true} title="Plaecholder long title" date="12 May 2023" description="Some long description"/>
+
+
+    {/* Pagination Bar */}
+    <PaginationBar style={"visibility:hidden"}/>
+
+
+    {/* Footer */}
+    <Footer />
+</HTMLSkeleton>

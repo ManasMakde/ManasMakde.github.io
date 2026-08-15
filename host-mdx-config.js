@@ -3,16 +3,24 @@ import util from "util";
 import path from "path";
 import * as esbuild from "esbuild";
 import * as pagefind from "pagefind";
+import rehypeHighlight from "rehype-highlight";
 import remarkHeadingId from "remark-heading-id";
+import languages from "./static/js/languages.js";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import { SitemapStream, streamToPromise } from "sitemap";
+import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA, SITE_DOMAIN } from "./static/js/global.js"
 
 
 // To-Set Properties
-const SITE_DOMAIN = "https://manasmakde.github.io";
 const HOME_PAGE = "index.html";
 const INDEX_FOLDER = "/index";
 const ROBOTS_TXT_PATH = "robots.txt";
 const CNAME_FILE = "CNAME";
+
+
+// Blog Properties
+let articlesMetadata = {};  // Format { "abs/path/to/article" : { title, thumbnail, ... }, ... }
+let areArticlesDirty = false;
 
 
 // Utility Methods
@@ -54,6 +62,7 @@ function getFiles(dir, allFiles = []) {
     return allFiles;
 }
 function getCleanDomain(domain) {
+
     // Make sure there is a protocol so URL constructor works
     let urlString = domain.includes("://") ? domain : "https://" + domain;
 
@@ -175,17 +184,151 @@ function createCNAME(outputPath) {
 }
 
 
-// Override Methods
-export async function onFileChangeEnd(inputPath, outputPath, inFilePath, outFilePath, wasDeleted, result) {
+// Blog Methods
+function updateArticles(inputPath, inFilePath, wasDeleted, result) {
 
-    // If the file was deleted, Remove from snippets data
-    if (wasDeleted) {
+    // Return If the file was deleted
+    if (wasDeleted && articlesMetadata.hasOwnProperty(inFilePath)) {
+        delete articlesMetadata[inFilePath];
+        areArticlesDirty = true;
         return;
     }
 
 
+    // Return if not article file or has no meta data 
+    const absBlogDir = path.join(inputPath, BLOG_DIR);
+    const relativePath = path.relative(absBlogDir, inFilePath)
+    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep)) {
+        return
+    }
+
+
+    // Return if no metadata
+    if (!result?.exports?.metadata) {
+        return
+    }
+
+
+    // Return if meta data has not changed
+    let oldMetadata = articlesMetadata[inFilePath]
+    let url = `/${path.dirname(path.relative(inputPath, inFilePath))}/`
+    let newMetadata = { ...result?.exports?.metadata, url }
+    if (util.isDeepStrictEqual(oldMetadata, newMetadata)) {
+        return;
+    }
+
+
+    // Remove if not to be published
+    if (newMetadata?.toPublish === false) {
+        delete articlesMetadata[inFilePath];
+    }
+    else {  // Add/Update meta data
+        articlesMetadata[inFilePath] = newMetadata;
+    }
+
+
+    // Mark articles as "dirty" i.e. to be all updated later
+    areArticlesDirty = true;
+}
+function createArticlesData(outputPath) {
+
+    // Sort articles by date/title
+    const articlesList = Object.values(articlesMetadata).sort((a, b) => {
+
+        // Sort by Date
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        if (dateA !== dateB) {
+            return dateA - dateB;
+        }
+
+
+        // Fallback sort by title
+        const titleA = (a.title || "").toLowerCase();
+        const titleB = (b.title || "").toLowerCase();
+        return titleB.localeCompare(titleA);
+    });
+
+
+    // Create data folder
+    let absDataDir = path.join(outputPath, BLOG_DATA_DIR);
+    if (!fs.existsSync(absDataDir)) {
+        fs.mkdirSync(absDataDir);
+    }
+
+
+    // Create site data.json files
+    for (let i = 0; i < articlesList.length; i += ARTICLES_PER_FILE) {
+        const chunk = articlesList.slice(i, i + ARTICLES_PER_FILE);
+        const jsonContent = JSON.stringify({ articles: chunk });
+        const fileNumber = i / ARTICLES_PER_FILE;
+        const fileName = `${BLOG_DATA_PREFIX}${fileNumber}.json`;
+        fs.writeFileSync(path.join(absDataDir, fileName), jsonContent);
+    }
+
+
+    // Create stats file
+    let stats = {
+        totalArticles: articlesList.length,
+        articlesPerFile: ARTICLES_PER_FILE
+    }
+    fs.writeFileSync(path.join(outputPath, BLOG_DATA_DIR, BLOG_STATS_FILE), JSON.stringify(stats));
+}
+async function buildArticleSearchIndex(outputPath) {
+
+    // Add all records
+    const { index } = await pagefind.createIndex();
+    for (const key in articlesMetadata) {
+
+        // Skip if not searchable
+        let article = { ...DEFAULT_ARTICLES_METADATA, ...articlesMetadata[key] };
+        if (article?.isSearchable === false) {
+            continue
+        }
+
+
+        // Make all meta values string for Pagefind
+        const stringMeta = {};
+        for (const metaKey in article) {
+            let value = article[metaKey];
+            if (Array.isArray(value)) {
+                value = value.join(",")
+            } else if (value instanceof Date) {
+                value = value.toISOString()
+            } else if (typeof value !== "string") {
+                value = String(value)
+            }
+            stringMeta[metaKey] = value;
+        }
+
+
+        // Add record
+        const normalizedUrl = article.url.replace(/\\/g, "/");
+        await index.addCustomRecord({
+            url: normalizedUrl,
+            content: `${article.title} ${article.searchKeywords.join(" ")}`,
+            meta: stringMeta,
+            language: "en",
+        });
+    }
+
+
+    // Save all records
+    await index.writeFiles({
+        outputPath: path.join(outputPath, BLOG_SEARCH_DIR)
+    });
+}
+
+
+// Override Methods
+export async function onFileChangeEnd(inputPath, outputPath, inFilePath, outFilePath, wasDeleted, result) {
+
     // Compress file if js or css
     await compressFile(outFilePath);
+
+
+    // update article metadata
+    updateArticles(inputPath, inFilePath, wasDeleted, result);
 }
 export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasInterrupted) {
 
@@ -207,6 +350,13 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
     moveUpContents(path.join(outputPath, INDEX_FOLDER));
 
 
+    // Create article data & search index
+    if (areArticlesDirty) {
+        createArticlesData(outputPath)
+        await buildArticleSearchIndex(outputPath)
+    }
+
+
     // Create site map
     await generateSitemap(outputPath, SITE_DOMAIN);
 }
@@ -226,7 +376,7 @@ export function modBundleMDXSettings(inputPath, outputPath, settings) {
     }
 
 
-    // mdx options
+    // Mdx options
     var oldMdxOptions = settings.mdxOptions;
     settings.mdxOptions = (options) => {
         options = oldMdxOptions(options);
@@ -234,10 +384,31 @@ export function modBundleMDXSettings(inputPath, outputPath, settings) {
             ...(options.remarkPlugins ?? []),
             [remarkHeadingId, { defaults: true }],
         ];
+        options.rehypePlugins = [
+            ...(options.rehypePlugins ?? []),
+            [rehypeHighlight, { languages }],
+            [rehypeMdxCodeProps, { tagName: 'code' }]
+        ]
+
         return options
     }
 
     return settings
+}
+export function modMDXCode(inputPath, outputPath, inFilePath, outFilePath, code) {
+
+    // Return if not article file or has no meta data 
+    const absBlogDir = path.join(inputPath, BLOG_DIR);
+    const relativePath = path.relative(absBlogDir, inFilePath)
+    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep)) {
+        return
+    }
+
+
+    // Add wrapper
+    const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
+    code = `import Content, { metadata } from "${normalizedInFilePath}"; import { BlogArticle } from "@/components.jsx"; import * as BlogArticleComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<BlogArticle metadata={metadata}><Content components={BlogArticleComponents} /></BlogArticle>`
+    return code;
 }
 export async function toIgnore(inputPath, outputPath, targetPath) {
     const isGOutputStream = /\.goutputstream-\w+$/.test(targetPath);

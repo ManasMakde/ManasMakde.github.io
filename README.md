@@ -1,7 +1,6 @@
 # Portfolio Website
 
 ## 💻 Setup Locally
-
 1. Make sure you have [node.js](https://nodejs.org/en) installed along with npm.
 1. Clone this repository:
     ```
@@ -20,34 +19,34 @@
    npm run start
    ```
 
-## 📖 Template
+
+## 📖 Blog Article Template
 ~~~jsx
-export const metaData = {
+export const metadata = {
     title: 'Your Title',
+    description: "Your Description",
     thumbnail: "your-thumbnail.webp",
-    author: "Your Name",                        // Optional
-    authorWebsite: "https://yourwebsite.com/",  // Optional
-    createdOnDate: new Date("2023-11-01"), 
-    editedOnDate: new Date("2023-11-12"),       // Optional
-    isUnlisted: true,                           // Optional
-    tags: ["your", "tags", "here"],
-    keywords: ["your", "keywords", "here"]      // Optional, These are used purely in searching
-};
+    createdOnDate: new Date("2000-01-25"),
+    editedOnDate: new Date("2000-01-30"),
+    searchKeywords: ["your", "searchable", "keywords", "here"],
+    isSearchable: true,
+    toPublish: true,
+}
 
 
-How to write Hello World:
+Hi this is my blog!
 
 <CodeTabs id={"My-Code-Block"} activeIndex={1} dropdown={true} childrenStyle={"background-color:blue"}> 
 ```Python
-print("Hello World")
+print("Hello from blog!")
 ```
 
 ```txt display-name="Custom Name" style="background-color:green; height:10rem"
-Hello World!
+Hello from blog!
 ```
 </CodeTabs>
 ~~~
 
-## 🔑 License
 
+## 🔑 License
 MIT NON-AI © [Manas Ravindra Makde](https://manasmakde.github.io/)

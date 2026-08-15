@@ -1,0 +1,84 @@
+.searchbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 auto 2rem auto;
+    width: 100%;
+    max-width: 350px;
+    height: 2rem;
+}
+.searchbar input {
+    z-index: 1;
+    flex: 1;
+    height: 100%;
+    padding: 0 1rem !important;
+    border-right: none !important;
+    border-radius: 1rem 0 0 1rem !important;
+    outline: none;
+    max-width: none !important;
+    box-sizing: border-box;
+}
+.searchbar-btn {
+    z-index: 2;
+    height: 100%;
+    border-radius: 0 1rem 1rem 0;
+    padding: 0.5rem;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+    background-image: url("/static/images/search-icon.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    background-position: center;
+    background-color: transparent;
+    border-color: var(--color-border);
+    border-left: none;
+}
+.searchbar-dropdown {
+    display: none;
+    position: absolute;
+    height: fit-content;
+    box-sizing: border-box;
+    top: calc(100% - 1px);
+    left: 50%;
+    width: calc(100% - 1.5rem);
+    background-color: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-border), white 25%);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    transform: translate(-50%, 0);
+}
+.searchbar-dropdown a {
+    display: block;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-top: 1px solid color-mix(in srgb, var(--color-border), white 25%);
+}
+.searchbar-dropdown a:focus,
+.searchbar-dropdown a:active {
+    background-color: var(--color-accent-dull);
+}
+.searchbar-dropdown a:last-of-type {
+    border-bottom: 0;
+}
+.searchbar:focus-within .searchbar-dropdown,
+.searchbar input:active~.searchbar-dropdown,
+.searchbar input:focus~.searchbar-dropdown,
+.searchbar-btn:active~.searchbar-dropdown,
+.searchbar-btn:focus~.searchbar-dropdown,
+.searchbar-dropdown:focus,
+.searchbar-dropdown:active,
+.searchbar-dropdown:hover {
+    display: block;
+}
+.searchbar-more {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+.searchbar-nonefound,
+.searchbar-loading {
+    pointer-events: none;
+}

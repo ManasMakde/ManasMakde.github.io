@@ -1,0 +1,18 @@
+#site-navbar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+}
+#site-navbar a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+}
+#site-navbar a:hover {
+    color: var(--color-accent);
+}

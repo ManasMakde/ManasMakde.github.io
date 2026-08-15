@@ -48,8 +48,8 @@
     display: inline-block;
     width: 1.1rem;
     height: 1.1rem;
-    -webkit-mask: url('/static/arrow.png') no-repeat center / contain;
-    mask: url('/static/arrow.png') no-repeat center / contain;
+    -webkit-mask: url('/static/images/arrow.png') no-repeat center / contain;
+    mask: url('/static/images/arrow.png') no-repeat center / contain;
     background-color: var(--color-text);
     transition: background-color 0.2s ease-in-out;
 }
@@ -65,18 +65,14 @@
 #highlights a {
     text-decoration: underline;
 }
-.highlight-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1.1rem 1.2rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
+#highlights p {
+    margin: 0;
 }
 .highlight-card {
     align-items: center;
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 1.1rem 1.2rem;
+    padding: 0.5rem 1rem;
     border-radius: 6px;
     margin-bottom: 1rem;
     min-height: 2.5rem;
@@ -199,8 +195,8 @@
     height: 1.2rem;
     background-color: var(--muted);
     
-    -webkit-mask-image: url('/static/download-icon.png');
-    mask-image: url('/static/download-icon.png');
+    -webkit-mask-image: url('/static/images/download-icon.png');
+    mask-image: url('/static/images/download-icon.png');
     
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;

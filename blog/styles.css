@@ -1,0 +1,139 @@
+/* Core */
+:root {
+    --body-width: 750px;
+    --body-width-padding: 1rem;
+}
+
+
+/* Query banner */
+#query-banner {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text-muted);
+    word-break: break-word;
+}
+
+
+/* Article Preview */
+.article-preview {
+    --card-img-size: 130px;
+    --card-gap: 20px;
+    --card-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--card-gap);
+    padding-bottom: 1.5rem;
+    border-radius: var(--card-radius);
+    width: 100%;
+    box-sizing: border-box;
+}
+.article-preview-image-link {
+    flex-shrink: 0;
+    align-self: baseline;
+    width: 40%;
+    min-width: 80px;
+    aspect-ratio: 16 / 9;
+    display: block;
+    /* Ensures the anchor takes up the full space */
+}
+.article-preview img {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--card-radius);
+    object-fit: cover;
+    display: block;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+}
+.article-preview-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.article-preview-date {
+    font-size: 0.8rem;
+    color: var(--muted);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.article-preview-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    cursor: pointer;
+}
+.article-preview-description {
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-text) 75%, black);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    margin: 0;
+    margin-top: 0.5rem;
+}
+
+
+/* Article Preview Loading */
+/* Article Preview Loading */
+.article-preview.loading .article-preview-image-link,
+.article-preview.loading .article-preview-date,
+.article-preview.loading .article-preview-title,
+.article-preview.loading .article-preview-description {
+    background: var(--color-surface);
+    background: linear-gradient(90deg, var(--color-surface) 25%, color-mix(in srgb, var(--color-surface), white 12%) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    -webkit-animation: 1.5s card-shine linear infinite;
+    animation: 1.5s card-shine linear infinite;
+    color: transparent;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: none;
+    border-radius: 3px;
+}
+.article-preview.loading img {
+    visibility: hidden;
+}
+.article-preview.loading .article-preview-date {
+    width: fit-content;
+    /* height: 0.8rem; */
+}
+.article-preview.loading .article-preview-title {
+    width: fit-content;
+    /* height: 1.1rem;
+    display: block; */
+}
+.article-preview.loading .article-preview-description {
+    width: fit-content;
+    /* height: 3.5rem;
+    display: block; */
+}
+.article-preview.loading {
+    cursor: default;
+    pointer-events: none;
+}
+.article-preview.loading .article-preview-image-link img {
+    border: none;
+}
+@-webkit-keyframes card-shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+@keyframes card-shine {
+    to {
+        background-position-x: -200%;
+    }
+}
