@@ -1,0 +1,102 @@
+export const metadata = {
+    title: 'Fading downward arrow in pure css',
+    thumbnail: "down-fading-arrow.gif",
+    createdOnDate: new Date("2023-11-12"),
+    tags: ["html", "css", "scss"]
+}
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="arrow">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+```
+
+```CSS
+:root {
+  --arrow_size: 5rem;
+  --arrow_thickness: 1rem;
+  --arrow_color: dodgerblue;
+}
+
+.arrow {
+  display: block;
+  width: fit-content;
+  margin: auto;
+}
+
+.arrow :nth-child(1),
+.arrow :nth-child(2),
+.arrow :nth-child(3) {
+  height: var(--arrow_size);
+  width: var(--arrow_size);
+  display: block;
+  position: relative;
+  
+  box-sizing: border-box;
+  border: solid var(--arrow_color) var(--arrow_thickness);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+  
+  opacity: 1;
+  animation: arrow 3s infinite;
+}
+
+.arrow :nth-child(1) { animation-delay: -1s; }
+.arrow :nth-child(2) { animation-delay: -0.5s; }
+.arrow :nth-child(3) { animation-delay: 0s; }
+
+
+@keyframes arrow {
+  0% { opacity: 0 }
+  40% { opacity: 1 }
+  80% { opacity: 0 }
+  100% { opacity: 0 }
+}
+```
+
+```SCSS
+$arrow_size: 5rem;
+$arrow_thickness: 1rem;
+$arrow_color: dodgerblue;
+
+.arrow {
+  display: block;
+  width: fit-content;
+  margin: auto;
+
+  & :nth-child(1),
+  & :nth-child(2),
+  & :nth-child(3) {
+    height: $arrow_size;
+    width: $arrow_size;
+    display: block;
+    position: relative;
+
+    box-sizing: border-box;
+    border: solid $arrow_color $arrow_thickness;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+
+    opacity: 1;
+    animation: arrow 3s infinite;
+  }
+  
+  & :nth-child(1) { animation-delay: -1s; }
+  & :nth-child(2) { animation-delay: -0.5s; }
+  & :nth-child(3) { animation-delay: 0s; }
+}
+
+@keyframes arrow {
+  0% { opacity: 0 }
+  40% { opacity: 1 }
+  80% { opacity: 0 }
+  100% { opacity: 0 }
+}
+```
+</CodeTabs>

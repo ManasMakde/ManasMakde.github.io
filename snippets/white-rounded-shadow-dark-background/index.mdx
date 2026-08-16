@@ -1,0 +1,25 @@
+export const metadata = {
+    title: 'White rounded shadow on dark background',
+    thumbnail: "white-round-shadow.webp",
+    createdOnDate: new Date("2023-11-11"),
+    tags: ["html", "css"]
+}
+
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="item"></div>
+```
+
+```CSS
+.item {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+  background-color: crimson;
+  filter: drop-shadow(0 0 4rem white);
+  box-shadow: rgba(0, 0, 0, 1) 0.25rem 0.25rem 10px;
+}
+```
+</CodeTabs>

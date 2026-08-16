@@ -1,12 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { SITE_DOMAIN, SITE_NAME } from "./static/js/global.js"
+import { SITE_DOMAIN, SITE_NAME, TAGS_QUERY_PARAM } from "./static/js/global.js"
 
 
 // Properties
 const DEFAULT_BOTTOM_NOTE = <>Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></>
-export const DEFAULT_ARTICLE_STYLES_FILE = "styles.css";
-export const DEFAULT_ARTICLE_SCRIPT_FILE = "script.js";
+const DEFAULT_CODE_TAB_STYLE = "max-height:31rem";
+const DEFAULT_ARTICLE_STYLES_FILE = "styles.css";
+const DEFAULT_ARTICLE_SCRIPT_FILE = "script.js";
+const DEFAULT_SNIPPET_STYLES_FILE = "styles.css";
+const DEFAULT_SNIPPET_SCRIPT_FILE = "script.js";
+
+
+// CodeTabs Properties
+const LANGUAGE_CLASS_PREFIX = "hljs language-";
+const DISPLAY_NAME_PROP = "display-name";
 
 
 // Utility Methods
@@ -56,7 +64,7 @@ export function HTMLSkeleton({ title = "", extendHead = <></>, children }) {  //
 export function Header({ title = "Manas R. Makde" }) {
     return (<>
         <link rel="stylesheet" href="/static/css/header.css" />
-        <a id="site-header" href="/">
+        <a id="site-header" href="/" tabIndex="-1">
             <img id="site-logo" alt="logo" src={"/static/images/logo.png"} />
             <div id="site-title">{title}</div>
             <div id="site-motto">{"Let's keep it dead simple!"}</div>
@@ -78,7 +86,6 @@ export function SearchBar({ id = "searchbar" }) {
     return (<>
         <link rel="stylesheet" href="/static/css/searchbar.css" />
         <div id={id} className="searchbar">
-            {/* <script src="/static/js/search-bar.js" type="module"></script> */}
             <input type="text" placeholder="Search..." />
             <div className="searchbar-dropdown">
                 <div className="searchbar-results"></div>
@@ -124,6 +131,126 @@ export function Footer({ bottomNote = DEFAULT_BOTTOM_NOTE }) {
         </footer>
     </>)
 }
+export function CodeTabs({ activeIndex = 0, dropdown = false, id = undefined, style = {}, childrenStyle = DEFAULT_CODE_TAB_STYLE, children }) {
+
+    // Make sure children are in array format
+    if (!Array.isArray(children)) {
+        children = [children]
+    }
+
+
+    // Reset active index if it exceeds language count
+    if (children.length <= activeIndex) {
+        activeIndex = 0;
+    }
+
+
+    // Get Languages & set default active code block
+    let languages = []
+    for (let i = 0; i < children.length; i++) {
+
+        // Skip if not <pre>
+        let child = children[i];
+        if (child?.type !== "pre") {
+            continue;
+        }
+
+
+        // Skip if no subchildren
+        let subchildren = child?.props?.children;
+        if (!subchildren) {
+            return;
+        }
+
+
+        // Make sure subchildren are array
+        if (!Array.isArray(subchildren)) {
+            subchildren = [subchildren]
+        }
+
+
+        // Skip if not <code>
+        let firstSubchild = subchildren?.[0]
+        if (firstSubchild?.type !== "code") {
+            continue;
+        }
+
+
+        // Add common styles to children
+        let styleString = (childrenStyle !== "" ? `${childrenStyle};` : "") + (firstSubchild?.props?.style ? firstSubchild.props.style : "");
+        firstSubchild = Preact.cloneElement(firstSubchild, {
+            style: styleString != "" ? styleString : undefined
+        });
+
+
+        // Set as active if it matches index
+        children[i] = Preact.cloneElement(child, {
+            className: `${child.props.className || ""} ${i === activeIndex ? "codetabs-active" : ""}`,
+            children: firstSubchild
+        });
+
+
+        // Skip if no className or displayName props
+        if (!(firstSubchild?.props?.className instanceof String) && (firstSubchild?.props?.[DISPLAY_NAME_PROP] instanceof String)) {
+            continue;
+        }
+
+
+        // Get language from displayName
+        if (firstSubchild?.props?.[DISPLAY_NAME_PROP]) {
+            languages.push(firstSubchild?.props?.[DISPLAY_NAME_PROP]);
+            continue;
+        }
+
+
+        // Fallback by getting language from className
+        let language = firstSubchild?.props?.className?.replace(LANGUAGE_CLASS_PREFIX, "");
+        if (language) {
+            languages.push(language);
+        }
+    }
+
+
+    // Assign topbar either button or dropdown
+    let topbarContent = (<></>)
+    if (dropdown) {
+        topbarContent = (<select name="codetabs-select" onchange="changeTab(this, this.value)">
+            {languages.map((lang, index) => (
+                <option key={index} value={index} selected={index === activeIndex}>
+                    {lang}
+                </option>
+            ))}
+        </select>)
+    }
+    else {
+        topbarContent = (<>{
+            languages.map((lang, index) => (
+                <button key={lang} className={index === activeIndex ? "codetabs-selected" : undefined} onclick={`changeTabByButton(this, ${index})`}>
+                    {lang}
+                </button>
+            ))
+        }</>)
+    }
+
+
+    return (<div className="codetabs" id={id} style={style}>
+        <script src="/static/js/codetabs.js"></script>
+        <div className="codetabs-topbar">{topbarContent}</div>
+        <button className="codetabs-copy" onclick="copyCode(this)"></button>
+        <div className="codetabs-content">
+            {children}
+        </div>
+    </div>)
+}
+export function Tags({ tags, assignHref = true }) {
+
+    // Return empty fragment if no tags
+    if (!tags || tags?.length == 0) {
+        return (<></>)
+    }
+
+    return tags?.map((tag, index) => (<a className="tag" key={index} href={assignHref ? `/snippets/?${TAGS_QUERY_PARAM}=${encodeURIComponent(tag.toLowerCase())}` : undefined}>{tag.toLowerCase()}</a>));
+}
 
 
 // Wrappers
@@ -136,9 +263,9 @@ export function BlogArticle({ metadata = {}, children }) {
     const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
     const thumbnail = metadata?.thumbnail ? new URL(metadata?.thumbnail, url).href : "";
     const defaultHead = (<>
-        <link rel="stylesheet" href="/static/css/code-styles.css" />
-        <link rel="stylesheet" href="/static/css/blog-article.css" />
-        <script src="/static/js/blog-article.js" type="module"></script>
+        <link rel="stylesheet" href="/static/css/code.css" />
+        <link rel="stylesheet" href="/static/css/article.css" />
+        <script src="/static/js/article.js" type="module"></script>
         {stylePathExists && <link rel="stylesheet" href={DEFAULT_ARTICLE_STYLES_FILE} />}
         {scriptPathExists && <script src={DEFAULT_ARTICLE_SCRIPT_FILE} type="module"></script>}
 
@@ -173,8 +300,8 @@ export function BlogArticle({ metadata = {}, children }) {
 
         <div id="blog-article-header">
             {metadata?.thumbnail && metadata?.thumbnail !== "" && <img id="blog-article-thumbnail" src={metadata?.thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
-            <div id="blog-article-card-title-wrapper">
-                <h1 id="blog-article-card-title">{metadata?.title ?? "Untitled"}</h1>
+            <div id="blog-article-title-wrapper">
+                <h1 id="blog-article-title">{metadata?.title ?? "Untitled"}</h1>
                 {metadata?.author && <a id="blog-article-author" className={!metadata?.authorWebsite && "blog-article-no-author"} href={metadata?.authorWebsite ? metadata?.authorWebsite : undefined}>By {metadata.author}</a>}
                 {metadata?.createdOnDate && <div id="blog-article-creation-date">Posted: {formatDate(metadata?.createdOnDate)}</div>}
                 {metadata?.editedOnDate && <div id="blog-article-update-date">Updated: {formatDate(metadata?.editedOnDate)}</div>}
@@ -185,5 +312,67 @@ export function BlogArticle({ metadata = {}, children }) {
 
         <Footer />
 
+    </HTMLSkeleton>)
+}
+export function Snippet({ metadata = {}, children }) {
+
+    // Default styles Component
+    const stylePathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_STYLES_FILE));
+    const scriptPathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_SCRIPT_FILE));
+    const title = `${metadata?.title}`;
+    const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
+    const thumbnail = metadata?.thumbnail ? new URL(metadata?.thumbnail, url).href : "";
+    const defaultHead = (<>
+        <link rel="stylesheet" href="/static/css/code.css" />
+        <link rel="stylesheet" href="/static/css/snippet.css" />
+        <script src="/static/js/snippet.js" type="module"></script>
+        {stylePathExists && <link rel="stylesheet" href={DEFAULT_SNIPPET_STYLES_FILE} />}
+        {scriptPathExists && <script src={DEFAULT_SNIPPET_SCRIPT_FILE} type="module"></script>}
+
+
+        {/* Meta Data */}
+        <meta name="description" content={title} />
+        <meta name="author" content={metadata?.author} />
+
+
+        {/* Preview card*/}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:url" content={url} />
+        <meta property="og:title" content={title} />
+        <meta property="og:image" content={thumbnail} />
+
+
+        {/* Twitter Preview card*/}
+        <meta name="twitter:site" content={SITE_NAME} />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={url} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:image" content={thumbnail} />
+    </>);
+
+
+    return (<HTMLSkeleton title={metadata?.title} extendHead={[defaultHead, metadata?.extendHead]}>
+        <Header />
+        <SearchBar />
+        <NavBar />
+
+        <div id="snippet-header">
+            {metadata?.thumbnail && metadata?.thumbnail !== "" && <img id="snippet-thumbnail" src={metadata?.thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
+            <div id="snippet-title-wrapper">
+                <h1 id="snippet-title">{metadata?.title ?? "Untitled"}</h1>
+                {metadata?.author && <a id="snippet-author" className={!metadata?.authorWebsite && "snippet-no-author"} href={metadata?.authorWebsite ? metadata?.authorWebsite : undefined}>By {metadata.author}</a>}
+                {metadata?.createdOnDate && <div id="snippet-creation-date">Posted: {formatDate(metadata?.createdOnDate)}</div>}
+                {metadata?.editedOnDate && <div id="snippet-update-date">Updated: {formatDate(metadata?.editedOnDate)}</div>}
+            </div>
+        </div>
+
+        <article id="snippet-content">{children}</article>
+
+        <div className="tag-container">
+            <Tags tags={metadata?.tags} />
+        </div>
+
+        <Footer />
     </HTMLSkeleton>)
 }

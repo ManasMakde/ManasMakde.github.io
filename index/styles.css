@@ -188,6 +188,7 @@
     padding: 0.5rem 0.75rem;
     align-items: center;
     text-decoration: none;
+    margin-bottom: 1rem;
 }
 #resume .download-icon {
     display: inline-block;

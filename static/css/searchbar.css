@@ -25,14 +25,22 @@
     padding: 0.5rem;
     cursor: pointer;
     aspect-ratio: 1 / 1;
-    background-image: url("/static/images/search-icon.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-origin: content-box;
-    background-position: center;
     background-color: transparent;
     border-color: var(--color-border);
     border-left: none;
+    position: relative;
+}
+.searchbar-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0.5rem;
+    background-image: url("/static/images/search-icon.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.searchbar-btn:hover::before {
+    filter: invert(1);
 }
 .searchbar-dropdown {
     display: none;

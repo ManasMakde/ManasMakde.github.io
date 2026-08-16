@@ -1,0 +1,123 @@
+export const metadata = {
+    title: "Pause & fade scrollbar in pure css",
+    thumbnail: "fading-scrollbar.gif",
+    createdOnDate: new Date("2023-11-04"),
+    editedOnDate: new Date("2023-11-12"),
+    tags: ["html", "css", "scss"]
+}
+
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="wrapper">
+  <article>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    sed do eiusmod tempor incididunt ut labore et dolore magna 
+    aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+    ullamco aboris nisi ut aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in voluptate
+    elit esse cillum dolore eu fugiat nulla pariatur.
+  </article>
+</div>
+```
+
+```CSS
+.wrapper {
+  width: 300px;
+  height: 200px;
+  margin: 100px auto;
+  overflow: auto;
+  white-space: nowrap;
+  border-radius: 3px;
+
+  -webkit-text-fill-color: black;
+  background-color: white;
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.5);
+
+  color: transparent;
+  transition: color 1s ease;
+  transition-delay: 0.5s;
+}
+
+.wrapper:hover {
+  color: #c4c4c4;
+  transition-duration: 200ms;
+  transition-delay: 0s;
+}
+
+.wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.wrapper::-webkit-scrollbar-thumb {
+  border: 10px solid;
+}
+
+.wrapper::-webkit-scrollbar-thumb:hover {
+  color: #acacac;
+}
+
+.wrapper::-webkit-scrollbar-thumb:active {
+  color: #7c7c7c;
+}
+
+article {
+  padding: 1rem;
+  font-size: 150%;
+  word-wrap: normal;
+  text-wrap: wrap;
+}
+```
+
+```SCSS
+.wrapper {
+  width: 300px;
+  height: 200px;
+  margin: 100px auto;
+  overflow: auto;
+  white-space: nowrap;
+  border-radius: 3px;
+
+  -webkit-text-fill-color: black;
+  background-color: white;
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.5);
+
+  color: transparent;
+  transition: color 1s ease;
+  transition-delay: 0.5s;
+
+  &:hover {
+    color: #c4c4c4;
+    transition-duration: 200ms;
+    transition-delay: 0s;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 10px solid;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    color: #acacac;
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    color: #7c7c7c
+  }
+
+}
+
+article {
+  padding: 1rem;
+  font-size: 150%;
+  word-wrap: normal;
+  text-wrap: wrap;
+}
+```
+</CodeTabs>

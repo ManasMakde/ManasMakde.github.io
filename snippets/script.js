@@ -1,20 +1,21 @@
-import { BLOG_DATA_DIR, BLOG_PAGEFIND, BLOG_DATA_PREFIX, BLOG_STATS_FILE, SEARCH_QUERY, PAGE_QUERY, getSearchQueryFromUrl, getPageNumFromUrl, formatDate } from "/static/js/global.js"
-import { fetchArticles, initArticlePagefind, setupSearchBar, CONTENT_TYPE } from "/static/js/search.js"
+import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_PAGEFIND, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SEARCH_QUERY, PAGE_QUERY } from "/static/js/global.js"
+import { getSearchQueryFromUrl, getPageNumFromUrl, getTagsQueryFromUrl, formatDate } from "/static/js/global.js"
+import { fetchSnippets, initSnippetPagefind, setupSearchBar, CONTENT_TYPE } from "/static/js/search.js"
 
 
 // Properties
-const RESULTS_PER_PAGE = 10;
-const FALLBACK_ARTICLE_THUMBNAIL = "/static/images/fallback-article-thumbnail.png"
-const ERROR_LOADING_ARTICLES = "Error loading articles"
-const NO_ARTICLES_MESSAGE = "No posts yet, Stay tuned!"
+const RESULTS_PER_PAGE = 12;
+const FALLBACK_SNIPPET_THUMBNAIL = "/static/images/fallback-snippet-thumbnail.png"
+const ERROR_LOADING_SNIPPETS = "Error loading snippets"
+const NO_SNIPPETS_MESSAGE = "No posts yet, Stay tuned!"
 const QUERY_BANNER_SELECTOR = "#query-banner";
-const ARTICLE_PREVIEW_CLASS = "article-preview"
-const ARTICLE_PREVIEW_IMG_LINK_CLASS = "article-preview-image-link"
-const ARTICLE_PREVIEW_TITLE_CLASS = "article-preview-title"
-const ARTICLE_PREVIEW_DATE_CLASS = "article-preview-date"
-const ARTICLE_PREVIEW_DESCRIPTION_CLASS = "article-preview-description"
-const ARTICLE_PREVIEW_TITLE_LINK_CLASS = "article-preview-title-link"
-const LOADING_CLASS = "loading"
+const SNIPPETS_CONTAINER_SELECTOR = ".snippets-preview-container"
+const SNIPPET_PREVIEW_CLASS = "snippet-preview"
+const SNIPPET_PREVIEW_THUMBNAIL_CLASS = "snippet-preview-thumbnail"
+const SNIPPET_PREVIEW_TITLE_CLASS = "snippet-preview-title"
+const SNIPPET_PREVIEW_TAGS_CLASS = "preview-tag-container"
+const SNIPPET_TAG_CLASS = "tag"
+const LOADING_CLASS = "is-loading"
 const DATE_PUBLISHED_LABEL = "Posted: "
 const DATE_EDITED_LABEL = "Updated: "
 
@@ -51,6 +52,7 @@ async function setupPaginationBar(currentPage, totalPages) {
     else {
         paginationBar.style.visibility = "visible";  // Ensure pagination bar is visible
     }
+
 
     // Get all elements in pagination bar
     let prevBtn = paginationBar.querySelector(PAGINATION_PREV_BTN_SELECTOR);
@@ -153,149 +155,148 @@ function assignQueryBanner(text) {
     // Assign into query Banner
     queryBannerElement.textContent = text;
 }
-function fillArticlePreview(preview, data) {
+function fillSnippetPreview(preview, data) {
 
-    // Assign image link
-    const imageLink = preview.querySelector(`.${ARTICLE_PREVIEW_IMG_LINK_CLASS}`);
-    const imgUrl = data?.thumbnail ? new URL(data?.thumbnail, window.location.origin + data?.url).href : FALLBACK_ARTICLE_THUMBNAIL;
-    imageLink.href = data?.url ?? "";
+    console.log(data)
+
+
+    // Assign thumbnail link
+    const thumbnailLink = preview.querySelector(`.${SNIPPET_PREVIEW_THUMBNAIL_CLASS}`);
+    thumbnailLink.href = data?.url ?? "";
 
 
     // Assign image
-    const img = preview.querySelector("img");
-    img.src = imgUrl
+    const img = thumbnailLink.querySelector("img");
+    const imgUrl = data?.thumbnail ? new URL(data.thumbnail, window.location.origin + data?.url).href : FALLBACK_SNIPPET_THUMBNAIL;
+    img.src = imgUrl;
     img.setAttribute("fetchpriority", "high");
     img.onerror = function () {
-        this.classList.remove(LOADING_CLASS);
+        thumbnailLink.classList.remove(LOADING_CLASS);
     };
     img.onload = function () {
-        this.classList.remove(LOADING_CLASS);
+        thumbnailLink.classList.remove(LOADING_CLASS);
     };
 
 
-    // Assign title link
-    const titleLink = preview.querySelector(`.${ARTICLE_PREVIEW_TITLE_LINK_CLASS}`);
+    // Assign title link and text
+    const titleLink = preview.querySelector(`.${SNIPPET_PREVIEW_TITLE_CLASS}`);
     titleLink.href = data?.url ?? "";
+    titleLink.title = data?.title ?? "";
+    titleLink.classList.remove(LOADING_CLASS);
+    const titleTextEl = titleLink.querySelector("div");
+    titleTextEl.textContent = data?.title ?? "";
 
 
-    // Assign title
-    const titleEl = preview.querySelector(`.${ARTICLE_PREVIEW_TITLE_CLASS}`);
-    titleEl.textContent = data?.title ?? "";
-
-
-    // Assign date
-    const dateEl = preview.querySelector(`.${ARTICLE_PREVIEW_DATE_CLASS}`);
-    const publishedDate = formatDate(data?.createdOnDate);
-    const editedDate = data?.editedOnDate ? formatDate(data.editedOnDate) : "";
-    dateEl.innerHTML = `${DATE_PUBLISHED_LABEL}${publishedDate}${editedDate ? `<br>${DATE_EDITED_LABEL}${editedDate}` : ""}`;
-
-
-    // Assign description
-    const descEl = preview.querySelector(`.${ARTICLE_PREVIEW_DESCRIPTION_CLASS}`);
-    descEl.textContent = data?.description ?? ""
+    // Assign tags
+    const tagsEl = preview.querySelector(`.${SNIPPET_PREVIEW_TAGS_CLASS}`);
+    tagsEl.classList.remove(LOADING_CLASS);
+    tagsEl.innerHTML = "";
+    const rawTags = data?.tags ?? [];
+    const tags = Array.isArray(rawTags) ? rawTags : typeof rawTags === "string" ? rawTags.split(",") : [];
+    for (let i = 0; i < tags.length; i++) {
+        const tagEl = document.createElement("a");
+        tagEl.className = SNIPPET_TAG_CLASS;
+        tagEl.href = `${SNIPPET_DIR}?tags=${encodeURIComponent(tags[i].toLowerCase())}`
+        tagEl.textContent = tags[i].toLowerCase();
+        tagsEl.appendChild(tagEl);
+    }
 }
-function clearArticlePreviews() {
-    const previews = document.querySelectorAll(`.${ARTICLE_PREVIEW_CLASS}`);
+function clearSnippetPreviews() {
+    const previews = document.querySelectorAll(`.${SNIPPET_PREVIEW_CLASS}`);
     previews.forEach(preview => preview.remove());
 }
-function updateArticlePreviews(previewTemplate, articleDataList, toShowDates = true) {
+function updateSnippetPreviews(previewTemplate, snippetDataList, toShowDates = true) {
 
-    // Find banner to insert after
-    let insertAfterEl = document.querySelector(QUERY_BANNER_SELECTOR)
-    if (insertAfterEl == null) {
-        console.warn("No query banner found!")
+    // Find container to populate
+    let containerEl = document.querySelector(SNIPPETS_CONTAINER_SELECTOR)
+    if (containerEl == null) {
+        console.warn("updateSnippetPreviews container not found")
         return;
     }
 
 
     // Clear existing
-    clearArticlePreviews()
+    clearSnippetPreviews()
 
 
     // Return if none provided
-    if (articleDataList.length === 0) {
+    if (snippetDataList.length === 0) {
         return;
     }
 
 
     // Add new cards
-    let currentMonthYear = null;
-    for (let i = 0; i < articleDataList.length; i++) {
+    for (let i = 0; i < snippetDataList.length; i++) {
 
-        // Get article data
-        const data = articleDataList[i];
-
-
-        // Insert month year heading when group changes
-        const articleDate = data?.createdOnDate ? new Date(data.createdOnDate) : null;
-        const monthYear = articleDate ? articleDate.toLocaleString("default", { month: "long", year: "numeric" }) : null;
-        if (toShowDates && monthYear && monthYear !== currentMonthYear) {
-            currentMonthYear = monthYear;
-            const heading = document.createElement("h2");
-            heading.textContent = monthYear;
-            insertAfterEl.insertAdjacentElement("afterend", heading);
-            insertAfterEl = heading;
-        }
+        // Get snippet data
+        const data = snippetDataList[i];
 
 
         // Clone template instead of using innerHTML
         const preview = previewTemplate.cloneNode(true);
-        preview.className = `${ARTICLE_PREVIEW_CLASS}`;
+        preview.className = `${SNIPPET_PREVIEW_CLASS}`;
 
 
-        // Fill details into article preview
+        // Fill details into snippet preview
         try {
-            fillArticlePreview(preview, data)
+            fillSnippetPreview(preview, data)
         }
         catch (err) {
             console.log(err);
         }
 
 
-        // Insert in order after last inserted element
-        insertAfterEl.insertAdjacentElement("afterend", preview);
-        insertAfterEl = preview;
+        // Append to container, keeps banner as first child
+        containerEl.appendChild(preview);
     }
 }
-async function setupArticlePreviews() {
+async function setupSnippetPreviews() {
 
-    // Get articles
+    // Get snippets
     let searchQuery = getSearchQueryFromUrl()
     let pageNumber = getPageNumFromUrl()
-    const articlesData = await fetchArticles(searchQuery, RESULTS_PER_PAGE, RESULTS_PER_PAGE * (pageNumber - 1))
+    let tags = getTagsQueryFromUrl()
+    const snippetsData = await fetchSnippets(searchQuery, RESULTS_PER_PAGE, tags, RESULTS_PER_PAGE * (pageNumber - 1))
 
 
     // Set banner text
     let bannerText = "";
-    if (articlesData == null) {
-        bannerText = ERROR_LOADING_ARTICLES;
+    if (snippetsData == null) {
+        bannerText = ERROR_LOADING_SNIPPETS;
     }
     else {
-        bannerText = searchQuery != "" ? `${articlesData.totalArticles} result${articlesData.totalArticles != 1 ? "s" : ""} for "${searchQuery}"` : (articlesData.totalArticles == 0) ? NO_ARTICLES_MESSAGE : "";
+        if (searchQuery != "" || tags.length != 0) {
+            bannerText = `${snippetsData.totalSnippets} ${snippetsData.totalSnippets == 1 ? "result" : "results"}`;
+            bannerText += searchQuery ? ` for "${searchQuery}"` : "";
+            bannerText += tags.length != 0 ? ` with ${tags.length == 1 ? "tag" : "tags"} [ ${tags.join(", ")} ]` : "";
+        }
+        else if (snippetsData.totalSnippets == 0) {
+            bannerText = NO_SNIPPETS_MESSAGE
+        }
     }
 
 
     // Clear previous previews
-    let previewTemplate = document.querySelector(`.${ARTICLE_PREVIEW_CLASS}`)
-    clearArticlePreviews()
+    let previewTemplate = document.querySelector(`.${SNIPPET_PREVIEW_CLASS}`)
+    clearSnippetPreviews()
 
 
     // Display banner
     assignQueryBanner(bannerText)
 
 
-    // Return if no articles
-    if (articlesData == null || articlesData.totalArticles == 0) {
+    // Return if no snippets
+    if (snippetsData == null || snippetsData.totalSnippets == 0) {
         return;
     }
 
 
-    // Add preview articles
-    updateArticlePreviews(previewTemplate, articlesData.articles);
+    // Add preview snippets
+    updateSnippetPreviews(previewTemplate, snippetsData.snippets);
 
 
     // Setup pagination bar
-    const totalPages = 0 < articlesData.totalArticles ? Math.ceil(articlesData.totalArticles / RESULTS_PER_PAGE) : 1;
+    const totalPages = 0 < snippetsData.totalSnippets ? Math.ceil(snippetsData.totalSnippets / RESULTS_PER_PAGE) : 1;
     setupPaginationBar(pageNumber, totalPages);
 }
 
@@ -304,15 +305,15 @@ async function setupArticlePreviews() {
 async function init() {
 
     // Setup page find
-    initArticlePagefind();
+    initSnippetPagefind();
 
 
-    // Setup article previews
-    await setupArticlePreviews()
+    // Setup snippet previews
+    setupSnippetPreviews()
 
 
     // Setup searchbar if present
-    setupSearchBar(CONTENT_TYPE.ARTICLE);
+    setupSearchBar(CONTENT_TYPE.SNIPPET);
 }
 
 init();

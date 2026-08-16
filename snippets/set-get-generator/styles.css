@@ -1,0 +1,21 @@
+#input-panel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+ 
+#input-panel select,
+#input-panel input[type="text"] {
+    width: auto;
+    max-width: none;
+}
+ 
+#input-panel .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    user-select: none;
+}

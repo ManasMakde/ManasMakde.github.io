@@ -1,0 +1,212 @@
+export const metadata = {
+    title: "Multi switch radio toggle options in pure css",
+    thumbnail: "multi-switch-toggle.gif",
+    createdOnDate: new Date("2023-11-07"),
+    editedOnDate: new Date("2023-11-12"),
+    tags: ["html", "css", "scss"]
+}
+
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="wrapper">
+    <label>
+        <input type="radio" name="example" checked>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png" />
+    </label>
+
+    <label>
+        <input type="radio" name="example">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png" />
+    </label>
+
+    <label>
+        <input type="radio" name="example">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png" />
+    </label>
+
+    <label>
+        <input type="radio" name="example">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png" />
+    </label>
+</div>
+```
+```CSS
+.wrapper {
+    background-color: black;
+    display: inline-block;
+    padding: 1rem;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked+img {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+img {
+    width: 3rem;
+    height: 3rem;
+
+    padding: 0.75rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+
+    cursor: pointer;
+    object-fit: contain;
+    overflow: visible;
+
+    transition: background-color 0.3s ease-out;
+}
+
+img:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+```
+</CodeTabs>
+
+If you like cleaner HTML you can also use :has() but beware of [browser support](https://caniuse.com/css-has),
+As it is not supported in firefox as of the time of writing
+
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="wrapper">
+
+  <label>
+    <input type="radio" name="example" checked>
+  </label>
+
+  <label>
+    <input type="radio" name="example">
+  </label>
+
+  <label>
+    <input type="radio" name="example">
+  </label>
+
+  <label>
+    <input type="radio" name="example">
+  </label>
+
+</div>
+```
+
+```CSS
+.wrapper {
+  background-color: black;
+  display: inline-block;
+  padding: 1rem;
+}
+
+input[type=radio] {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+
+  padding: 0.75rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+
+  cursor: pointer;
+  object-fit: contain;
+  overflow: visible;
+
+  background-origin: content-box;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  transition: background-color 0.3s ease-out;
+}
+
+label:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+label:has(input[type=radio]:checked) {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+label:nth-child(1) {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png");
+}
+
+label:nth-child(2) {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png");
+}
+
+label:nth-child(3) {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png");
+}
+
+label:nth-child(4) {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png");
+}
+```
+
+```SCSS
+.wrapper {
+  background-color: black;
+  display: inline-block;
+  padding: 1rem;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+
+  padding: 0.75rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+
+  cursor: pointer;
+  object-fit: contain;
+  overflow: visible;
+
+  background-origin: content-box;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  transition: background-color 0.3s ease-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:has(input[type="radio"]:checked) {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:nth-child(1) {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png")
+  }
+
+  &:nth-child(2) {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png")
+  }
+
+  &:nth-child(3) {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png")
+  }
+
+  &:nth-child(4) {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png")
+  }
+}
+```
+</CodeTabs>

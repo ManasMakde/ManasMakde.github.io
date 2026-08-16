@@ -1,0 +1,127 @@
+export const metadata = {
+    title: 'Popup / Toast notification in pure Javascript',
+    thumbnail: "toast.gif",
+    createdOnDate: new Date("2023-11-14"),
+    tags: ["html", "css", "javascript"]
+}
+
+
+<CodeTabs>
+```Javascript
+// Copy paste this code into your javascript & invoke toast("...") from anywhere
+
+const transiton_duration = 500
+const visible_duration = 3000
+
+let toast_timeout = null;
+const body_page = document.querySelector("body")
+const toast_el = Object.assign(document.createElement("div"), {
+  "style": `position: fixed;
+    bottom: 3rem;
+    right: 50%;
+    transform: translate(50%, 0);
+    z-index: 999;
+    padding: 1rem;
+    text-align:center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    border-radius:10px;
+    pointer-events: none;
+    opacity:0;
+    transition: opacity ${transiton_duration}ms;`,
+})
+
+function toast(txt) {
+
+  if (toast_timeout != undefined)
+    clearTimeout(toast_timeout);
+  else 
+    body_page.prepend(toast_el);
+
+  toast_el.innerText = txt;
+  setTimeout(() => toast_el.style.opacity = "1", 0);
+
+  toast_timeout = setTimeout(() => {
+    toast_el.style.opacity = "0"
+    toast_timeout = setTimeout(() => { toast_el.parentNode.removeChild(toast_el); toast_timeout = null }, transiton_duration);
+  }, visible_duration)
+
+}
+```
+</CodeTabs>
+
+To use in Html:
+
+```HTML
+<input type="button" onClick="toast('This is a toast!')" value="Click Me" />
+```
+
+To use in Javascript:
+
+```Javascript
+toast("This is a toast!")
+```
+
+<br />
+<hr />
+<br />
+
+Or if you prefer the cleaner version:
+
+
+<CodeTabs activeIndex={1}>
+```CSS
+.toast {
+    position: fixed;
+    bottom: 3rem;
+    right: 50%;
+    transform: translate(50%, 0);
+    z-index: 999;
+    padding: 1rem;
+    text-align:center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    border-radius:10px;
+    pointer-events: none;
+    opacity:0;
+    transition: opacity;
+}
+```
+
+```Javascript
+const transiton_duration = 500
+const visible_duration = 3000
+
+let toast_timeout = null;
+const body_page = document.querySelector("body")
+const toast_el = Object.assign(document.createElement("div"), {
+  "style": `transition-duration:${transiton_duration}ms;`,
+  "className": "toast"
+})
+
+function toast(txt) { // toast to notify extension actions to user
+
+  if (toast_timeout != undefined)  //if toast is already active
+    clearTimeout(toast_timeout);
+  else 
+    body_page.prepend(toast_el);
+  
+  toast_el.innerText = txt;
+  setTimeout(() => toast_el.style.opacity = "1", 0);
+
+  toast_timeout = setTimeout(() => {
+    toast_el.style.opacity = "0"
+
+    toast_timeout = setTimeout(() => {
+      toast_el.parentNode.removeChild(toast_el);
+      toast_timeout = null;
+
+    }, transiton_duration);
+
+  }, visible_duration)
+
+}
+```
+</CodeTabs>

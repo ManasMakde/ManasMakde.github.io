@@ -9,6 +9,7 @@ import languages from "./static/js/languages.js";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import { SitemapStream, streamToPromise, XMLToSitemapIndexStream } from "sitemap";
 import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA, SITE_DOMAIN } from "./static/js/global.js"
+import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SNIPPET_SEARCH_DIR, SNIPPETS_PER_FILE, DEFAULT_SNIPPETS_METADATA } from "./static/js/global.js"
 
 
 // To-Set Properties
@@ -21,6 +22,11 @@ const CNAME_FILE = "CNAME";
 // Blog Properties
 let articlesMetadata = {};  // Format { "abs/path/to/article" : { title, thumbnail, ... }, ... }
 let areArticlesDirty = true;
+
+
+// Snippet Properties
+let snippetsMetadata = {};  // Format { "abs/path/to/snippet" : { title, thumbnail, tags, ... }, ... }
+let areSnippetsDirty = true;
 
 
 // Utility Methods
@@ -185,6 +191,11 @@ function createCNAME(outputPath) {
 
 
 // Blog Methods
+function isArticle(inputPath, inFilePath) {
+    const absBlogDir = path.join(inputPath, BLOG_DIR);
+    const relativePath = path.relative(absBlogDir, inFilePath)
+    return !(relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep))
+}
 function updateArticles(inputPath, inFilePath, wasDeleted, result) {
 
     // Return If the file was deleted
@@ -195,10 +206,8 @@ function updateArticles(inputPath, inFilePath, wasDeleted, result) {
     }
 
 
-    // Return if not article file or has no meta data 
-    const absBlogDir = path.join(inputPath, BLOG_DIR);
-    const relativePath = path.relative(absBlogDir, inFilePath)
-    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep)) {
+    // Return if not article file
+    if (!isArticle(inputPath, inFilePath)) {
         return
     }
 
@@ -318,6 +327,154 @@ async function buildArticleSearchIndex(outputPath) {
         outputPath: path.join(outputPath, BLOG_SEARCH_DIR)
     });
 }
+function modArticleWrapper(inputPath, outputPath, inFilePath, outFilePath, code) {
+    const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
+    return `import Content, { metadata } from "${normalizedInFilePath}"; import { BlogArticle } from "@/components.jsx"; import * as BlogArticleComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<BlogArticle metadata={metadata}><Content components={BlogArticleComponents} /></BlogArticle>`
+}
+
+
+// Snippet Methods
+function isSnippet(inputPath, inFilePath) {
+    const absSnippetPath = path.join(inputPath, SNIPPET_DIR);
+    const relSnippetPath = path.relative(absSnippetPath, inFilePath)
+    return !(relSnippetPath.startsWith('..') || path.isAbsolute(relSnippetPath) || !relSnippetPath.includes(path.sep))
+}
+function updateSnippets(inputPath, inFilePath, wasDeleted, result) {
+
+    // Return If the file was deleted
+    if (wasDeleted && snippetsMetadata.hasOwnProperty(inFilePath)) {
+        delete snippetsMetadata[inFilePath];
+        areSnippetsDirty = true;
+        return;
+    }
+
+
+    // Return if not snippet file
+    if (!isSnippet(inputPath, inFilePath)) {
+        return
+    }
+
+
+    // Return if no metadata
+    if (!result?.exports?.metadata) {
+        return
+    }
+
+
+    // Return if meta data has not changed
+    let oldMetadata = snippetsMetadata[inFilePath]
+    let url = `/${path.dirname(path.relative(inputPath, inFilePath))}/`
+    let newMetadata = { ...result?.exports?.metadata, url }
+    if (util.isDeepStrictEqual(oldMetadata, newMetadata)) {
+        return;
+    }
+
+
+    // Remove if not to be published
+    if (newMetadata?.toPublish === false) {
+        delete snippetsMetadata[inFilePath];
+    }
+    else {  // Add/Update meta data
+        snippetsMetadata[inFilePath] = newMetadata;
+    }
+
+
+    // Mark snippets as "dirty" i.e. to be all updated later
+    areSnippetsDirty = true;
+}
+function createSnippetsData(outputPath) {
+
+    // Sort snippets by date/title
+    const snippetsList = Object.values(snippetsMetadata).sort((a, b) => {
+
+        // Sort by Date
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        if (dateA !== dateB) {
+            return dateA - dateB;
+        }
+
+
+        // Fallback sort by title
+        const titleA = (a.title || "").toLowerCase();
+        const titleB = (b.title || "").toLowerCase();
+        return titleB.localeCompare(titleA);
+    });
+
+
+    // Create data folder
+    let absDataDir = path.join(outputPath, SNIPPET_DATA_DIR);
+    if (!fs.existsSync(absDataDir)) {
+        fs.mkdirSync(absDataDir);
+    }
+
+
+    // Create site data.json files
+    for (let i = 0; i < snippetsList.length; i += SNIPPETS_PER_FILE) {
+        const chunk = snippetsList.slice(i, i + SNIPPETS_PER_FILE);
+        const jsonContent = JSON.stringify({ snippets: chunk });
+        const fileNumber = i / SNIPPETS_PER_FILE;
+        const fileName = `${SNIPPET_DATA_PREFIX}${fileNumber}.json`;
+        fs.writeFileSync(path.join(absDataDir, fileName), jsonContent);
+    }
+
+
+    // Create stats file
+    let stats = {
+        totalSnippets: snippetsList.length,
+        snippetsPerFile: SNIPPETS_PER_FILE
+    }
+    fs.writeFileSync(path.join(outputPath, SNIPPET_DATA_DIR, SNIPPET_STATS_FILE), JSON.stringify(stats));
+}
+async function buildSnippetSearchIndex(outputPath) {
+
+    // Add all records
+    const { index } = await pagefind.createIndex();
+    for (const key in snippetsMetadata) {
+
+        // Skip if not searchable
+        let snippet = { ...DEFAULT_SNIPPETS_METADATA, ...snippetsMetadata[key] };
+        if (snippet?.isSearchable === false) {
+            continue
+        }
+
+
+        // Make all meta values string for Pagefind
+        const stringMeta = {};
+        for (const metaKey in snippet) {
+            let value = snippet[metaKey];
+            if (Array.isArray(value)) {
+                value = value.join(",")
+            } else if (value instanceof Date) {
+                value = value.toISOString()
+            } else if (typeof value !== "string") {
+                value = String(value)
+            }
+            stringMeta[metaKey] = value;
+        }
+
+
+        // Add record
+        const normalizedUrl = snippet.url.replace(/\\/g, "/");
+        await index.addCustomRecord({
+            url: normalizedUrl,
+            content: `${snippet.title} ${snippet.searchKeywords.join(" ")}`,
+            meta: stringMeta,
+            filters: { tags: snippet?.tags ?? [] },
+            language: "en",
+        });
+    }
+
+
+    // Save all records
+    await index.writeFiles({
+        outputPath: path.join(outputPath, SNIPPET_SEARCH_DIR)
+    });
+}
+function modSnippetWrapper(inputPath, outputPath, inFilePath, outFilePath, code) {
+    const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
+    return `import Content, { metadata } from "${normalizedInFilePath}"; import { Snippet } from "@/components.jsx"; import * as SnippetComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<Snippet metadata={metadata}><Content components={SnippetComponents} /></Snippet>`
+}
 
 
 // Override Methods
@@ -329,6 +486,10 @@ export async function onFileChangeEnd(inputPath, outputPath, inFilePath, outFile
 
     // update article metadata
     updateArticles(inputPath, inFilePath, wasDeleted, result);
+
+
+    // update snippet metadata
+    updateSnippets(inputPath, inFilePath, wasDeleted, result);
 }
 export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasInterrupted) {
 
@@ -354,6 +515,13 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
     if (areArticlesDirty) {
         createArticlesData(outputPath)
         await buildArticleSearchIndex(outputPath)
+    }
+
+
+    // Create article data & search index
+    if (areSnippetsDirty) {
+        createSnippetsData(outputPath)
+        await buildSnippetSearchIndex(outputPath)
     }
 
 
@@ -397,18 +565,18 @@ export function modBundleMDXSettings(inputPath, outputPath, settings) {
 }
 export function modMDXCode(inputPath, outputPath, inFilePath, outFilePath, code) {
 
-    // Return if not article file or has no meta data 
-    const absBlogDir = path.join(inputPath, BLOG_DIR);
-    const relativePath = path.relative(absBlogDir, inFilePath)
-    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep)) {
-        return
+    // Add wrapper to article code
+    if (isArticle(inputPath, inFilePath)) {
+        return modArticleWrapper(inputPath, outputPath, inFilePath, outFilePath, code);
     }
 
 
-    // Add wrapper
-    const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
-    code = `import Content, { metadata } from "${normalizedInFilePath}"; import { BlogArticle } from "@/components.jsx"; import * as BlogArticleComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<BlogArticle metadata={metadata}><Content components={BlogArticleComponents} /></BlogArticle>`
-    return code;
+    // Add wrapper to snippet code
+    if (isSnippet(inputPath, inFilePath)) {
+        return modSnippetWrapper(inputPath, outputPath, inFilePath, outFilePath, code);
+    }
+
+    return code
 }
 export async function toIgnore(inputPath, outputPath, targetPath) {
     const isGOutputStream = /\.goutputstream-\w+$/.test(targetPath);

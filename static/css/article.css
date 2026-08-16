@@ -18,14 +18,14 @@
     width: 100%;
     background-color: var(--color-surface);
 }
-#blog-article-card-title-wrapper {
+#blog-article-title-wrapper {
     display: flex;
     justify-content: center;
     flex-direction: column;
     flex: 1;
     min-width: min(calc(100% - calc(var(--body-width-padding) * 2)), 370px);
 }
-#blog-article-card-title {
+#blog-article-title {
     display: inline-block;
     margin: 0;
     margin-bottom: 1.25rem;

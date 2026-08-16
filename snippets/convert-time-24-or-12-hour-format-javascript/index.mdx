@@ -1,0 +1,48 @@
+export const metadata = {
+    title: 'Convert any time to 24 or 12 hour format in Javascript',
+    thumbnail: "time-to-hours.png",
+    createdOnDate: new Date("2023-11-10"),
+    tags: ["javascript"]
+}
+
+
+<CodeTabs activeIndex={1}>
+```Javascript
+function TimeToHours(hours = 0, mins = 0, secs = 0, to12Hours = true) {
+
+    let postfix = ""
+
+    hours = Math.floor(hours) + Math.floor(mins / 60) + Math.floor(secs / 3600)
+    hours %= 24
+
+    mins = Math.floor(mins) + Math.floor(secs / 60)
+    mins %= 60
+
+    secs = Math.floor(secs)
+    secs %= 60
+
+
+    // Convert to 12hr
+    if (to12Hours) {
+        postfix = hours >= 12 ? " PM" : " AM"
+        hours %= 12
+        hours = hours ? hours : 12
+    }
+
+
+    // Convert to string
+    hours = String(hours).padStart(2, '0');
+    mins = String(mins).padStart(2, '0');
+    secs = String(secs).padStart(2, '0');
+
+    return `${hours}:${mins}:${secs}${postfix}`
+}
+```
+</CodeTabs>
+
+<br/>
+
+**Example**
+```
+TimeToHours(14, 80, 71) --> 03:21:11 PM
+```

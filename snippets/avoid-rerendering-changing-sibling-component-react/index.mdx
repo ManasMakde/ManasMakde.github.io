@@ -1,0 +1,347 @@
+export const metadata = {
+    title: 'Avoid Rerendering on changing sibling component in React.js & React Native',
+    thumbnail: "avoid-sibling-rerender-react.gif",
+    createdOnDate: new Date("2023-11-20"),
+    tags: ["react-native", "reactjs"]
+}
+
+
+**Traditional method** (Top part of gif)
+<CodeTabs>
+```jsx display-name="React Native"
+import { useRef, useState } from "react";
+import { View, StyleSheet, Button, Text } from "react-native";
+
+
+const CustomButton = (props) => {
+
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (<View style={styles.button_wrapper}>
+    <Button {...props} title="Toggle Color" color={"mediumseagreen"} />
+    <Text style={styles.render_text}>Render Count: {renderCounter.current}</Text>
+  </View>)
+}
+
+
+const CustomItem = ({ backColor }) => {
+
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (<View style={styles.item}>
+    <Text style={[{ backgroundColor: backColor }, styles.item_text]}>Sibling Component</Text>
+    <Text>Render Count:{renderCounter.current}</Text>
+  </View>)
+}
+
+
+export default function App() {
+
+  const [backColor, setBackColor] = useState("crimson")
+
+  return (<View style={styles.body}>
+    <CustomButton onPress={() => { setBackColor(val => val == "crimson" ? "dodgerblue" : "crimson") }} />
+    <CustomItem backColor={backColor} />
+  </View>)
+}
+
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor:"ghostwhite"
+  },
+  button_wrapper: {
+    width: "50%",
+    margin: 10
+  },
+  item: {
+    flex: 1,
+    height: 80,
+    margin: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  item_text: {
+    height: 50,
+    width: "100%",
+    borderRadius: 5,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  render_text: {
+    textAlign: "center",
+    marginTop: 5
+  }
+});
+```
+
+```jsx display-name="React.js"
+import { useRef, useState } from "react";
+
+
+const CustomButton = (props) => {
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (
+    <div style={styles.button_wrapper}>
+      <input type="button" {...props} value="Toggle Color"/>
+      <div style={styles.render_text}> Render Count: {renderCounter.current} </div>
+    </div>
+  );
+};
+
+
+const CustomItem = ({ backColor }) => {
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (
+    <div style={styles.item}>
+      <div style={{ backgroundColor: backColor, ...styles.item_text }}> Sibling Component </div>
+      <div>Render Count:{renderCounter.current}</div>
+    </div>
+  );
+};
+
+
+export default function App() {
+  const [backColor, setBackColor] = useState("crimson");
+
+  return (
+    <div style={styles.body}>
+      <CustomButton onClick={() => { setBackColor((val) => (val == "crimson" ? "dodgerblue" : "crimson")) }} />
+      <CustomItem backColor={backColor} />
+    </div>
+  );
+}
+
+
+const styles = {
+  body: {
+    display: "flex",
+    alignItems: "center"
+  },
+  button_wrapper: {
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    margin: 10
+  },
+  item: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    margin: "10px",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  item_text: {
+    width: "100%",
+    padding: "0.5rem",
+    borderRadius: 5,
+    color: "white",
+    textAlign: "center"
+  },
+  render_text: {
+    textAlign: "center",
+    marginTop: "10px"
+  }
+};
+```
+</CodeTabs>
+
+
+<br />
+
+
+**Optimized method** (Bottom part of gif)
+<CodeTabs>
+```jsx display-name="React Native"
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { View, StyleSheet, Button, Text } from "react-native";
+
+
+const CustomButton = (props) => {
+
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (<View style={styles.button_wrapper}>
+    <Button {...props} title="Toggle Color" color={"mediumseagreen"} />
+    <Text style={styles.render_text}>Render Count: {renderCounter.current}</Text>
+  </View>)
+}
+
+
+const CustomItem = forwardRef((props, ref) => {
+
+  const [backColor, setBackColor] = useState("crimson")
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  useImperativeHandle(ref, () => ({
+    toggleColor() {
+      setBackColor(val => val == "crimson" ? "dodgerblue" : "crimson")
+    }
+    // or
+    //
+    // toggleColor: ()=>{
+    //   setBackColor(val => val == "crimson" ? "dodgerblue" : "crimson")
+    // }
+
+  }), []);
+
+  return (<View style={styles.item}>
+    <Text style={[{ backgroundColor: backColor }, styles.item_text]}>Sibling Component</Text>
+    <Text>Render Count: {renderCounter.current}</Text>
+  </View>)
+})
+
+
+export default function App() {
+
+  const itemRef = useRef()
+
+  return (<View style={styles.body}>
+    <CustomButton onPress={() => { itemRef.current.toggleColor() }} />
+    <CustomItem ref={itemRef} />
+  </View>)
+}
+
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "ghostwhite"
+  },
+  button_wrapper: {
+    width: "50%",
+    margin: 10
+  },
+  item: {
+    flex: 1,
+    height: 80,
+    margin: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  item_text: {
+    height: 50,
+    width: "100%",
+    borderRadius: 5,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  render_text: {
+    textAlign: "center",
+    marginTop: 5
+  }
+});
+```
+
+```jsx display-name="React.js"
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+
+
+const CustomButton = (props) => {
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  return (<div style={styles.button_wrapper}>
+    <input type="button" {...props} value="Toggle Color" />
+    <div style={styles.render_text}> Render Count: {renderCounter.current} </div>
+  </div>);
+}
+
+
+const CustomItem = forwardRef((props, ref) => {
+  const [backColor, setBackColor] = useState("crimson");
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+
+  useImperativeHandle(ref, () => ({
+    toggleColor() {
+      setBackColor(val => val == "crimson" ? "dodgerblue" : "crimson")
+    }
+    // or
+    //
+    // toggleColor: ()=>{
+    //   setBackColor(val => val == "crimson" ? "dodgerblue" : "crimson")
+    // }
+
+  }), []);
+
+  return (<div style={styles.item}>
+    <div style={{ backgroundColor: backColor, ...styles.item_text }}> Sibling Component </div>
+    <div>Render Count:{renderCounter.current}</div>
+  </div>);
+})
+
+
+export default function App() {
+
+  const itemRef = useRef()
+
+  return (<div style={styles.body}>
+    <CustomButton onClick={() => { itemRef.current.toggleColor() }} />
+    <CustomItem ref={itemRef} />
+  </div>);
+}
+
+
+const styles = {
+  body: {
+    display: "flex",
+    alignItems: "center"
+  },
+  button_wrapper: {
+    width: "50%",
+    display: "flex",
+    flexDirection: "column",
+    margin: 10
+  },
+  item: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    margin: "10px",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  item_text: {
+    width: "100%",
+    padding: "0.5rem",
+    borderRadius: 5,
+    color: "white",
+    textAlign: "center"
+  },
+  render_text: {
+    textAlign: "center",
+    marginTop: "10px"
+  }
+};
+```
+</CodeTabs>
+
+<br />
+
+**References:**
+* [What is useImperativeHandle?](https://react.dev/reference/react/useImperativeHandle)
+* [How to use useImperativeHandle?](https://youtu.be/zpEyAOkytkU?si=F59NPRLxyjnHZhv8&t=48)
+* [How to declare functions inside objects in js?](https://stackoverflow.com/a/48645842/22302305)

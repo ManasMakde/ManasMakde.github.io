@@ -1,0 +1,176 @@
+/* Core */
+:root {
+    --body-width: 1400px;
+    --snippet-preview-color: #36383f;
+}
+
+
+/* Query banner */
+#query-banner {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text-muted);
+    word-break: break-word;
+}
+
+
+/* Snippet Preview */
+.snippets-preview-container {
+    --row-count: 4;
+    --item-width: calc(var(--body-width) / var(--row-count) - var(--gap));
+    --gap: 1.25rem;
+
+    display: grid;
+    gap: var(--gap);
+    margin: 0 auto;
+    margin-bottom: 4rem;
+    grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
+    max-width: calc((var(--item-width) * var(--row-count)) + (var(--gap) * (var(--row-count) - 1)));
+    justify-items: center;
+    width: 100%;
+}
+.snippet-preview {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--snippet-preview-color);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.snippet-preview-thumbnail {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    aspect-ratio: 16 / 9;
+    background-color: var(--color-surface);
+    box-sizing: border-box;
+}
+.snippet-preview-thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0 auto;
+}
+.snippet-preview-title {
+    --margin: 0.75rem;
+    display: flex;
+    height: 5rem;
+    width: calc(100% - var(--margin) * 2);
+    margin: 0.75rem var(--margin) 0.75rem var(--margin);
+    margin-bottom: 0.5rem;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* text-align: center; */
+    cursor: pointer;
+    line-height: 1.4;
+    flex: 1;
+    min-height: 5.5rem;
+}
+.snippet-preview-title div {
+    height: fit-content;
+    width: 100%;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+/* Tag container */
+.preview-tag-container {
+    display: flex;
+    margin: 0 0.75rem;
+    height: 2.25rem;
+    gap: 0.5rem;
+    white-space: nowrap;
+    /* -webkit-text-fill-color: black; */
+    overflow-x: scroll;
+    overflow-y: clip;
+    color: transparent;
+}
+.preview-tag-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.preview-tag-container::-webkit-scrollbar-thumb {
+    border: 8px solid;
+    border-radius: 1rem;
+}
+.preview-tag-container::-webkit-scrollbar-thumb:hover {
+    color: darkgray;
+}
+.preview-tag-container:active,
+.preview-tag-container:hover,
+.preview-tag-container:focus {
+    color: lightgray;
+}
+
+
+/* Tags */
+.tag {
+    display: inline-block;
+    background-color: var(--color-accent-vibrant);
+    /* box-sizing: border-box; */
+    border-radius: 3px;
+    padding: 2px 6px;
+    /* text-decoration: none; */
+    height: fit-content;
+    margin-bottom: 3px;
+    font-size: 0.75rem;
+    width: fit-content;
+    font-weight: 500;
+    color: var(--color-text);
+    width: fit-content;
+    border: 1px solid color-mix(in srgb, var(--color-accent-vibrant), white 7.5%);
+}
+.tag:hover {
+    cursor: pointer;
+    color: var(--color-bg);
+    background-color: var(--color-accent);
+    border: 1px solid color-mix(in srgb, var(--color-accent), white 25%);
+}
+
+
+/* Snippet Preview Loading */
+.snippet-preview-thumbnail.is-loading,
+.snippet-preview-title.is-loading div,
+.preview-tag-container.is-loading .tag {
+    background: var(--color-surface);
+    background: linear-gradient(90deg, var(--color-surface) 25%, color-mix(in srgb, var(--color-surface), white 8%) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    -webkit-animation: 2s shine linear infinite;
+    animation: 2s shine linear infinite;
+    color: transparent;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: none;
+}
+.snippet-preview-title.is-loading {
+    cursor: default;
+}
+.snippet-preview-title.is-loading div {
+    width: 100%;
+    height: 2rem;
+    border-radius: 3px;
+}
+.snippet-preview-thumbnail.is-loading img {
+    visibility: hidden;
+}
+@-webkit-keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+@keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}

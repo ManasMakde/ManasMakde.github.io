@@ -3,10 +3,9 @@ import { HTMLSkeleton, Header, SearchBar, NavBar, PaginationBar, Footer } from "
 
 export function ArticlePreview({ id, imgSrc, title, date, description, link, isLoading = false, loadingClass = "loading" }) {
     const removeLoadingFunction = isLoading ? `this.parentElement.classList.remove('${loadingClass}')` : "";
-    const errorFunction = ``;
     return (<div id={id} className={`article-preview ${isLoading ? loadingClass : ""}`}>
         <a href={link} className="article-preview-image-link">
-            <img className={isLoading ? loadingClass : ""} src={imgSrc} onError={errorFunction} onLoad={removeLoadingFunction} alt="thumbnail" fetchPriority="high" />
+            <img className={isLoading ? loadingClass : ""} src={imgSrc} onLoad={removeLoadingFunction} onError={removeLoadingFunction} alt="thumbnail" fetchPriority="high" />
         </a>
 
         <div className="article-preview-body">

@@ -1,0 +1,107 @@
+export const metadata = {
+    title: 'Animated sidebar with device back button handling in react native',
+    thumbnail: "animated-sidebar-react-native.gif",
+    createdOnDate: new Date("2023-11-18"),
+    tags: ["react-native"]
+}
+
+
+<CodeTabs>
+```JSX
+import { useEffect, useRef, useState } from "react";
+import { Pressable, View, StyleSheet, Button, Animated, Dimensions, BackHandler, Text } from "react-native";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const sidebarWidth = Dimensions.get('window').width * 0.6;
+const duration = 200
+
+
+const SideBar = ({ sideAni, backgroundAni, menuOpen, setMenuOpen }) => {
+
+  useEffect(() => {
+
+    Animated.timing(sideAni, { toValue: !menuOpen ? 0 : 1, duration, useNativeDriver: true }).start();
+    Animated.timing(backgroundAni, { toValue: !menuOpen ? 0 : 1, duration, useNativeDriver: true }).start();
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      setMenuOpen(val => menuOpen ? false : val)
+      return menuOpen
+    });
+
+    return () => backHandler.remove();
+
+  }, [menuOpen])
+
+  return (<AnimatedPressable style={{
+    ...styles.sidebarBackground,
+    backgroundColor: backgroundAni.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)'],
+    })
+  }}
+    onPress={() => setMenuOpen(false)}
+    pointerEvents={!menuOpen ? "none" : "auto"}>
+
+    <Animated.View
+      style={{
+        ...styles.sidebar,
+        transform: [{ translateX: backgroundAni.interpolate({ inputRange: [0, 1], outputRange: [-sidebarWidth, 0], }) }]
+      }}
+      onStartShouldSetResponder={(event) => true}
+      onTouchEnd={(e) => { e.stopPropagation() }}
+      pointerEvents={!menuOpen ? "none" : "auto"}
+    >
+      <Text style={styles.customText}>Sidebar</Text>
+    </Animated.View>
+
+  </AnimatedPressable>)
+
+}
+
+export default function App() {
+
+  const backgroundAni = useRef(new Animated.Value(0)).current;
+  const sideAni = useRef(new Animated.Value(0)).current;
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  return (<View>
+    <Button
+      title="Toggle Sidebar"
+      onPress={() => {
+        setMenuOpen(val => !val)
+        Animated.timing(sideAni, { toValue: menuOpen ? 0 : 1, duration, useNativeDriver: true }).start();
+        Animated.timing(backgroundAni, { toValue: menuOpen ? 0 : 1, duration, useNativeDriver: true }).start();
+      }} />
+
+    <Text style={[styles.customText]}>Main Page</Text>
+
+    <SideBar {...{ sideAni, backgroundAni, menuOpen, setMenuOpen }} />
+
+  </View>)
+}
+
+
+const styles = StyleSheet.create({
+
+  sidebarBackground: {
+    height: "100%",
+    width: "100%",
+    position: "absolute"
+  },
+  sidebar: {
+    height: "100%",
+    width: "60%",
+    backgroundColor: "white",
+    elevation: 10,
+  },
+  customText: {
+    height: "100%",
+    fontWeight: "bold",
+    fontSize: 25,
+    color: "gray",
+    textAlign: "center",
+    textAlignVertical: "center",
+  }
+});
+```
+</CodeTabs>

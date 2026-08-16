@@ -1,0 +1,66 @@
+export const metadata = {
+    title: 'Set-Get generator in unity',
+    thumbnail: "set-get-generator.webp",
+    createdOnDate: new Date("2026-03-22"),
+    tags: ["unity", "c#"]
+}
+
+
+{/* Properties Panel */}
+<div id="input-panel">
+    <div style="position: relative;">
+        <select id="typeSelect">
+            <option>int</option>
+            <option>float</option>
+            <option>double</option>
+            <option>bool</option>
+            <option>string</option>
+            <option>char</option>
+            <option>long</option>
+            <option>uint</option>
+            <option>byte</option>
+            <option>short</option>
+            <option value="custom">Custom</option>
+        </select>
+    </div>
+
+    <input type="text" id="customTypeInput" placeholder="Type name" style="width: 130px; display: none;" />
+    <input type="text" id="varInput" value="myVar" style="width: 160px;" placeholder="variableName" />
+    <label class="checkbox-row">
+        <input type="checkbox" id="commentsCheck" checked /> Comments
+    </label>
+</div>
+
+
+{/* Output */}
+<CodeTabs childrenStyle={"min-height:26rem"}>
+    ```csharp display-name="Unity C#" id="output"
+    public event Action<int /* oldMyVar */, int /* newMyVar */> OnMyVarUpdated;
+
+    void SetMyVar(int newMyVar)
+    {
+        // Return if trying to assign the same value
+        if(newMyVar == myVar)
+        {
+            return;
+        }
+
+
+        // Store old point for broadcasting
+        var oldMyVar = myVar;
+        
+        
+        // Assign new point
+        myVar = newMyVar;
+        
+        
+        // Broadcast
+        OnMyVarUpdated?.Invoke(oldMyVar, newMyVar);
+    }
+
+    int GetMyVar()
+    {
+        return myVar;
+    }
+    ```
+</CodeTabs>

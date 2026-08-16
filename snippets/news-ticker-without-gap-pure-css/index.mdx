@@ -1,0 +1,104 @@
+export const metadata = {
+    title: 'News ticker without gap in pure CSS',
+    thumbnail: "news-ticker.gif",
+    createdOnDate: new Date("2024-02-25"),
+    tags: ["html", "css", "javascript"]
+}
+
+
+**Pure css version**
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="ticker-container">
+  <span class="ticker">
+    <div class="ticker-item">Breaking news!</div>
+    <div class="ticker-item">News Headline 1</div>
+    <div class="ticker-item">News Headline 2</div>
+    <div class="ticker-item">News Headline 3</div>
+  </span>
+
+  <!-- duplicate -->
+  <span class="ticker">
+    <div class="ticker-item">Breaking news!</div>
+    <div class="ticker-item">News Headline 1</div>
+    <div class="ticker-item">News Headline 2</div>
+    <div class="ticker-item">News Headline 3</div>
+  </span>
+</div>
+```
+
+```CSS
+.ticker-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: black;
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0;
+  margin-top: 40%
+}
+
+.ticker {
+  position: relative;
+  display: inline-flex;
+  justify-content:center;
+  white-space: nowrap;
+  animation-name: tick;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 10s;
+  min-width:fit-content;
+  width:100%;
+}
+
+.ticker-container:hover .ticker {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  display: inline-block;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  color: white;
+  font-weight: bold;
+  font-size: initial;
+}
+
+@keyframes tick {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-100%, 0);
+  }
+
+}
+```
+</CodeTabs>
+
+<br />
+
+
+**JavaScript version** (if you wish to avoid duplication)
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<div class="ticker-container">
+  <span class="ticker">
+    <div class="ticker-item">Breaking news!</div>
+    <div class="ticker-item">News Headline 1</div>
+    <div class="ticker-item">News Headline 2</div>
+    <div class="ticker-item">News Headline 3</div>
+  </span>
+</div>
+```
+```Javascript
+const ticker_container = document.querySelector(".ticker-container")
+const ticker = ticker_container.querySelector(".ticker")
+const duplicate_ticker = ticker.cloneNode(true)
+ticker_container.append(duplicate_ticker)
+```
+</CodeTabs>

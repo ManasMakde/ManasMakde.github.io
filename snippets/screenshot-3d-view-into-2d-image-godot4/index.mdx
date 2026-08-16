@@ -1,0 +1,32 @@
+export const metadata = {
+    title: 'Screenshot 3D view into 2D image in godot4',
+    thumbnail: "screenshot-3d-view-godot.webp",
+    createdOnDate: new Date("2024-04-06"),
+    tags: ["godot", "gdscript"]
+}
+
+
+<CodeTabs>
+
+```GDScript
+@tool
+extends Node2D
+
+@export var btn := false : set=set_btn
+
+func set_btn(new_val):
+	if !new_val:
+		return
+	
+	var sub_viewport = $SubViewport
+	var sprite2d = $Sprite2D
+	
+	# wait for drawing to complete
+	await RenderingServer.frame_pre_draw
+	await RenderingServer.frame_post_draw
+	
+	# capture image & set as texture
+	var new_image=sub_viewport.get_texture().get_image()
+	sprite2d.texture = ImageTexture.create_from_image(new_image)
+```
+</CodeTabs>

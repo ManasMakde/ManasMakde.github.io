@@ -32,9 +32,26 @@ export const metadata = {
     isSearchable: true,
     toPublish: true,
 }
+~~~
 
 
-Hi this is my blog!
+
+## 📖 Snippet Template
+~~~jsx
+export const metadata = {
+    title: 'Your Title',
+    description: "Your Description",
+    thumbnail: "your-thumbnail.webp",
+    createdOnDate: new Date("2000-01-25"),
+    editedOnDate: new Date("2000-01-30"),
+    tags: ["your", "tags", "here"],
+    searchKeywords: ["your", "searchable", "keywords", "here"],
+    isSearchable: true,
+    toPublish: true,
+}
+
+
+Hi this is my snippet!
 
 <CodeTabs id={"My-Code-Block"} activeIndex={1} dropdown={true} childrenStyle={"background-color:blue"}> 
 ```Python

@@ -1,0 +1,67 @@
+import { HTMLSkeleton, Header, SearchBar, NavBar, PaginationBar, Tags, Footer } from "@/components.jsx";
+
+
+export function SnippetPreview({ imgSrc, text, link, tags = [], isLoading = false, loadingClass = "is-loading" }) {
+
+    const removeLoadingFunction = isLoading ? `this.parentElement.classList.remove('${loadingClass}')` : ""
+
+    return (<div className="snippet-preview">
+        <a href={link} className={`snippet-preview-thumbnail ${isLoading ? loadingClass : ""}`} tabindex="-1">
+            <img src={imgSrc} onerror={removeLoadingFunction} onLoad={removeLoadingFunction} alt="thumbnail" fetchpriority="high" />
+        </a>
+        <a href={link} className={`snippet-preview-title ${loadingClass ? loadingClass : ""}`} title={text}>
+            <div>{text}</div>
+        </a>
+        <div className={`preview-tag-container ${loadingClass ? loadingClass : ""}`}>
+            <Tags tags={tags} assignHref={false} />
+        </div>
+    </div>)
+}
+
+
+<HTMLSkeleton title={`Snippets`}>
+    <link rel="stylesheet" href="/snippets/styles.css" />
+    <script rel="modulepreload" src="/snippets/script.js" type="module"></script>
+
+
+    {/* Header */}
+    <Header/>
+    <SearchBar/>
+    <NavBar />
+
+
+    {/* Query Banner */}
+    <h2 id="query-banner" style="display:none"></h2>
+
+
+    {/* Snippets */}
+    <main className="snippets-preview-container">
+        <SnippetPreview isLoading={true} tags={["typescript", "react", "nextjs", "tailwind"]}/>
+        <SnippetPreview isLoading={true} tags={["html", "css", "javascript"]}/>
+        <SnippetPreview isLoading={true} tags={["rust", "wasm"]}/>
+        <SnippetPreview isLoading={true} tags={["python", "django", "postgresql"]}/>
+
+        <SnippetPreview isLoading={true} tags={["swift", "ios", "swiftui"]}/>
+        <SnippetPreview isLoading={true} tags={["go", "docker", "kubernetes", "grpc"]}/>
+        <SnippetPreview isLoading={true} tags={["java", "spring-boot", "maven"]}/>
+        <SnippetPreview isLoading={true} tags={["ruby", "rails"]}/>
+        
+        <SnippetPreview isLoading={true} tags={["swift", "ios", "swiftui"]}/>
+        <SnippetPreview isLoading={true} tags={["kotlin", "android", "gdscript"]}/>
+        <SnippetPreview isLoading={true} tags={["csharp", "dotnet", "azure"]}/>
+        <SnippetPreview isLoading={true} tags={["php", "laravel"]}/>
+        
+        <SnippetPreview isLoading={true} tags={["c-plus-plus", "opengl"]}/>
+        <SnippetPreview isLoading={true} tags={["elixir", "phoenix"]}/>
+        <SnippetPreview isLoading={true} tags={["sql", "redis", "mongodb"]}/>
+        <SnippetPreview isLoading={true} tags={["dart", "flutter", "firebase"]}/>
+    </main>
+
+
+    {/* Pagination Bar */}
+    <PaginationBar style={"visibility:hidden"}/>
+
+
+    {/* Footer */}
+    <Footer />
+</HTMLSkeleton>

@@ -1,0 +1,189 @@
+export const metadata = {
+    title: 'Toggle theme button in pure css',
+    thumbnail: "theme-btn.gif",
+    createdOnDate: new Date("2023-11-13"),
+    tags: ["html", "css", "scss"]
+}
+
+
+
+<CodeTabs activeIndex={1}>
+```HTML
+<input type="checkbox" id="theme_btn" checked>
+```
+
+```CSS
+:root {
+  --theme_light_color: #e08712;
+  --theme_dark_color: white;
+  --moon_clip_color: white;
+  --theme_switch_duration: 0.5s;
+  --sun_line_length: 15px;
+  --sun_line_thickness: 5px;
+  --sun_line_offset: 5px;
+
+  --light_grad: transparent calc(50% - var(--sun_line_thickness)/2), var(--theme_light_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px), transparent calc(50% + var(--sun_line_thickness)/2);
+  --dark_grad:  transparent calc(50% - var(--sun_line_thickness)/2), var(--theme_dark_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px), transparent calc(50% + var(--sun_line_thickness)/2);
+}
+
+#theme_btn {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin: calc(var(--sun_line_length) + var(--sun_line_offset) + 10px);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  appearance: none;
+  background-color: var(--theme_light_color);
+  transition: transform var(--theme_switch_duration);
+}
+
+#theme_btn:checked {
+  background-color: var(--theme_dark_color);
+  transform: scale(1.3);
+}
+
+#theme_btn::after {
+  content: '';
+  position: absolute;
+  top:      calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+  bottom:   calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+  left:     calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+  right:    calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(0deg, var(--light_grad)),
+    linear-gradient(45deg, var(--light_grad)),
+    linear-gradient(-45deg, var(--light_grad)),
+    linear-gradient(90deg, var(--light_grad));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--sun_line_length)), #fff calc(100% - var(--sun_line_length)));
+  mask:         radial-gradient(farthest-side, transparent calc(100% - var(--sun_line_length)), #fff calc(100% - var(--sun_line_length)));
+  transition: transform var(--theme_switch_duration);
+}
+
+#theme_btn::before {
+  position: relative;
+  content: '';
+  display: block;
+  border-radius: inherit;
+  top:   calc(-100% - var(--sun_line_length) - var(--sun_line_offset));
+  right: calc(-100% - var(--sun_line_length) - var(--sun_line_offset));
+  background-color: var(--moon_clip_color);
+  height: inherit;
+  width: inherit;
+  transition: top var(--theme_switch_duration), right var(--theme_switch_duration);
+}
+
+#theme_btn:checked::before {
+  top: -30%;
+  right: -30%;
+}
+
+#theme_btn:checked::after {
+  transform: scale(0);
+  background:
+    linear-gradient(0deg, var(--dark_grad)),
+    linear-gradient(45deg, var(--dark_grad)),
+    linear-gradient(-45deg, var(--dark_grad)),
+    linear-gradient(90deg, var(--dark_grad));
+}
+
+body {
+  background: var(--moon_clip_color);
+}
+
+body:has(#theme_btn:checked){
+  --moon_clip_color: black;
+}
+```
+
+```SCSS
+:root {
+  --theme_light_color: #e08712;
+  --theme_dark_color: white;
+  --moon_clip_color: white;
+  --theme_switch_duration: 0.5s;
+  --sun_line_length: 15px;
+  --sun_line_thickness: 5px;
+  --sun_line_offset: 5px;
+
+  --light_grad: transparent calc(50% - var(--sun_line_thickness)/2), var(--theme_light_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px), transparent calc(50% + var(--sun_line_thickness)/2);
+  --dark_grad:  transparent calc(50% - var(--sun_line_thickness)/2), var(--theme_dark_color) calc(50% - var(--sun_line_thickness)/2 + 1px) calc(50% + var(--sun_line_thickness)/2 - 1px), transparent calc(50% + var(--sun_line_thickness)/2);
+}
+
+#theme_btn {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin: calc(var(--sun_line_length) + var(--sun_line_offset) + 10px);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  appearance: none;
+  background-color: var(--theme_light_color);
+  transition: transform var(--theme_switch_duration);
+
+  &:checked {
+    background-color: var(--theme_dark_color);
+    transform: scale(1.3);
+
+    &::before {
+      top: -30%;
+      right: -30%;
+    }
+
+    &::after {
+      transform: scale(0);
+      background:
+        linear-gradient(0deg, var(--dark_grad)),
+        linear-gradient(45deg, var(--dark_grad)),
+        linear-gradient(-45deg, var(--dark_grad)),
+        linear-gradient(90deg, var(--dark_grad));
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+    bottom: calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+    left: calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+    right: calc(-1*var(--sun_line_length) - var(--sun_line_offset));
+    z-index: -1;
+    border-radius: inherit;
+    background:
+      linear-gradient(0deg, var(--light_grad)),
+      linear-gradient(45deg, var(--light_grad)),
+      linear-gradient(-45deg, var(--light_grad)),
+      linear-gradient(90deg, var(--light_grad));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--sun_line_length)), #fff calc(100% - var(--sun_line_length)));
+    mask: radial-gradient(farthest-side, transparent calc(100% - var(--sun_line_length)), #fff calc(100% - var(--sun_line_length)));
+    transition: transform var(--theme_switch_duration);
+  }
+
+  &::before {
+    position: relative;
+    content: '';
+    display: block;
+    border-radius: inherit;
+    top: calc(-100% - var(--sun_line_length) - var(--sun_line_offset));
+    right: calc(-100% - var(--sun_line_length) - var(--sun_line_offset));
+    background-color: var(--moon_clip_color);
+    height: inherit;
+    width: inherit;
+    transition: top var(--theme_switch_duration), right var(--theme_switch_duration);
+  }
+}
+
+
+body {
+  background: var(--moon_clip_color);
+}
+
+body:has(#theme_btn:checked) {
+  --moon_clip_color: black;
+}
+```
+</CodeTabs>
