@@ -3,13 +3,14 @@ import util from "util";
 import path from "path";
 import * as esbuild from "esbuild";
 import * as pagefind from "pagefind";
+import { parseHTML } from 'linkedom';
 import rehypeHighlight from "rehype-highlight";
 import remarkHeadingId from "remark-heading-id";
 import languages from "./static/js/languages.js";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import { SitemapStream, streamToPromise, XMLToSitemapIndexStream } from "sitemap";
 import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA, SITE_DOMAIN } from "./static/js/global.js"
-import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SNIPPET_SEARCH_DIR, SNIPPETS_PER_FILE, DEFAULT_SNIPPETS_METADATA } from "./static/js/global.js"
+import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SNIPPET_SEARCH_DIR, SNIPPETS_PER_FILE, DEFAULT_SNIPPETS_METADATA, formatDate } from "./static/js/global.js"
 
 
 // To-Set Properties
@@ -20,6 +21,16 @@ const CNAME_FILE = "CNAME";
 
 
 // Blog Properties
+const LATEST_ARTICLES_COUNT = 3;
+const PLACEHOLDER_ARTICLE_IMAGE = "/static/placeholder.png"
+const LATEST_ARTICLES_SELECTOR = "#blog-posts-content"
+const LATEST_ARTICLES_HEADER_SELECTOR = "#latest-blog-posts"
+const ARTICLE_PREVIEW_SELECTOR = ".article-preview"
+const ARTICLE_PREVIEW_IMG_LINK_SELECTOR = ".article-preview-image-link"
+const ARTICLE_PREVIEW_TITLE_SELECTOR = ".article-preview-title"
+const ARTICLE_PREVIEW_DATE_SELECTOR = ".article-preview-date"
+const ARTICLE_PREVIEW_DESCRIPTION_SELECTOR = ".article-preview-description"
+const ARTICLE_PREVIEW_TITLE_LINK_SELECTOR = ".article-preview-title-link"
 let articlesMetadata = {};  // Format { "abs/path/to/article" : { title, thumbnail, ... }, ... }
 let areArticlesDirty = true;
 
@@ -331,6 +342,115 @@ function modArticleWrapper(inputPath, outputPath, inFilePath, outFilePath, code)
     const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
     return `import Content, { metadata } from "${normalizedInFilePath}"; import { BlogArticle } from "@/components.jsx"; import * as BlogArticleComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<BlogArticle metadata={metadata}><Content components={BlogArticleComponents} /></BlogArticle>`
 }
+function injectLatestArticles(outputPath) {
+
+    // Get articles
+    const articles = Object.values(articlesMetadata).sort((a, b) => {  // Sort Newest First
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        if (dateA !== dateB) {
+            return dateB - dateA;
+        }
+
+
+        // Fallback sort alphabetically by title
+        const titleA = (a.title || "").toLowerCase();
+        const titleB = (b.title || "").toLowerCase();
+        return titleA.localeCompare(titleB);
+    });
+
+
+    // Return if no home page found
+    const indexPath = path.join(outputPath, HOME_PAGE);
+    if (!fs.existsSync(indexPath)) {
+        console.warn(`${indexPath} not found for build-time article injection`);
+        return;
+    }
+
+
+    // Return if "latest blog posts" not found
+    const html = fs.readFileSync(indexPath, 'utf8');
+    const { document } = parseHTML(html);
+    const container = document.querySelector(LATEST_ARTICLES_SELECTOR);
+    if (!container) {
+        return;
+    }
+
+
+    // Return if no articles
+    const latestArticles = articles.slice(0, LATEST_ARTICLES_COUNT);
+    if (latestArticles.length === 0) {
+        document.querySelector(LATEST_ARTICLES_HEADER_SELECTOR)?.remove(); // Remove header
+        document.querySelector(LATEST_ARTICLES_SELECTOR)?.remove(); // Remove container
+        fs.writeFileSync(indexPath, document.toString());
+        return;
+    }
+
+
+    // Return if no placeholder templates found
+    const placeholderTemplates = Array.from(container.querySelectorAll(ARTICLE_PREVIEW_SELECTOR));
+    const previewTemplate = placeholderTemplates[0];
+    if (!previewTemplate) {
+        console.warn(`No template article preview found in ${indexPath}`);
+        return;
+    }
+
+
+    // Add first N articles
+    latestArticles.forEach(article => {
+
+        // Get article data
+        const thumbnail = article?.thumbnail;
+        const imgUrl = thumbnail ? path.join(article?.url ?? "", thumbnail) : PLACEHOLDER_IMAGE_URL;
+        const postedDateStr = formatDate(article?.createdOnDate);
+        const updatedDateStr = formatDate(article?.updatedOnDate);
+
+
+        // Clone template instead of using innerHTML
+        const preview = previewTemplate.cloneNode(true);
+
+
+        // Fill image link and img
+        const imageLink = preview.querySelector(ARTICLE_PREVIEW_IMG_LINK_SELECTOR);
+        imageLink.setAttribute("href", article?.url ?? "");
+        const img = preview.querySelector("img");
+        img.setAttribute("src", imgUrl);
+        img.setAttribute("alt", "thumbnail");
+        img.setAttribute("fetchpriority", "high");
+
+
+        // Fill title link
+        const titleLinkEl = preview.querySelector(ARTICLE_PREVIEW_TITLE_LINK_SELECTOR);
+        titleLinkEl.setAttribute("href", article?.url ?? "");
+
+
+        // Fill title
+        const titleEl = preview.querySelector(ARTICLE_PREVIEW_TITLE_SELECTOR);
+        titleEl.textContent = article?.title ?? "Untitled";
+
+
+        // Fill date
+        const dateEl = preview.querySelector(ARTICLE_PREVIEW_DATE_SELECTOR);
+        dateEl.textContent = postedDateStr;
+
+
+        // Fill description
+        const descEl = preview.querySelector(ARTICLE_PREVIEW_DESCRIPTION_SELECTOR);
+        descEl.textContent = article?.description ?? "";
+
+
+        // Insert before first placeholder to preserve its position in markup
+        container.insertBefore(preview, previewTemplate);
+    });
+
+
+    // Remove all placeholder templates now that real previews are in place
+    placeholderTemplates.forEach(placeholder => placeholder.remove());
+
+
+    // Write into HTML file
+    fs.writeFileSync(indexPath, document.toString());
+}
 
 
 // Snippet Methods
@@ -515,6 +635,7 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
     if (areArticlesDirty) {
         createArticlesData(outputPath)
         await buildArticleSearchIndex(outputPath)
+        injectLatestArticles(outputPath)
     }
 
 

@@ -1,6 +1,6 @@
 /* Core */
 :root {
-    --body-width: 750px;
+    --body-width: 800px;
     --body-width-padding: 1rem;
 }
 
@@ -23,19 +23,18 @@
     flex-direction: row;
     align-items: center;
     gap: var(--card-gap);
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
     border-radius: var(--card-radius);
     width: 100%;
     box-sizing: border-box;
 }
 .article-preview-image-link {
     flex-shrink: 0;
-    align-self: baseline;
+    align-self: center;
     width: 40%;
-    min-width: 80px;
+    min-width: 200px;
     aspect-ratio: 16 / 9;
     display: block;
-    /* Ensures the anchor takes up the full space */
 }
 .article-preview img {
     width: 100%;
@@ -58,6 +57,10 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    line-height: 1.5;
+}
+.article-preview-title-link{
+    margin-bottom: 0.5rem;
 }
 .article-preview-title {
     font-size: 1.1rem;

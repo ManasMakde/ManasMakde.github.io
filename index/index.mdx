@@ -1,4 +1,5 @@
 import { HTMLSkeleton, Header, NavBar, Footer } from "@/components.jsx";
+import { ArticlePreview } from "@/blog/index.mdx"
 
 
 {/* Properties */}
@@ -40,6 +41,7 @@ export const HighlightCard = ({ id, children }) => {
 
 
 <HTMLSkeleton title={`Portfolio`} description={DESCRIPTION}>
+    <link rel="stylesheet" href="/blog/styles.css" />
     <link rel="stylesheet" href="/styles.css" />
 
 
@@ -49,7 +51,7 @@ export const HighlightCard = ({ id, children }) => {
 
 
     {/* Intro */}
-    <section className="intro">
+    <section className="intro-content">
         Hi, I'm Manas (pronounced similar to <a id="similar-name" href="https://en.wikipedia.org/wiki/Midas#:~:text=The%20most%20famous%20King%20Midas,touch%2C%20or%20the%20Midas%20touch.">Midas</a>) & I've been a developer for 7+ years with focus on simplicity
         with maximum functionality.
 
@@ -61,22 +63,9 @@ export const HighlightCard = ({ id, children }) => {
     </section>
 
 
-    {/* Blog Posts */}
-    {/* ## Latest Posts
-    <section id="blog-posts-content" style="margin-bottom:0rem">
-        <div id="blog-posts-empty">No posts yet, Stay tuned!</div>
-    </section>
-    <div id="blog-more">
-        <a href="/blog">
-            All Posts
-            <span class="nav-arrow"></span>
-        </a>
-    </div> */}
-
-
     {/* Highlights */}
     ## Highlights
-    <section id="highlights">
+    <section id="highlights-content">
         <HighlightCard id={"sprite-sheet-maker-updated"}>
             ⭐ Updated my blender plugin <a href="https://extensions.blender.org/add-ons/sprite-sheet-maker/">Sprite Sheet Maker</a> to version 5.2.4
         </HighlightCard>
@@ -91,9 +80,17 @@ export const HighlightCard = ({ id, children }) => {
     </section>
 
 
+    {/* Latest Blog Posts */}
+    ## Latest Blog Posts
+    <section id="blog-posts-content">
+        <ArticlePreview />
+        <a class="see-all" href="/blog"><u>See all posts</u> -></a>
+    </section>
+
+
     {/* Projects */}
     ## Projects
-    <section id="projects">
+    <section id="projects-content">
         <Project text="Ben 10: Perplexaquest" imgSrc="static/images/ben-10-perplexaquest.png" link="https://manas-makde.itch.io/ben-10-perplexaquest" />
         <Project text="Sprite Sheet Maker" imgSrc="static/images/sprite-sheet-maker-banner.png" link="https://extensions.blender.org/add-ons/sprite-sheet-maker/" />
         <Project text="host-mdx" imgSrc="static/images/host-mdx.jpeg" link="https://github.com/ManasMakde/Turbo-Tetris" />
@@ -104,7 +101,7 @@ export const HighlightCard = ({ id, children }) => {
 
     {/* Experience */}
     ## Experience
-    <section id="experience">
+    <section id="experience-content">
         <Experience position={"Game Developer"} company={"Black March Studios"} duration={"Dec 2025 - Present"} logo={"static/images/black-march-studios-logo.jpeg"} />
         <Experience position={"Indie Game Developer"} company={"Eye Slash Studios"} duration={"Oct 2023 - Dec 2025"} logo={"static/images/indie-logo.png"} />
         <Experience position={"Full Stack Engineer"} company={"Sportzfy"} duration={"Sep 2023 - Oct 2023"} logo={"static/images/sportzfy-logo.png"} />
