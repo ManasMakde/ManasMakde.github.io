@@ -1,5 +1,6 @@
 import { HTMLSkeleton, Header, NavBar, Footer } from "@/components.jsx";
 import { ArticlePreview } from "@/blog/index.mdx"
+import { SnippetPreview } from "@/snippets/index.mdx"
 
 
 {/* Properties */}
@@ -42,6 +43,7 @@ export const HighlightCard = ({ id, children }) => {
 
 <HTMLSkeleton title={`Portfolio`} description={DESCRIPTION}>
     <link rel="stylesheet" href="/blog/styles.css" />
+    <link rel="stylesheet" href="/snippets/styles.css" />
     <link rel="stylesheet" href="/styles.css" />
 
 
@@ -84,8 +86,20 @@ export const HighlightCard = ({ id, children }) => {
     ## Latest Blog Posts
     <section id="blog-posts-content">
         <ArticlePreview />
-        <a class="see-all" href="/blog"><u>See all posts</u> -></a>
+        <ArticlePreview />
+        <ArticlePreview />
     </section>
+    <a id="see-all-articles" class="see-all" href="/blog"><u>See all posts</u> -></a>
+
+
+    {/* Latest Snippets */}
+    ## Latest Snippets
+    <section id="snippets-content">
+        <SnippetPreview />
+        <SnippetPreview />
+        <SnippetPreview />
+    </section>
+    <a id="see-all-snippets" class="see-all" href="/snippets"><u>See all snippets</u> -></a>
 
 
     {/* Projects */}

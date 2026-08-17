@@ -15,6 +15,7 @@
     box-sizing: border-box;
     display: block;
     max-width: 500px;
+    min-width: 100px;
     width: 100%;
     background-color: var(--color-surface);
 }

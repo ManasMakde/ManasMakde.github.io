@@ -15,8 +15,9 @@ export const BLOG_SEARCH_DIR = "/static/blog-search/";
 export const BLOG_PAGEFIND = `${BLOG_SEARCH_DIR}pagefind.js`;
 export const ARTICLES_PER_FILE = 500
 export const DEFAULT_ARTICLES_METADATA = {
-    title: 'Unknown',
+    title: 'Untitled',
     thumbnail: "",
+    description: "",
     createdOnDate: null,
     editedOnDate: null,
     searchKeywords: [],
@@ -34,7 +35,7 @@ export const SNIPPET_SEARCH_DIR = "/static/snippets-search/";
 export const SNIPPET_PAGEFIND = `${SNIPPET_SEARCH_DIR}pagefind.js`;
 export const SNIPPETS_PER_FILE = 500
 export const DEFAULT_SNIPPETS_METADATA = {
-    title: 'Unknown',
+    title: 'Untitled',
     thumbnail: "",
     createdOnDate: null,
     editedOnDate: null,
@@ -82,4 +83,51 @@ export function formatDate(dateInput) {
     });
 
     return formatter.format(checkDateInput);
+}
+export function getCleanDomain(domain) {
+
+    // Make sure there is a protocol so URL constructor works
+    let urlString = domain.includes("://") ? domain : "https://" + domain;
+
+
+    // Remove www.
+    try {
+        const url = new URL(urlString);
+        return url.hostname.replace(/^www\./, "");
+    } catch (e) {
+        return "";
+    }
+}
+export function isAbsUrl(url) {
+    try {
+        new URL(url);
+        return true;
+    } catch (_) {
+        return false
+    }
+}
+export function normalizeUrl(url) {
+    return url.replace(/\\/g, "/")
+}
+export function resolveUrl(url, baseUrl, fallbackUrl = "") {
+
+    // Return if absolute url
+    if (isAbsUrl(url)) {
+        return url
+    }
+
+
+    // Return fallback url
+    if (!url) {
+        return fallbackUrl
+    }
+
+
+    // normalize backslashes before trimming slashes
+    const normalizedBaseUrl = normalizeUrl(baseUrl)
+    const normalizedUrl = normalizeUrl(url)
+    const cleanBaseUrl = normalizedBaseUrl.replace(/\/+$/, '')
+    const cleanUrl = normalizedUrl.replace(/^\/+/, '')
+
+    return `${cleanBaseUrl}/${cleanUrl}`
 }

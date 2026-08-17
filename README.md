@@ -40,7 +40,6 @@ export const metadata = {
 ~~~jsx
 export const metadata = {
     title: 'Your Title',
-    description: "Your Description",
     thumbnail: "your-thumbnail.webp",
     createdOnDate: new Date("2000-01-25"),
     editedOnDate: new Date("2000-01-30"),

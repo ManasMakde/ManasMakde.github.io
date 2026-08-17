@@ -9,8 +9,9 @@ import remarkHeadingId from "remark-heading-id";
 import languages from "./static/js/languages.js";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import { SitemapStream, streamToPromise, XMLToSitemapIndexStream } from "sitemap";
-import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA, SITE_DOMAIN } from "./static/js/global.js"
-import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SNIPPET_SEARCH_DIR, SNIPPETS_PER_FILE, DEFAULT_SNIPPETS_METADATA, formatDate } from "./static/js/global.js"
+import { BLOG_DIR, BLOG_DATA_DIR, BLOG_DATA_PREFIX, BLOG_STATS_FILE, BLOG_SEARCH_DIR, ARTICLES_PER_FILE, DEFAULT_ARTICLES_METADATA } from "./static/js/global.js"
+import { SNIPPET_DIR, SNIPPET_DATA_DIR, SNIPPET_DATA_PREFIX, SNIPPET_STATS_FILE, SNIPPET_SEARCH_DIR, SNIPPETS_PER_FILE, DEFAULT_SNIPPETS_METADATA, } from "./static/js/global.js"
+import { SITE_DOMAIN, getCleanDomain, formatDate, normalizeUrl, resolveUrl } from "./static/js/global.js"
 
 
 // To-Set Properties
@@ -26,6 +27,7 @@ const PLACEHOLDER_ARTICLE_IMAGE = "/static/placeholder.png"
 const LATEST_ARTICLES_SELECTOR = "#blog-posts-content"
 const LATEST_ARTICLES_HEADER_SELECTOR = "#latest-blog-posts"
 const ARTICLE_PREVIEW_SELECTOR = ".article-preview"
+const SEE_ALL_ARTICLES_SELECTOR = "#see-all-articles"
 const ARTICLE_PREVIEW_IMG_LINK_SELECTOR = ".article-preview-image-link"
 const ARTICLE_PREVIEW_TITLE_SELECTOR = ".article-preview-title"
 const ARTICLE_PREVIEW_DATE_SELECTOR = ".article-preview-date"
@@ -36,6 +38,14 @@ let areArticlesDirty = true;
 
 
 // Snippet Properties
+const LATEST_SNIPPETS_COUNT = 3;
+const PLACEHOLDER_SNIPPET_IMAGE = "/static/placeholder.png"
+const LATEST_SNIPPETS_SELECTOR = "#snippets-content"
+const LATEST_SNIPPETS_HEADER_SELECTOR = "#latest-snippets"
+const SNIPPET_PREVIEW_SELECTOR = ".snippet-preview"
+const SEE_ALL_SNIPPETS_SELECTOR = "#see-all-snippets"
+const SNIPPET_PREVIEW_IMG_LINK_SELECTOR = ".snippet-preview-thumbnail"
+const SNIPPET_PREVIEW_TITLE_LINK_SELECTOR = ".snippet-preview-title"
 let snippetsMetadata = {};  // Format { "abs/path/to/snippet" : { title, thumbnail, tags, ... }, ... }
 let areSnippetsDirty = true;
 
@@ -78,20 +88,7 @@ function getFiles(dir, allFiles = []) {
     }
     return allFiles;
 }
-function getCleanDomain(domain) {
 
-    // Make sure there is a protocol so URL constructor works
-    let urlString = domain.includes("://") ? domain : "https://" + domain;
-
-
-    // Remove www.
-    try {
-        const url = new URL(urlString);
-        return url.hostname.replace(/^www\./, "");
-    } catch (e) {
-        return "";
-    }
-}
 
 
 // Primary Methods
@@ -231,7 +228,7 @@ function updateArticles(inputPath, inFilePath, wasDeleted, result) {
 
     // Return if meta data has not changed
     let oldMetadata = articlesMetadata[inFilePath]
-    let url = `/${path.dirname(path.relative(inputPath, inFilePath))}/`
+    let url = normalizeUrl(`/${path.dirname(path.relative(inputPath, inFilePath))}/`)
     let newMetadata = { ...result?.exports?.metadata, url }
     if (util.isDeepStrictEqual(oldMetadata, newMetadata)) {
         return;
@@ -323,7 +320,7 @@ async function buildArticleSearchIndex(outputPath) {
 
 
         // Add record
-        const normalizedUrl = article.url.replace(/\\/g, "/");
+        const normalizedUrl = normalizeUrl(article.url);
         await index.addCustomRecord({
             url: normalizedUrl,
             content: `${article.title} ${article.searchKeywords.join(" ")}`,
@@ -382,6 +379,7 @@ function injectLatestArticles(outputPath) {
     if (latestArticles.length === 0) {
         document.querySelector(LATEST_ARTICLES_HEADER_SELECTOR)?.remove(); // Remove header
         document.querySelector(LATEST_ARTICLES_SELECTOR)?.remove(); // Remove container
+        document.querySelector(SEE_ALL_ARTICLES_SELECTOR)?.remove(); // Remove see all
         fs.writeFileSync(indexPath, document.toString());
         return;
     }
@@ -399,22 +397,19 @@ function injectLatestArticles(outputPath) {
     // Add first N articles
     latestArticles.forEach(article => {
 
-        // Get article data
-        const thumbnail = article?.thumbnail;
-        const imgUrl = thumbnail ? path.join(article?.url ?? "", thumbnail) : PLACEHOLDER_IMAGE_URL;
-        const postedDateStr = formatDate(article?.createdOnDate);
-        const updatedDateStr = formatDate(article?.updatedOnDate);
-
-
         // Clone template instead of using innerHTML
         const preview = previewTemplate.cloneNode(true);
 
 
-        // Fill image link and img
+        // Fill image link
         const imageLink = preview.querySelector(ARTICLE_PREVIEW_IMG_LINK_SELECTOR);
         imageLink.setAttribute("href", article?.url ?? "");
+
+
+        // Fill image
+        const thumbnail = resolveUrl(article?.thumbnail, article?.url, PLACEHOLDER_ARTICLE_IMAGE)
         const img = preview.querySelector("img");
-        img.setAttribute("src", imgUrl);
+        img.setAttribute("src", thumbnail);
         img.setAttribute("alt", "thumbnail");
         img.setAttribute("fetchpriority", "high");
 
@@ -426,11 +421,12 @@ function injectLatestArticles(outputPath) {
 
         // Fill title
         const titleEl = preview.querySelector(ARTICLE_PREVIEW_TITLE_SELECTOR);
-        titleEl.textContent = article?.title ?? "Untitled";
+        titleEl.textContent = article?.title ?? "";
 
 
         // Fill date
         const dateEl = preview.querySelector(ARTICLE_PREVIEW_DATE_SELECTOR);
+        const postedDateStr = formatDate(article?.createdOnDate);
         dateEl.textContent = postedDateStr;
 
 
@@ -444,7 +440,7 @@ function injectLatestArticles(outputPath) {
     });
 
 
-    // Remove all placeholder templates now that real previews are in place
+    // Remove all placeholder templates
     placeholderTemplates.forEach(placeholder => placeholder.remove());
 
 
@@ -483,7 +479,7 @@ function updateSnippets(inputPath, inFilePath, wasDeleted, result) {
 
     // Return if meta data has not changed
     let oldMetadata = snippetsMetadata[inFilePath]
-    let url = `/${path.dirname(path.relative(inputPath, inFilePath))}/`
+    let url = normalizeUrl(`/${path.dirname(path.relative(inputPath, inFilePath))}/`)
     let newMetadata = { ...result?.exports?.metadata, url }
     if (util.isDeepStrictEqual(oldMetadata, newMetadata)) {
         return;
@@ -575,7 +571,7 @@ async function buildSnippetSearchIndex(outputPath) {
 
 
         // Add record
-        const normalizedUrl = snippet.url.replace(/\\/g, "/");
+        const normalizedUrl = normalizeUrl(snippet.url);
         await index.addCustomRecord({
             url: normalizedUrl,
             content: `${snippet.title} ${snippet.searchKeywords.join(" ")}`,
@@ -594,6 +590,103 @@ async function buildSnippetSearchIndex(outputPath) {
 function modSnippetWrapper(inputPath, outputPath, inFilePath, outFilePath, code) {
     const normalizedInFilePath = inFilePath.replaceAll(path.sep, '/');
     return `import Content, { metadata } from "${normalizedInFilePath}"; import { Snippet } from "@/components.jsx"; import * as SnippetComponents from "@/components.jsx"; export { metadata } from "${normalizedInFilePath}";\n\n<Snippet metadata={metadata}><Content components={SnippetComponents} /></Snippet>`
+}
+function injectLatestSnippets(outputPath) {
+
+    // Get snippets
+    const snippets = Object.values(snippetsMetadata).sort((a, b) => {  // Sort Newest First
+        const dateA = a.createdOnDate instanceof Date ? a.createdOnDate.getTime() : 0;
+        const dateB = b.createdOnDate instanceof Date ? b.createdOnDate.getTime() : 0;
+        if (dateA !== dateB) {
+            return dateB - dateA;
+        }
+
+
+        // Fallback sort alphabetically by title
+        const titleA = (a.title || "").toLowerCase();
+        const titleB = (b.title || "").toLowerCase();
+        return titleA.localeCompare(titleB);
+    });
+
+
+    // Return if no home page found
+    const indexPath = path.join(outputPath, HOME_PAGE);
+    if (!fs.existsSync(indexPath)) {
+        console.warn(`${indexPath} not found for build-time snippet injection`);
+        return;
+    }
+
+
+    // Return if latest snippets container not found
+    const html = fs.readFileSync(indexPath, 'utf8');
+    const { document } = parseHTML(html);
+    const container = document.querySelector(LATEST_SNIPPETS_SELECTOR);
+    if (!container) {
+        return;
+    }
+
+
+    // Return if no snippets
+    const latestSnippets = snippets.slice(0, LATEST_SNIPPETS_COUNT);
+    if (latestSnippets.length === 0) {
+        document.querySelector(LATEST_SNIPPETS_HEADER_SELECTOR)?.remove(); // Remove header
+        document.querySelector(LATEST_SNIPPETS_SELECTOR)?.remove(); // Remove container
+        document.querySelector(SEE_ALL_SNIPPETS_SELECTOR)?.remove(); // Remove see all
+        fs.writeFileSync(indexPath, document.toString());
+        return;
+    }
+
+
+    // Return if no placeholder templates found
+    const placeholderTemplates = Array.from(container.querySelectorAll(SNIPPET_PREVIEW_SELECTOR));
+    const previewTemplate = placeholderTemplates[0];
+    if (!previewTemplate) {
+        console.warn(`No template snippet preview found in ${indexPath}`);
+        return;
+    }
+
+
+    // Add first N snippets
+    latestSnippets.forEach(snippet => {
+
+        // Clone template instead of using innerHTML
+        const preview = previewTemplate.cloneNode(true);
+
+
+        // Fill image link
+        const imageLink = preview.querySelector(SNIPPET_PREVIEW_IMG_LINK_SELECTOR);
+        imageLink.setAttribute("href", snippet?.url ?? "");
+
+
+        // Fill image
+        const thumbnail = resolveUrl(snippet?.thumbnail, snippet?.url, PLACEHOLDER_SNIPPET_IMAGE)
+        const img = preview.querySelector("img");
+        img.setAttribute("src", thumbnail);
+        img.setAttribute("alt", "thumbnail");
+        img.setAttribute("fetchpriority", "high");
+
+
+        // Fill title link
+        const titleLinkEl = preview.querySelector(SNIPPET_PREVIEW_TITLE_LINK_SELECTOR);
+        titleLinkEl.setAttribute("href", snippet?.url ?? "");
+
+
+        // Fill title
+        const titleTextEl = titleLinkEl.querySelector("div");
+        titleTextEl.textContent = snippet?.title ?? "";
+
+
+        // Insert before first placeholder to preserve its position in markup
+        container.insertBefore(preview, previewTemplate);
+    });
+
+
+    // Remove all placeholder templates now that real previews are in place
+    placeholderTemplates.forEach(placeholder => placeholder.remove());
+
+
+    // Write into HTML file
+    fs.writeFileSync(indexPath, document.toString());
 }
 
 
@@ -643,6 +736,7 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
     if (areSnippetsDirty) {
         createSnippetsData(outputPath)
         await buildSnippetSearchIndex(outputPath)
+        injectLatestSnippets(outputPath)
     }
 
 

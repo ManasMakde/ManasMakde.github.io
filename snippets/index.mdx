@@ -9,10 +9,10 @@ export function SnippetPreview({ imgSrc, text, link, tags = [], isLoading = fals
         <a href={link} className={`snippet-preview-thumbnail ${isLoading ? loadingClass : ""}`} tabindex="-1">
             <img src={imgSrc} onerror={removeLoadingFunction} onLoad={removeLoadingFunction} alt="thumbnail" fetchpriority="high" />
         </a>
-        <a href={link} className={`snippet-preview-title ${loadingClass ? loadingClass : ""}`} title={text}>
+        <a href={link} className={`snippet-preview-title ${isLoading ? loadingClass : ""}`} title={text}>
             <div>{text}</div>
         </a>
-        <div className={`preview-tag-container ${loadingClass ? loadingClass : ""}`}>
+        <div className={`preview-tag-container ${isLoading ? loadingClass : ""}`}>
             <Tags tags={tags} assignHref={false} />
         </div>
     </div>)

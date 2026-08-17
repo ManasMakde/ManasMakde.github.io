@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { SITE_DOMAIN, SITE_NAME, TAGS_QUERY_PARAM } from "./static/js/global.js"
+import { SITE_DOMAIN, SITE_NAME, TAGS_QUERY_PARAM, resolveUrl } from "./static/js/global.js"
 
 
 // Properties
@@ -259,9 +259,8 @@ export function BlogArticle({ metadata = {}, children }) {
     // Default styles Component
     const stylePathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_ARTICLE_STYLES_FILE));
     const scriptPathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_ARTICLE_SCRIPT_FILE));
-    const title = `${metadata?.title}`;
+    const thumbnail = resolveUrl(metadata?.thumbnail, `/${path.relative(hostmdxInputPath, hostmdxCwd)}/`);
     const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
-    const thumbnail = metadata?.thumbnail ? new URL(metadata?.thumbnail, url).href : "";
     const defaultHead = (<>
         <link rel="stylesheet" href="/static/css/code.css" />
         <link rel="stylesheet" href="/static/css/article.css" />
@@ -271,7 +270,7 @@ export function BlogArticle({ metadata = {}, children }) {
 
 
         {/* Meta Data */}
-        <meta name="description" content={title} />
+        <meta name="description" content={metadata?.title} />
         <meta name="author" content={metadata?.author} />
 
 
@@ -279,7 +278,7 @@ export function BlogArticle({ metadata = {}, children }) {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={url} />
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={metadata?.title} />
         <meta property="og:image" content={thumbnail} />
 
 
@@ -287,7 +286,7 @@ export function BlogArticle({ metadata = {}, children }) {
         <meta name="twitter:site" content={SITE_NAME} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={url} />
-        <meta property="twitter:title" content={title} />
+        <meta property="twitter:title" content={metadata?.title} />
         <meta property="twitter:image" content={thumbnail} />
     </>);
 
@@ -299,9 +298,9 @@ export function BlogArticle({ metadata = {}, children }) {
         <NavBar />
 
         <div id="blog-article-header">
-            {metadata?.thumbnail && metadata?.thumbnail !== "" && <img id="blog-article-thumbnail" src={metadata?.thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
+            {thumbnail && <img id="blog-article-thumbnail" src={thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
             <div id="blog-article-title-wrapper">
-                <h1 id="blog-article-title">{metadata?.title ?? "Untitled"}</h1>
+                <h1 id="blog-article-title">{metadata?.title}</h1>
                 {metadata?.author && <a id="blog-article-author" className={!metadata?.authorWebsite && "blog-article-no-author"} href={metadata?.authorWebsite ? metadata?.authorWebsite : undefined}>By {metadata.author}</a>}
                 {metadata?.createdOnDate && <div id="blog-article-creation-date">Posted: {formatDate(metadata?.createdOnDate)}</div>}
                 {metadata?.editedOnDate && <div id="blog-article-update-date">Updated: {formatDate(metadata?.editedOnDate)}</div>}
@@ -319,9 +318,8 @@ export function Snippet({ metadata = {}, children }) {
     // Default styles Component
     const stylePathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_STYLES_FILE));
     const scriptPathExists = fs.existsSync(path.join(hostmdxCwd, DEFAULT_SNIPPET_SCRIPT_FILE));
-    const title = `${metadata?.title}`;
+    const thumbnail = resolveUrl(metadata?.thumbnail, `/${path.relative(hostmdxInputPath, hostmdxCwd)}/`);
     const url = new URL(SITE_DOMAIN + "/" + path.relative(hostmdxInputPath, hostmdxCwd) + "/").href
-    const thumbnail = metadata?.thumbnail ? new URL(metadata?.thumbnail, url).href : "";
     const defaultHead = (<>
         <link rel="stylesheet" href="/static/css/code.css" />
         <link rel="stylesheet" href="/static/css/snippet.css" />
@@ -331,7 +329,7 @@ export function Snippet({ metadata = {}, children }) {
 
 
         {/* Meta Data */}
-        <meta name="description" content={title} />
+        <meta name="description" content={metadata?.title} />
         <meta name="author" content={metadata?.author} />
 
 
@@ -339,7 +337,7 @@ export function Snippet({ metadata = {}, children }) {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={url} />
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={metadata?.title} />
         <meta property="og:image" content={thumbnail} />
 
 
@@ -347,7 +345,7 @@ export function Snippet({ metadata = {}, children }) {
         <meta name="twitter:site" content={SITE_NAME} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={url} />
-        <meta property="twitter:title" content={title} />
+        <meta property="twitter:title" content={metadata?.title} />
         <meta property="twitter:image" content={thumbnail} />
     </>);
 
@@ -358,9 +356,9 @@ export function Snippet({ metadata = {}, children }) {
         <NavBar />
 
         <div id="snippet-header">
-            {metadata?.thumbnail && metadata?.thumbnail !== "" && <img id="snippet-thumbnail" src={metadata?.thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
+            {thumbnail !== "" && <img id="snippet-thumbnail" src={thumbnail} onerror={`if(this.src!=="")this.src=""`} alt="thumbnail" />}
             <div id="snippet-title-wrapper">
-                <h1 id="snippet-title">{metadata?.title ?? "Untitled"}</h1>
+                <h1 id="snippet-title">{metadata?.title}</h1>
                 {metadata?.author && <a id="snippet-author" className={!metadata?.authorWebsite && "snippet-no-author"} href={metadata?.authorWebsite ? metadata?.authorWebsite : undefined}>By {metadata.author}</a>}
                 {metadata?.createdOnDate && <div id="snippet-creation-date">Posted: {formatDate(metadata?.createdOnDate)}</div>}
                 {metadata?.editedOnDate && <div id="snippet-update-date">Updated: {formatDate(metadata?.editedOnDate)}</div>}
