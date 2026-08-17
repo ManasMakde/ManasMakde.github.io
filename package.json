@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "esbuild": "^0.27.3",
-    "host-mdx": "^2.4.3",
+    "host-mdx": "^3.0.0",
     "linkedom": "^0.18.12",
     "pagefind": "^1.4.0",
     "rehype-highlight": "^7.0.2",
