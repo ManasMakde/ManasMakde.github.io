@@ -50,6 +50,10 @@ let snippetsMetadata = {};  // Format { "abs/path/to/snippet" : { title, thumbna
 let areSnippetsDirty = true;
 
 
+// Properties
+let pathsToUnpublish = new Set();
+
+
 // Utility Methods
 function stripTrailingSep(thePath) {
     if (thePath[thePath.length - 1] === path.sep) {
@@ -88,7 +92,6 @@ function getFiles(dir, allFiles = []) {
     }
     return allFiles;
 }
-
 
 
 // Primary Methods
@@ -196,6 +199,27 @@ function createCNAME(outputPath) {
     let domain = getCleanDomain(SITE_DOMAIN);
     fs.writeFileSync(filePath, domain);
 }
+function deleteUnpublishedPaths() {
+
+    // Return if nothing to delete
+    if (pathsToUnpublish.size === 0) {
+        return;
+    }
+
+
+    // Delete each marked directory
+    pathsToUnpublish.forEach((dirPath) => {
+        if (!fs.existsSync(dirPath)) {
+            console.warn(`${dirPath} not found for unpublish deletion`);
+            return;
+        }
+        fs.rmSync(dirPath, { recursive: true, force: true });
+    });
+
+
+    // Clear set after deletion
+    pathsToUnpublish.clear();
+}
 
 
 // Blog Methods
@@ -204,7 +228,7 @@ function isArticle(inputPath, inFilePath) {
     const relativePath = path.relative(absBlogDir, inFilePath)
     return !(relativePath.startsWith('..') || path.isAbsolute(relativePath) || !relativePath.includes(path.sep))
 }
-function updateArticles(inputPath, inFilePath, wasDeleted, result) {
+function updateArticles(inputPath, inFilePath, outFilePath, wasDeleted, result) {
 
     // Return If the file was deleted
     if (wasDeleted && articlesMetadata.hasOwnProperty(inFilePath)) {
@@ -226,6 +250,23 @@ function updateArticles(inputPath, inFilePath, wasDeleted, result) {
     }
 
 
+    // Return if not to be published
+    if (result?.exports?.metadata?.isPublished === false) {
+        pathsToUnpublish.add(path.dirname(outFilePath));
+        delete articlesMetadata[inFilePath];
+        areArticlesDirty = true;
+        return;
+    }
+
+
+    // Return if not to be indexed
+    if (result?.exports?.metadata?.isIndexed === false) {
+        delete articlesMetadata[inFilePath];
+        areArticlesDirty = true;
+        return;
+    }
+
+
     // Return if meta data has not changed
     let oldMetadata = articlesMetadata[inFilePath]
     let url = normalizeUrl(`/${path.dirname(path.relative(inputPath, inFilePath))}/`)
@@ -235,13 +276,8 @@ function updateArticles(inputPath, inFilePath, wasDeleted, result) {
     }
 
 
-    // Remove if not to be published
-    if (newMetadata?.toPublish === false) {
-        delete articlesMetadata[inFilePath];
-    }
-    else {  // Add/Update meta data
-        articlesMetadata[inFilePath] = newMetadata;
-    }
+    // Add/Update meta data
+    articlesMetadata[inFilePath] = newMetadata;
 
 
     // Mark articles as "dirty" i.e. to be all updated later
@@ -299,7 +335,7 @@ async function buildArticleSearchIndex(outputPath) {
 
         // Skip if not searchable
         let article = { ...DEFAULT_ARTICLES_METADATA, ...articlesMetadata[key] };
-        if (article?.isSearchable === false) {
+        if (article?.isIndexed === false) {
             continue
         }
 
@@ -455,7 +491,7 @@ function isSnippet(inputPath, inFilePath) {
     const relSnippetPath = path.relative(absSnippetPath, inFilePath)
     return !(relSnippetPath.startsWith('..') || path.isAbsolute(relSnippetPath) || !relSnippetPath.includes(path.sep))
 }
-function updateSnippets(inputPath, inFilePath, wasDeleted, result) {
+function updateSnippets(inputPath, inFilePath, outFilePath, wasDeleted, result) {
 
     // Return If the file was deleted
     if (wasDeleted && snippetsMetadata.hasOwnProperty(inFilePath)) {
@@ -477,6 +513,23 @@ function updateSnippets(inputPath, inFilePath, wasDeleted, result) {
     }
 
 
+    // Return if not to be published
+    if (result?.exports?.metadata?.isPublished === false) {
+        pathsToUnpublish.add(path.dirname(outFilePath));
+        delete snippetsMetadata[inFilePath];
+        areSnippetsDirty = true;
+        return;
+    }
+
+
+    // Return if not to be indexed
+    if (result?.exports?.metadata?.isIndexed === false) {
+        delete snippetsMetadata[inFilePath];
+        areSnippetsDirty = true;
+        return;
+    }
+
+
     // Return if meta data has not changed
     let oldMetadata = snippetsMetadata[inFilePath]
     let url = normalizeUrl(`/${path.dirname(path.relative(inputPath, inFilePath))}/`)
@@ -486,13 +539,8 @@ function updateSnippets(inputPath, inFilePath, wasDeleted, result) {
     }
 
 
-    // Remove if not to be published
-    if (newMetadata?.toPublish === false) {
-        delete snippetsMetadata[inFilePath];
-    }
-    else {  // Add/Update meta data
-        snippetsMetadata[inFilePath] = newMetadata;
-    }
+    // Add/Update meta data
+    snippetsMetadata[inFilePath] = newMetadata;
 
 
     // Mark snippets as "dirty" i.e. to be all updated later
@@ -550,7 +598,7 @@ async function buildSnippetSearchIndex(outputPath) {
 
         // Skip if not searchable
         let snippet = { ...DEFAULT_SNIPPETS_METADATA, ...snippetsMetadata[key] };
-        if (snippet?.isSearchable === false) {
+        if (snippet?.isIndexed === false) {
             continue
         }
 
@@ -698,11 +746,11 @@ export async function onFileChangeEnd(inputPath, outputPath, inFilePath, outFile
 
 
     // update article metadata
-    updateArticles(inputPath, inFilePath, wasDeleted, result);
+    updateArticles(inputPath, inFilePath, outFilePath, wasDeleted, result);
 
 
     // update snippet metadata
-    updateSnippets(inputPath, inFilePath, wasDeleted, result);
+    updateSnippets(inputPath, inFilePath, outFilePath, wasDeleted, result);
 }
 export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasInterrupted) {
 
@@ -738,6 +786,10 @@ export async function onSiteCreateEnd(inputPath, outputPath, isSoftReload, wasIn
         await buildSnippetSearchIndex(outputPath)
         injectLatestSnippets(outputPath)
     }
+
+
+    // Delete all unpublished dirs
+    deleteUnpublishedPaths();
 
 
     // Create site map

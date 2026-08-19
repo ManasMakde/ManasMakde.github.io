@@ -29,8 +29,8 @@ export const metadata = {
     createdOnDate: new Date("2000-01-25"),
     editedOnDate: new Date("2000-01-30"),
     searchKeywords: ["your", "searchable", "keywords", "here"],
-    isSearchable: true,
-    toPublish: true,
+    isIndexed: true,
+    isPublished: true
 }
 ~~~
 
@@ -45,8 +45,8 @@ export const metadata = {
     editedOnDate: new Date("2000-01-30"),
     tags: ["your", "tags", "here"],
     searchKeywords: ["your", "searchable", "keywords", "here"],
-    isSearchable: true,
-    toPublish: true,
+    isIndexed: true,
+    isPublished: true
 }
 
 
