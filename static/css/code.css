@@ -78,6 +78,14 @@ code {
     overflow: hidden;
     margin-bottom: 1rem;
 }
+.codetabs::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    background-image: url("/static/images/copy-done-icon.png");  /* Hack to preload copy done icon */
+}
 .codetabs-topbar {
     display: flex;
     gap: 0.5rem;
