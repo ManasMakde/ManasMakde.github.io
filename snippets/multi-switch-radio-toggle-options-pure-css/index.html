@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Multi switch radio toggle options in pure css - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><meta name="description" content="Multi switch radio toggle options in pure css"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/multi-switch-radio-toggle-options-pure-css/"/><meta property="og:title" content="Multi switch radio toggle options in pure css"/><meta property="og:image" content="/snippets/multi-switch-radio-toggle-options-pure-css/multi-switch-toggle.gif"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/multi-switch-radio-toggle-options-pure-css/"/><meta property="twitter:title" content="Multi switch radio toggle options in pure css"/><meta property="twitter:image" content="/snippets/multi-switch-radio-toggle-options-pure-css/multi-switch-toggle.gif"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/multi-switch-radio-toggle-options-pure-css/multi-switch-toggle.gif" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">Multi switch radio toggle options in pure css</h1><div id="snippet-creation-date">Posted: 07 November 2023</div><div id="snippet-update-date">Updated: 12 November 2023</div></div></div><article id="snippet-content"><div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)">HTML</button><button onclick="changeTabByButton(this, 1)" class="codetabs-selected">CSS</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" "><code style="max-height:31rem;" class="hljs language-HTML"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrapper&quot;</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span> <span class="hljs-attr">checked</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png&quot;</span> /></span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png&quot;</span> /></span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png&quot;</span> /></span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png&quot;</span> /></span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>></span>
+</code></pre><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-CSS"><span class="hljs-selector-class">.wrapper</span> {
+    <span class="hljs-attribute">background-color</span>: black;
+    <span class="hljs-attribute">display</span>: inline-block;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">1rem</span>;
+}
+
+<span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;radio&quot;</span>]</span> {
+    <span class="hljs-attribute">display</span>: none;
+}
+
+<span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;radio&quot;</span>]</span><span class="hljs-selector-pseudo">:checked</span>+<span class="hljs-selector-tag">img</span> {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.3</span>);
+}
+
+<span class="hljs-selector-tag">img</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">3rem</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">3rem</span>;
+
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.75rem</span>;
+    <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">1rem</span>;
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+
+    <span class="hljs-attribute">cursor</span>: pointer;
+    <span class="hljs-attribute">object-fit</span>: contain;
+    <span class="hljs-attribute">overflow</span>: visible;
+
+    <span class="hljs-attribute">transition</span>: background-color <span class="hljs-number">0.3s</span> ease-out;
+}
+
+<span class="hljs-selector-tag">img</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.2</span>);
+}
+</code></pre></div></div>
+<p>If you like cleaner HTML you can also use :has() but beware of <a href="https://caniuse.com/css-has">browser support</a>,
+As it is not supported in firefox as of the time of writing</p>
+<div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)">HTML</button><button onclick="changeTabByButton(this, 1)" class="codetabs-selected">CSS</button><button onclick="changeTabByButton(this, 2)">SCSS</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" "><code style="max-height:31rem;" class="hljs language-HTML"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrapper&quot;</span>></span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span> <span class="hljs-attr">checked</span>></span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;example&quot;</span>></span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>></span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>></span>
+</code></pre><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-CSS"><span class="hljs-selector-class">.wrapper</span> {
+  <span class="hljs-attribute">background-color</span>: black;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">1rem</span>;
+}
+
+<span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=radio]</span> {
+  <span class="hljs-attribute">display</span>: none;
+}
+
+<span class="hljs-selector-tag">label</span> {
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">3rem</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">3rem</span>;
+
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.75rem</span>;
+  <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">1rem</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">object-fit</span>: contain;
+  <span class="hljs-attribute">overflow</span>: visible;
+
+  <span class="hljs-attribute">background-origin</span>: content-box;
+  <span class="hljs-attribute">background-position</span>: center;
+  <span class="hljs-attribute">background-size</span>: contain;
+  <span class="hljs-attribute">background-repeat</span>: no-repeat;
+
+  <span class="hljs-attribute">transition</span>: background-color <span class="hljs-number">0.3s</span> ease-out;
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.2</span>);
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:has</span>(<span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=radio]</span><span class="hljs-selector-pseudo">:checked</span>) {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.3</span>);
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">1</span>) {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png&quot;</span>);
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">2</span>) {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png&quot;</span>);
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">3</span>) {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png&quot;</span>);
+}
+
+<span class="hljs-selector-tag">label</span><span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">4</span>) {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png&quot;</span>);
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-SCSS"><span class="hljs-selector-class">.wrapper</span> {
+  <span class="hljs-attribute">background-color</span>: black;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">1rem</span>;
+}
+
+<span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;radio&quot;</span>]</span> {
+  <span class="hljs-attribute">display</span>: none;
+}
+
+<span class="hljs-selector-tag">label</span> {
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">3rem</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">3rem</span>;
+
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.75rem</span>;
+  <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">1rem</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-selector-tag">object</span>-fit: contain;
+  <span class="hljs-attribute">overflow</span>: visible;
+
+  <span class="hljs-attribute">background-origin</span>: content-box;
+  <span class="hljs-attribute">background-position</span>: center;
+  <span class="hljs-attribute">background-size</span>: contain;
+  <span class="hljs-attribute">background-repeat</span>: no-repeat;
+
+  <span class="hljs-attribute">transition</span>: background-color <span class="hljs-number">0.3s</span> ease-out;
+
+  &amp;<span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.2</span>);
+  }
+
+  &amp;<span class="hljs-selector-pseudo">:has</span>(input[type=&quot;radio&quot;]:checked) {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.3</span>);
+  }
+
+  &amp;<span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">1</span>) {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/1280px-PlayStationTriangle.svg.png&quot;</span>)
+  }
+
+  &amp;<span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">2</span>) {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/PlayStationCircle.svg/1280px-PlayStationCircle.svg.png&quot;</span>)
+  }
+
+  &amp;<span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">3</span>) {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStationCross.svg/1280px-PlayStationCross.svg.png&quot;</span>)
+  }
+
+  &amp;<span class="hljs-selector-pseudo">:nth-child</span>(<span class="hljs-number">4</span>) {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/PlayStationSquare.svg/1280px-PlayStationSquare.svg.png&quot;</span>)
+  }
+}
+</code></pre></div></div></article><div class="tag-container"><a href="/snippets/?tags=html" class="tag">html</a><a href="/snippets/?tags=css" class="tag">css</a><a href="/snippets/?tags=scss" class="tag">scss</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>

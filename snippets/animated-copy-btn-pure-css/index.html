@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Animated copy button in pure css - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><meta name="description" content="Animated copy button in pure css"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/animated-copy-btn-pure-css/"/><meta property="og:title" content="Animated copy button in pure css"/><meta property="og:image" content="/snippets/animated-copy-btn-pure-css/copy-btn.gif"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/animated-copy-btn-pure-css/"/><meta property="twitter:title" content="Animated copy button in pure css"/><meta property="twitter:image" content="/snippets/animated-copy-btn-pure-css/copy-btn.gif"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/animated-copy-btn-pure-css/copy-btn.gif" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">Animated copy button in pure css</h1><div id="snippet-creation-date">Posted: 02 November 2023</div><div id="snippet-update-date">Updated: 12 November 2023</div></div></div><article id="snippet-content"><div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)">HTML</button><button onclick="changeTabByButton(this, 1)" class="codetabs-selected">CSS</button><button onclick="changeTabByButton(this, 2)">SCSS</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" "><code style="max-height:31rem;" class="hljs language-HTML"><span class="hljs-tag">&lt;<span class="hljs-name">button</span>></span><span class="hljs-tag">&lt;/<span class="hljs-name">button</span>></span>
+</code></pre><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-CSS"><span class="hljs-selector-tag">button</span> {
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">5rem</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">5rem</span>;
+  <span class="hljs-attribute">position</span>: relative;
+  
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.5rem</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">border</span>: solid <span class="hljs-number">3px</span> black;
+  
+  <span class="hljs-attribute">background-color</span>: lightgray;
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://cdn-icons-png.flaticon.com/512/178/178921.png&quot;</span>);
+  <span class="hljs-attribute">background-repeat</span>: no-repeat;
+  <span class="hljs-attribute">background-size</span>: contain;
+  <span class="hljs-attribute">background-origin</span>: content-box;
+  
+  <span class="hljs-attribute">transition</span>: background-image <span class="hljs-number">0s</span> <span class="hljs-number">2s</span>;
+}
+
+<span class="hljs-selector-tag">button</span><span class="hljs-selector-pseudo">:active</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://cdn-icons-png.flaticon.com/512/18/18442.png&quot;</span>);
+  <span class="hljs-attribute">transition-delay</span>: <span class="hljs-number">0s</span>;
+}
+
+<span class="hljs-selector-tag">button</span><span class="hljs-selector-pseudo">:active</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;
+  <span class="hljs-attribute">transition</span>: opacity <span class="hljs-number">0s</span> <span class="hljs-number">0s</span>;
+}
+
+<span class="hljs-selector-tag">button</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">'Copied'</span>;
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">bottom</span>: -<span class="hljs-number">2.5rem</span>;
+  <span class="hljs-attribute">right</span>: <span class="hljs-number">50%</span>;
+  <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>);
+  
+  <span class="hljs-attribute">color</span>: white;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.5rem</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">0.5rem</span>;
+  <span class="hljs-attribute">background-color</span>: gray;
+  
+  <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">transition</span>: opacity <span class="hljs-number">0.2s</span> <span class="hljs-number">2s</span>;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-SCSS"><span class="hljs-selector-tag">button</span> {
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">5rem</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">5rem</span>;
+  <span class="hljs-attribute">position</span>: relative;
+
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.5rem</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">border</span>: solid <span class="hljs-number">3px</span> black;
+
+  <span class="hljs-attribute">background-color</span>: lightgray;
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://cdn-icons-png.flaticon.com/512/178/178921.png&quot;</span>);
+  <span class="hljs-attribute">background-repeat</span>: no-repeat;
+  <span class="hljs-attribute">background-size</span>: contain;
+  <span class="hljs-attribute">background-origin</span>: content-box;
+
+  <span class="hljs-attribute">transition</span>: background-image <span class="hljs-number">0s</span> <span class="hljs-number">2s</span>;
+
+  &amp;<span class="hljs-selector-pseudo">:active</span> {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;https://cdn-icons-png.flaticon.com/512/18/18442.png&quot;</span>);
+    <span class="hljs-attribute">transition-delay</span>: <span class="hljs-number">0s</span>;
+
+    &amp;<span class="hljs-selector-pseudo">::after</span> {
+      <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;
+      <span class="hljs-attribute">transition</span>: opacity <span class="hljs-number">0s</span> <span class="hljs-number">0s</span>;
+    }
+  }
+
+  &amp;<span class="hljs-selector-pseudo">::after</span> {
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">'Copied'</span>;
+    <span class="hljs-attribute">position</span>: absolute;
+    <span class="hljs-attribute">bottom</span>: -<span class="hljs-number">2.5rem</span>;
+    <span class="hljs-attribute">right</span>: <span class="hljs-number">50%</span>;
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>);
+
+    <span class="hljs-attribute">color</span>: white;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.5rem</span>;
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">0.5rem</span>;
+    <span class="hljs-attribute">background-color</span>: gray;
+
+    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">transition</span>: opacity <span class="hljs-number">0.2s</span> <span class="hljs-number">2s</span>;
+  }
+
+}
+</code></pre></div></div></article><div class="tag-container"><a href="/snippets/?tags=html" class="tag">html</a><a href="/snippets/?tags=css" class="tag">css</a><a href="/snippets/?tags=scss" class="tag">scss</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>
