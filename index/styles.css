@@ -223,10 +223,6 @@
 .article-preview{
     margin-bottom: 1rem;
 }
-.article-preview img {
-    min-width: 200px;
-    min-height: 112px;
-}
 .article-preview-image-link{
     width: 40%;
     min-width: 50px;

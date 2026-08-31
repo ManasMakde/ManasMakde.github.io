@@ -251,6 +251,16 @@ export function Tags({ tags, assignHref = true }) {
 
     return tags?.map((tag, index) => (<a className="tag" key={index} href={assignHref ? `/snippets/?${TAGS_QUERY_PARAM}=${encodeURIComponent(tag.toLowerCase())}` : undefined}>{tag.toLowerCase()}</a>));
 }
+export function Pic({ src, href, alt, target, subtext, imageAttr, style, imgStyle, subtextStyle }) {
+
+    return (<>
+        <link rel="stylesheet" href="/static/css/pic.css" />
+        <a href={href} className="pic" target={target} style={style}>
+            <img src={src} alt={alt} style={imgStyle} {...imageAttr} />
+            {subtext && (<span className="pic-subtext" style={subtextStyle}>{subtext}</span>)}
+        </a>
+    </>);
+}
 
 
 // Wrappers

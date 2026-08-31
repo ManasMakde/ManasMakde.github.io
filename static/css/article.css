@@ -1,3 +1,7 @@
+/* Core */
+:root {
+    --body-width: 800px;
+}
 #blog-article-header {
     display: flex;
     flex-wrap: wrap;
