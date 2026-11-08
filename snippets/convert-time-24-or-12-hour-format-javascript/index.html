@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Convert any time to 24 or 12 hour format in Javascript - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><meta name="description" content="Convert any time to 24 or 12 hour format in Javascript"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/convert-time-24-or-12-hour-format-javascript/"/><meta property="og:title" content="Convert any time to 24 or 12 hour format in Javascript"/><meta property="og:image" content="/snippets/convert-time-24-or-12-hour-format-javascript/time-to-hours.png"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/convert-time-24-or-12-hour-format-javascript/"/><meta property="twitter:title" content="Convert any time to 24 or 12 hour format in Javascript"/><meta property="twitter:image" content="/snippets/convert-time-24-or-12-hour-format-javascript/time-to-hours.png"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/convert-time-24-or-12-hour-format-javascript/time-to-hours.png" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">Convert any time to 24 or 12 hour format in Javascript</h1><div id="snippet-creation-date">Posted: 10 November 2023</div></div></div><article id="snippet-content"><div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)" class="codetabs-selected">Javascript</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-Javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">TimeToHours</span>(<span class="hljs-params">hours = <span class="hljs-number">0</span>, mins = <span class="hljs-number">0</span>, secs = <span class="hljs-number">0</span>, to12Hours = <span class="hljs-literal">true</span></span>) {
+
+    <span class="hljs-keyword">let</span> postfix = <span class="hljs-string">&quot;&quot;</span>
+
+    hours = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(hours) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(mins / <span class="hljs-number">60</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(secs / <span class="hljs-number">3600</span>)
+    hours %= <span class="hljs-number">24</span>
+
+    mins = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(mins) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(secs / <span class="hljs-number">60</span>)
+    mins %= <span class="hljs-number">60</span>
+
+    secs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(secs)
+    secs %= <span class="hljs-number">60</span>
+
+
+    <span class="hljs-comment">// Convert to 12hr</span>
+    <span class="hljs-keyword">if</span> (to12Hours) {
+        postfix = hours >= <span class="hljs-number">12</span> ? <span class="hljs-string">&quot; PM&quot;</span> : <span class="hljs-string">&quot; AM&quot;</span>
+        hours %= <span class="hljs-number">12</span>
+        hours = hours ? hours : <span class="hljs-number">12</span>
+    }
+
+
+    <span class="hljs-comment">// Convert to string</span>
+    hours = <span class="hljs-title class_">String</span>(hours).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">2</span>, <span class="hljs-string">'0'</span>);
+    mins = <span class="hljs-title class_">String</span>(mins).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">2</span>, <span class="hljs-string">'0'</span>);
+    secs = <span class="hljs-title class_">String</span>(secs).<span class="hljs-title function_">padStart</span>(<span class="hljs-number">2</span>, <span class="hljs-string">'0'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${hours}</span>:<span class="hljs-subst">${mins}</span>:<span class="hljs-subst">${secs}</span><span class="hljs-subst">${postfix}</span>`</span>
+}
+</code></pre></div></div>
+<br/>
+<p><strong>Example</strong></p>
+<pre><code>TimeToHours(14, 80, 71) --> 03:21:11 PM
+</code></pre></article><div class="tag-container"><a href="/snippets/?tags=javascript" class="tag">javascript</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>

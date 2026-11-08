@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Set-Get generator in unity - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><link rel="stylesheet" href="styles.css"/><script src="script.js" type="module"></script><meta name="description" content="Set-Get generator in unity"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/set-get-generator/"/><meta property="og:title" content="Set-Get generator in unity"/><meta property="og:image" content="/snippets/set-get-generator/set-get-generator.webp"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/set-get-generator/"/><meta property="twitter:title" content="Set-Get generator in unity"/><meta property="twitter:image" content="/snippets/set-get-generator/set-get-generator.webp"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/set-get-generator/set-get-generator.webp" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">Set-Get generator in unity</h1><div id="snippet-creation-date">Posted: 22 March 2026</div></div></div><article id="snippet-content">
+<div id="input-panel"><div style="position: relative;"><select id="typeSelect"><option>int</option><option>float</option><option>double</option><option>bool</option><option>string</option><option>char</option><option>long</option><option>uint</option><option>byte</option><option>short</option><option value="custom">Custom</option></select></div><input type="text" id="customTypeInput" placeholder="Type name" style="width: 130px; display: none;"/><input type="text" id="varInput" value="myVar" style="width: 160px;" placeholder="variableName"/><label class="checkbox-row"><p><input type="checkbox" id="commentsCheck" checked/> Comments</p></label></div>
+
+<div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)" class="codetabs-selected">Unity C#</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" codetabs-active"><code display-name="Unity C#" id="output" style="min-height:26rem;" class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">event</span> Action&lt;<span class="hljs-built_in">int</span> <span class="hljs-comment">/* oldMyVar */</span>, <span class="hljs-built_in">int</span> <span class="hljs-comment">/* newMyVar */</span>> OnMyVarUpdated;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">SetMyVar</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> newMyVar</span>)</span>
+{
+    <span class="hljs-comment">// Return if trying to assign the same value</span>
+    <span class="hljs-keyword">if</span>(newMyVar == myVar)
+    {
+        <span class="hljs-keyword">return</span>;
+    }
+
+
+    <span class="hljs-comment">// Store old point for broadcasting</span>
+    <span class="hljs-keyword">var</span> oldMyVar = myVar;
+    
+    
+    <span class="hljs-comment">// Assign new point</span>
+    myVar = newMyVar;
+    
+    
+    <span class="hljs-comment">// Broadcast</span>
+    OnMyVarUpdated?.Invoke(oldMyVar, newMyVar);
+}
+
+<span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">GetMyVar</span>()</span>
+{
+    <span class="hljs-keyword">return</span> myVar;
+}
+</code></pre></div></div></article><div class="tag-container"><a href="/snippets/?tags=unity" class="tag">unity</a><a href="/snippets/?tags=c%23" class="tag">c#</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>

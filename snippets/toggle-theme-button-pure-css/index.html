@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Toggle theme button in pure css - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><meta name="description" content="Toggle theme button in pure css"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/toggle-theme-button-pure-css/"/><meta property="og:title" content="Toggle theme button in pure css"/><meta property="og:image" content="/snippets/toggle-theme-button-pure-css/theme-btn.gif"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/toggle-theme-button-pure-css/"/><meta property="twitter:title" content="Toggle theme button in pure css"/><meta property="twitter:image" content="/snippets/toggle-theme-button-pure-css/theme-btn.gif"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/toggle-theme-button-pure-css/theme-btn.gif" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">Toggle theme button in pure css</h1><div id="snippet-creation-date">Posted: 13 November 2023</div></div></div><article id="snippet-content"><div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><button onclick="changeTabByButton(this, 0)">HTML</button><button onclick="changeTabByButton(this, 1)" class="codetabs-selected">CSS</button><button onclick="changeTabByButton(this, 2)">SCSS</button></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" "><code style="max-height:31rem;" class="hljs language-HTML"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;theme_btn&quot;</span> <span class="hljs-attr">checked</span>></span>
+</code></pre><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-CSS"><span class="hljs-selector-pseudo">:root</span> {
+  <span class="hljs-attr">--theme_light_color</span>: <span class="hljs-number">#e08712</span>;
+  <span class="hljs-attr">--theme_dark_color</span>: white;
+  <span class="hljs-attr">--moon_clip_color</span>: white;
+  <span class="hljs-attr">--theme_switch_duration</span>: <span class="hljs-number">0.5s</span>;
+  <span class="hljs-attr">--sun_line_length</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attr">--sun_line_thickness</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attr">--sun_line_offset</span>: <span class="hljs-number">5px</span>;
+
+  <span class="hljs-attr">--light_grad</span>: transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>), <span class="hljs-built_in">var</span>(--theme_light_color) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> + <span class="hljs-number">1px</span>) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> - <span class="hljs-number">1px</span>), transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>);
+  <span class="hljs-attr">--dark_grad</span>:  transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>), <span class="hljs-built_in">var</span>(--theme_dark_color) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> + <span class="hljs-number">1px</span>) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> - <span class="hljs-number">1px</span>), transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>);
+}
+
+<span class="hljs-selector-id">#theme_btn</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--sun_line_length) + <span class="hljs-built_in">var</span>(--sun_line_offset) + <span class="hljs-number">10px</span>);
+  <span class="hljs-attribute">border</span>: none;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">appearance</span>: none;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--theme_light_color);
+  <span class="hljs-attribute">transition</span>: transform <span class="hljs-built_in">var</span>(--theme_switch_duration);
+}
+
+<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">:checked</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--theme_dark_color);
+  <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale</span>(<span class="hljs-number">1.3</span>);
+}
+
+<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">''</span>;
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">top</span>:      <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">bottom</span>:   <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">left</span>:     <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">right</span>:    <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">z-index</span>: -<span class="hljs-number">1</span>;
+  <span class="hljs-attribute">border-radius</span>: inherit;
+  <span class="hljs-attribute">background</span>:
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">0deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(-<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">90deg</span>, <span class="hljs-built_in">var</span>(--light_grad));
+  -webkit-<span class="hljs-attribute">mask</span>: <span class="hljs-built_in">radial-gradient</span>(farthest-side, transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)), <span class="hljs-number">#fff</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)));
+  <span class="hljs-attribute">mask</span>:         <span class="hljs-built_in">radial-gradient</span>(farthest-side, transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)), <span class="hljs-number">#fff</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)));
+  <span class="hljs-attribute">transition</span>: transform <span class="hljs-built_in">var</span>(--theme_switch_duration);
+}
+
+<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">''</span>;
+  <span class="hljs-attribute">display</span>: block;
+  <span class="hljs-attribute">border-radius</span>: inherit;
+  <span class="hljs-attribute">top</span>:   <span class="hljs-built_in">calc</span>(-<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">right</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--moon_clip_color);
+  <span class="hljs-attribute">height</span>: inherit;
+  <span class="hljs-attribute">width</span>: inherit;
+  <span class="hljs-attribute">transition</span>: top <span class="hljs-built_in">var</span>(--theme_switch_duration), right <span class="hljs-built_in">var</span>(--theme_switch_duration);
+}
+
+<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">:checked</span><span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">top</span>: -<span class="hljs-number">30%</span>;
+  <span class="hljs-attribute">right</span>: -<span class="hljs-number">30%</span>;
+}
+
+<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">:checked</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale</span>(<span class="hljs-number">0</span>);
+  <span class="hljs-attribute">background</span>:
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">0deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(-<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+    <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">90deg</span>, <span class="hljs-built_in">var</span>(--dark_grad));
+}
+
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--moon_clip_color);
+}
+
+<span class="hljs-selector-tag">body</span><span class="hljs-selector-pseudo">:has</span>(<span class="hljs-selector-id">#theme_btn</span><span class="hljs-selector-pseudo">:checked</span>){
+  <span class="hljs-attr">--moon_clip_color</span>: black;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-SCSS"><span class="hljs-selector-pseudo">:root</span> {
+  <span class="hljs-attr">--theme_light_color</span>: <span class="hljs-number">#e08712</span>;
+  <span class="hljs-attr">--theme_dark_color</span>: white;
+  <span class="hljs-attr">--moon_clip_color</span>: white;
+  <span class="hljs-attr">--theme_switch_duration</span>: <span class="hljs-number">0.5s</span>;
+  <span class="hljs-attr">--sun_line_length</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attr">--sun_line_thickness</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attr">--sun_line_offset</span>: <span class="hljs-number">5px</span>;
+
+  <span class="hljs-attr">--light_grad</span>: transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>), <span class="hljs-built_in">var</span>(--theme_light_color) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> + <span class="hljs-number">1px</span>) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> - <span class="hljs-number">1px</span>), transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>);
+  <span class="hljs-attr">--dark_grad</span>:  transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>), <span class="hljs-built_in">var</span>(--theme_dark_color) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> + <span class="hljs-number">1px</span>) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span> - <span class="hljs-number">1px</span>), transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--sun_line_thickness)/<span class="hljs-number">2</span>);
+}
+
+<span class="hljs-selector-id">#theme_btn</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--sun_line_length) + <span class="hljs-built_in">var</span>(--sun_line_offset) + <span class="hljs-number">10px</span>);
+  <span class="hljs-attribute">border</span>: none;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">appearance</span>: none;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--theme_light_color);
+  <span class="hljs-attribute">transition</span>: transform <span class="hljs-built_in">var</span>(--theme_switch_duration);
+
+  &amp;<span class="hljs-selector-pseudo">:checked</span> {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--theme_dark_color);
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale</span>(<span class="hljs-number">1.3</span>);
+
+    &amp;<span class="hljs-selector-pseudo">::before</span> {
+      <span class="hljs-attribute">top</span>: -<span class="hljs-number">30%</span>;
+      <span class="hljs-attribute">right</span>: -<span class="hljs-number">30%</span>;
+    }
+
+    &amp;<span class="hljs-selector-pseudo">::after</span> {
+      <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scale</span>(<span class="hljs-number">0</span>);
+      <span class="hljs-attribute">background</span>:
+        <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">0deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+        <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+        <span class="hljs-built_in">linear-gradient</span>(-<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--dark_grad)),
+        <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">90deg</span>, <span class="hljs-built_in">var</span>(--dark_grad));
+    }
+  }
+
+  &amp;<span class="hljs-selector-pseudo">::after</span> {
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">''</span>;
+    <span class="hljs-attribute">position</span>: absolute;
+    <span class="hljs-attribute">top</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">bottom</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">left</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">right</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">1</span>*<span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">z-index</span>: -<span class="hljs-number">1</span>;
+    <span class="hljs-attribute">border-radius</span>: inherit;
+    <span class="hljs-attribute">background</span>:
+      <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">0deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+      <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+      <span class="hljs-built_in">linear-gradient</span>(-<span class="hljs-number">45deg</span>, <span class="hljs-built_in">var</span>(--light_grad)),
+      <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">90deg</span>, <span class="hljs-built_in">var</span>(--light_grad));
+    -webkit-<span class="hljs-selector-tag">mask</span>: <span class="hljs-built_in">radial-gradient</span>(farthest-side, transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)), <span class="hljs-number">#fff</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)));
+    <span class="hljs-selector-tag">mask</span>: <span class="hljs-built_in">radial-gradient</span>(farthest-side, transparent <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)), <span class="hljs-number">#fff</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length)));
+    <span class="hljs-attribute">transition</span>: transform <span class="hljs-built_in">var</span>(--theme_switch_duration);
+  }
+
+  &amp;<span class="hljs-selector-pseudo">::before</span> {
+    <span class="hljs-attribute">position</span>: relative;
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">''</span>;
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">border-radius</span>: inherit;
+    <span class="hljs-attribute">top</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">right</span>: <span class="hljs-built_in">calc</span>(-<span class="hljs-number">100%</span> - <span class="hljs-built_in">var</span>(--sun_line_length) - <span class="hljs-built_in">var</span>(--sun_line_offset));
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--moon_clip_color);
+    <span class="hljs-attribute">height</span>: inherit;
+    <span class="hljs-attribute">width</span>: inherit;
+    <span class="hljs-attribute">transition</span>: top <span class="hljs-built_in">var</span>(--theme_switch_duration), right <span class="hljs-built_in">var</span>(--theme_switch_duration);
+  }
+}
+
+
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--moon_clip_color);
+}
+
+<span class="hljs-selector-tag">body</span><span class="hljs-selector-pseudo">:has</span>(#theme_btn:checked) {
+  <span class="hljs-attr">--moon_clip_color</span>: black;
+}
+</code></pre></div></div></article><div class="tag-container"><a href="/snippets/?tags=html" class="tag">html</a><a href="/snippets/?tags=css" class="tag">css</a><a href="/snippets/?tags=scss" class="tag">scss</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>

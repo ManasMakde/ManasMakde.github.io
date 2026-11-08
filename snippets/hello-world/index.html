@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>&quot;Hello World&quot; in every programming language - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/snippet.css"/><script src="/static/js/snippet.js" type="module"></script><meta name="description" content="&quot;Hello World&quot; in every programming language"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/snippets/hello-world/"/><meta property="og:title" content="&quot;Hello World&quot; in every programming language"/><meta property="og:image" content="/snippets/hello-world/hello-world.webp"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/snippets/hello-world/"/><meta property="twitter:title" content="&quot;Hello World&quot; in every programming language"/><meta property="twitter:image" content="/snippets/hello-world/hello-world.webp"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="snippet-header"><img id="snippet-thumbnail" src="/snippets/hello-world/hello-world.webp" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="snippet-title-wrapper"><h1 id="snippet-title">&quot;Hello World&quot; in every programming language</h1><div id="snippet-creation-date">Posted: 01 November 2023</div><div id="snippet-update-date">Updated: 12 November 2023</div></div></div><article id="snippet-content"><div class="codetabs"><script src="/static/js/codetabs.js"></script><div class="codetabs-topbar"><select name="codetabs-select" onchange="changeTab(this, this.value)"><option value="0">Ada</option><option value="1">Bash</option><option value="2">Brainfuck</option><option value="3">C</option><option value="4">C#</option><option value="5" selected>C++</option><option value="6">CSS</option><option value="7">D</option><option value="8">Dart</option><option value="9">Elixer</option><option value="10">F#</option><option value="11">GDScript</option><option value="12">Go</option><option value="13">Groovy</option><option value="14">HTML</option><option value="15">Haskell</option><option value="16">Java</option><option value="17">JavaScript</option><option value="18">Julia</option><option value="19">Kotlin</option><option value="20">Lisp</option><option value="21">Lua</option><option value="22">Markdown</option><option value="23">Nim</option><option value="24">ObjectiveC</option><option value="25">Perl</option><option value="26">PHP</option><option value="27">Python</option><option value="28">R</option><option value="29">Ruby</option><option value="30">Rust</option><option value="31">Scala</option><option value="32">SCSS</option><option value="33">Swift</option><option value="34">Tcl</option><option value="35">Zig</option></select></div><button onclick="copyCode(this)" class="codetabs-copy"></button><div class="codetabs-content"><pre class=" "><code style="max-height:31rem;" class="hljs language-Ada"><span class="hljs-keyword">with</span> Ada.Text_IO; <span class="hljs-keyword">use</span> Ada.Text_IO;
+<span class="hljs-keyword">procedure</span> <span class="hljs-title">Hello</span> <span class="hljs-keyword">is</span>
+<span class="hljs-keyword">begin</span>
+        Put_Line (<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+<span class="hljs-keyword">end</span> Hello;
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>;
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Brainfuck"><span class="hljs-literal">-</span><span class="hljs-title">[</span><span class="hljs-literal">-------</span>><span class="hljs-literal">+</span>&lt;<span class="hljs-title">]</span>><span class="hljs-literal">-</span><span class="hljs-string">.</span><span class="hljs-literal">-</span><span class="hljs-title">[</span><span class="hljs-literal">-</span>><span class="hljs-literal">+++++</span>&lt;<span class="hljs-title">]</span>><span class="hljs-literal">++</span><span class="hljs-string">.</span><span class="hljs-literal">+++++++</span><span class="hljs-string">.</span><span class="hljs-string">.</span><span class="hljs-literal">+++</span><span class="hljs-string">.</span><span class="hljs-title">[</span><span class="hljs-literal">-</span>><span class="hljs-literal">+++++</span>&lt;<span class="hljs-title">]</span>><span class="hljs-literal">+</span><span class="hljs-string">.</span><span class="hljs-literal">------------</span><span class="hljs-string">.</span><span class="hljs-literal">---</span><span class="hljs-title">[</span><span class="hljs-literal">-</span>><span class="hljs-literal">+++</span>&lt;<span class="hljs-title">]</span>><span class="hljs-string">.</span><span class="hljs-literal">-</span><span class="hljs-title">[</span><span class="hljs-literal">---</span>><span class="hljs-literal">+</span>&lt;<span class="hljs-title">]</span>><span class="hljs-literal">---</span><span class="hljs-string">.</span><span class="hljs-literal">+++</span><span class="hljs-string">.</span><span class="hljs-literal">------</span><span class="hljs-string">.</span><span class="hljs-literal">--------</span><span class="hljs-string">.</span><span class="hljs-literal">-</span><span class="hljs-title">[</span><span class="hljs-literal">---</span>><span class="hljs-literal">+</span>&lt;<span class="hljs-title">]</span>><span class="hljs-string">.</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-C"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h></span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-C#"><span class="hljs-keyword">using</span> System; 
+
+<span class="hljs-keyword">class</span> <span class="hljs-title">HelloWorld</span> {         
+    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-built_in">string</span>[] <span class="hljs-keyword">args</span></span>)</span>
+    {
+        System.Console.WriteLine(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+    }
+}
+</code></pre><pre class=" codetabs-active"><code style="max-height:31rem;" class="hljs language-C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream></span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{    
+    cout &lt;&lt; <span class="hljs-string">&quot;Hello, World!&quot;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-CSS"><span class="hljs-selector-tag">body</span><span class="hljs-selector-pseudo">::before</span>{
+    <span class="hljs-attribute">content</span>:<span class="hljs-string">&quot;Hello, World!&quot;</span>;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-D"><span class="hljs-keyword">import</span> std.stdio;
+
+<span class="hljs-keyword">void</span> main()
+{
+    writeln(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Dart"><span class="hljs-keyword">void</span> main() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Elixer">IO.puts &quot;Hello, World!&quot;
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-F#"><span class="hljs-keyword">open</span> System
+
+<span class="hljs-built_in">printfn</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-GDScript"><span class="hljs-keyword">extends</span> Node
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">_init</span>():</span>
+    print(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Go"><span class="hljs-keyword">package</span> main
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    fmt.Println(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Groovy">println <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-HTML"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>></span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>></span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>></span>
+        Hello, World!
+    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>></span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>></span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Haskell"><span class="hljs-title">main</span> = putStrLn <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> 
+    {
+        System.out.println(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+    }
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-JavaScript"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Julia">println(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    println(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Lisp">(<span class="hljs-name">print</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Lua"><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Markdown"><span class="hljs-section"># Hello, World!</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Nim">echo <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-ObjectiveC"><span class="hljs-meta">#import <span class="hljs-string">&lt;Foundation/Foundation.h></span></span>
+
+<span class="hljs-type">int</span> main (<span class="hljs-type">int</span> argc, <span class="hljs-keyword">const</span> <span class="hljs-type">char</span> * argv[]){
+    fprintf(stdout, <span class="hljs-string">&quot;Hello, World!&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Perl"><span class="hljs-keyword">print</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>;
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-PHP"><span class="hljs-meta">&lt;?php</span>
+
+<span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>;
+
+<span class="hljs-meta">?></span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-R">print<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Hello, World!&quot;</span><span class="hljs-punctuation">)</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Ruby">puts <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() {
+    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>);
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">HelloWorld</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>(args: <span class="hljs-type">Array</span>[<span class="hljs-type">String</span>]) {
+        println(<span class="hljs-string">&quot;Hello, world!&quot;</span>)
+    }
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-SCSS"><span class="hljs-selector-tag">body</span> {
+    &amp;<span class="hljs-selector-pseudo">::before</span> {
+        <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;Hello, World!&quot;</span>;
+    }
+}
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Swift"><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Tcl"><span class="hljs-keyword">puts</span> <span class="hljs-string">&quot;Hello, World!&quot;</span>
+</code></pre><pre class=" "><code style="max-height:31rem;" class="hljs language-Zig">const print = @import(&quot;std&quot;).debug.print;
+
+pub fn main() void {
+    print(&quot;Hello, world!&quot;, .{});
+}
+</code></pre></div></div></article><div class="tag-container"><a href="/snippets/?tags=ada" class="tag">ada</a><a href="/snippets/?tags=bash" class="tag">bash</a><a href="/snippets/?tags=c" class="tag">c</a><a href="/snippets/?tags=c%23" class="tag">c#</a><a href="/snippets/?tags=c%2B%2B" class="tag">c++</a><a href="/snippets/?tags=css" class="tag">css</a><a href="/snippets/?tags=d" class="tag">d</a><a href="/snippets/?tags=dart" class="tag">dart</a><a href="/snippets/?tags=elixir" class="tag">elixir</a><a href="/snippets/?tags=f%23" class="tag">f#</a><a href="/snippets/?tags=gdscript" class="tag">gdscript</a><a href="/snippets/?tags=go" class="tag">go</a><a href="/snippets/?tags=groovy" class="tag">groovy</a><a href="/snippets/?tags=html" class="tag">html</a><a href="/snippets/?tags=haskell" class="tag">haskell</a><a href="/snippets/?tags=java" class="tag">java</a><a href="/snippets/?tags=javascript" class="tag">javascript</a><a href="/snippets/?tags=julia" class="tag">julia</a><a href="/snippets/?tags=kotlin" class="tag">kotlin</a><a href="/snippets/?tags=lisp" class="tag">lisp</a><a href="/snippets/?tags=lua" class="tag">lua</a><a href="/snippets/?tags=markdown" class="tag">markdown</a><a href="/snippets/?tags=nim" class="tag">nim</a><a href="/snippets/?tags=objectivec" class="tag">objectivec</a><a href="/snippets/?tags=perl" class="tag">perl</a><a href="/snippets/?tags=php" class="tag">php</a><a href="/snippets/?tags=python" class="tag">python</a><a href="/snippets/?tags=r" class="tag">r</a><a href="/snippets/?tags=ruby" class="tag">ruby</a><a href="/snippets/?tags=rust" class="tag">rust</a><a href="/snippets/?tags=scala" class="tag">scala</a><a href="/snippets/?tags=scss" class="tag">scss</a><a href="/snippets/?tags=swift" class="tag">swift</a><a href="/snippets/?tags=tcl" class="tag">tcl</a><a href="/snippets/?tags=zig" class="tag">zig</a><a href="/snippets/?tags=brainfuck" class="tag">brainfuck</a></div><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>

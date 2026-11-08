@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>How I invented The Act Pattern - Manas R. Makde</title><link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico?"/><link rel="stylesheet" href="/static/css/global-styles.css"/><link rel="stylesheet" href="/static/css/code.css"/><link rel="stylesheet" href="/static/css/article.css"/><script src="/static/js/article.js" type="module"></script><meta name="description" content="How I invented The Act Pattern"/><meta name="author"/><meta property="og:type" content="website"/><meta property="og:site_name" content="Manas R. Makde"/><meta property="og:url" content="https://manasmakde.com/blog/how-i-invented-act-pattern/"/><meta property="og:title" content="How I invented The Act Pattern"/><meta property="og:image" content="/blog/how-i-invented-act-pattern/images/thumbnail.png"/><meta name="twitter:site" content="Manas R. Makde"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://manasmakde.com/blog/how-i-invented-act-pattern/"/><meta property="twitter:title" content="How I invented The Act Pattern"/><meta property="twitter:image" content="/blog/how-i-invented-act-pattern/images/thumbnail.png"/></head><body><link rel="stylesheet" href="/static/css/header.css"/><a id="site-header" href="/" tabindex="-1"><img id="site-logo" alt="logo" src="/static/images/logo.png"/><div id="site-title">Manas R. Makde</div><div id="site-motto">Let's keep it dead simple!</div></a><link rel="stylesheet" href="/static/css/searchbar.css"/><div id="searchbar" class="searchbar"><input type="text" placeholder="Search..."/><div class="searchbar-dropdown"><div class="searchbar-results"></div><a href="#" style="display:none" class="searchbar-more">Show all results</a><a style="display:none" class="searchbar-nonefound">No results found</a><a style="display:none" class="searchbar-loading">Loading...</a></div><button aria-label="Search Button" class="searchbar-btn"></button></div><link rel="stylesheet" href="/static/css/navbar.css"/><nav id="site-navbar"><a href="/blog">Blog</a><a href="/snippets">Snippets</a><a href="/#projects">Projects</a><a href="/#site-contacts">Contact</a></nav><div id="blog-article-header"><img id="blog-article-thumbnail" src="/blog/how-i-invented-act-pattern/images/thumbnail.png" onerror="if(this.src!==&quot;&quot;)this.src=&quot;&quot;" alt="thumbnail"/><div id="blog-article-title-wrapper"><h1 id="blog-article-title">How I invented The Act Pattern</h1><div id="blog-article-creation-date">Posted: 31 August 2026</div></div></div><article id="blog-article-content"><h2 id="index">Index</h2>
+<ol>
+<li><a href="#tl-dr">TL;DR</a></li>
+<li><a href="#what-is-the-act-pattern">What is the Act Pattern?</a></li>
+<li><a href="#background">Background</a></li>
+<li><a href="#journey">Journey</a></li>
+<li><a href="#the-over-shooting">The Over Shooting</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+<br/>
+<blockquote>
+<h2 id="tl-dr">TL;DR</h2>
+<p>I created the <a href="https://github.com/ManasMakde/act" target="_blank">Act Pattern</a> out of necessity while refusing to accept existing design patterns<br/>
+and it was a journey through trials, errors &amp; insanity.</p>
+<br/>
+<details><summary>Why not State Machine?</summary><img src="images/state-machine-hell.webp" alt="State Machine Hell"/></details>
+<details><summary>Why not Behaviour Trees?</summary><em>It's rigid &amp; predictable and does not support parallelism.</em></details>
+<details><summary>Why not GOAP?</summary><em>It's far too complex and also does not support parallelism.</em></details>
+</blockquote>
+<br/>
+<h2 id="what-is-the-act-pattern">What is the Act Pattern?</h2>
+<p>It is a game design pattern that can manage complex behaviors with parallelism at its core.<br/>
+I'll let the code speak for itself:</p>
+<pre><code class="hljs language-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Player</span> : <span class="hljs-title">MonoBehaviour</span>
+{
+    MoveAct moveAct = <span class="hljs-keyword">new</span>();
+    LookAct aimAct = <span class="hljs-keyword">new</span>();
+    ShootAct shootAct = <span class="hljs-keyword">new</span>();
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Update</span>()</span>
+    {
+        <span class="hljs-comment">// Move</span>
+        moveAct.direction = GetMoveDirection();
+        moveAct.Perform();
+
+
+        <span class="hljs-comment">// Aim</span>
+        aimAct.targetPosition = GetMouseWorldPosition();
+        aimAct.Perform();
+        
+
+        <span class="hljs-comment">// Shoot</span>
+        <span class="hljs-keyword">if</span> (Input.GetMouseButtonDown(<span class="hljs-number">0</span>))
+        {
+            shootAct.direction = GetShootDirection();
+            shootAct.Perform();
+        }
+    }
+}
+
+<span class="hljs-comment">// Works with Unreal &amp; Godot as well</span>
+</code></pre>
+<p>Visit the <a href="https://github.com/ManasMakde/act" target="_blank">repository</a> for a guide on how to use &amp; technical breakdown of how it works.</p>
+<br/>
+<h2 id="background">Background</h2>
+<p>Picture this, you're 17 again, just started to get into game dev. You've installed a game engine,
+looked up some tutorials, maybe downloaded a few assets and are ready to make your first game.</p>
+<p>You code your very first controllable character. No structure. No architecture. Just raw &quot;<em>yep looks good</em>&quot; code.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a href="https://www.youtube.com/watch?v=CLdJbAzaTpE&amp;list=PL4cUxeGkcC9jTpR5D2z-xy7YRnWh9xnFM" target="__blank" style="max-width: 500px;" class="pic"><img src="images/character-example-1.gif" alt="Character Example 1"/><span class="pic-subtext">Credit: Net Ninja</span></a>
+<p>Nothing fancy, just a little platformer character with arrow keys to move and spacebar to shoot
+but you have fun playing around with your first character.</p>
+<p>After a while your level starts to look a bit empty so you whip up an enemy for your character to shoot at.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a style="max-width: 500px;" class="pic"><img src="images/character-example-2.gif" alt="Character Example 2"/></a>
+<p>Doesn't do much only walks around left to right but a solid start none the less.<br/>
+You play around some more and already start seeing your game come to life.</p>
+<p>Now feeling more confident, you add more features to the enemy AI like following the player around, shooting, patrolling, etc
+but you quickly realize your unstructured code is not maintainable.</p>
+<p>You do a quick online search and come across <a href="https://www.youtube.com/watch?v=-ZP2Xm-mY4E" target="_blank">State Machine</a>. It looks solid.
+Makes sense, so you rewrite your enemy AI code into states.</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> <span class="hljs-title class_">State</span> = { 
+    <span class="hljs-attr">PATROL</span>: <span class="hljs-number">0</span>, 
+    <span class="hljs-attr">CHASE</span>: <span class="hljs-number">1</span>, 
+    <span class="hljs-attr">ATTACK</span>: <span class="hljs-number">2</span>, 
+    <span class="hljs-attr">HURT</span>: <span class="hljs-number">3</span> 
+}
+<span class="hljs-keyword">let</span> currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">PATROL</span>
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">updateState</span>(<span class="hljs-params">enemy, player</span>) {
+    <span class="hljs-keyword">if</span> (enemy.<span class="hljs-property">gotHit</span>) {
+        currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">HURT</span>
+        <span class="hljs-keyword">return</span>
+    }
+
+
+    <span class="hljs-keyword">if</span> (currentState === <span class="hljs-title class_">State</span>.<span class="hljs-property">PATROL</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">canSeePlayer</span>(enemy, player)) {
+            currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">CHASE</span>
+        }
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentState === <span class="hljs-title class_">State</span>.<span class="hljs-property">CHASE</span>) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">canSeePlayer</span>(enemy, player)) {
+            currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">PATROL</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">inAttackRange</span>(enemy, player)) {
+            currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">ATTACK</span>
+        }
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentState === <span class="hljs-title class_">State</span>.<span class="hljs-property">ATTACK</span>) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">inAttackRange</span>(enemy, player)) {
+            currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">CHASE</span>
+        }
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentState === <span class="hljs-title class_">State</span>.<span class="hljs-property">HURT</span>) {
+        <span class="hljs-keyword">if</span> (enemy.<span class="hljs-property">hurtTimer</span> &lt;= <span class="hljs-number">0</span>) {
+            currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">PATROL</span>
+        }
+    }
+    <span class="hljs-keyword">else</span> {
+        currentState = <span class="hljs-title class_">State</span>.<span class="hljs-property">PATROL</span>
+    }
+}
+</code></pre>
+<p>You continue adding more and more features but eventually hit a roadblock with one conclusion:<br/>
+<em><strong>states are manageable but the transitions are not</strong></em><br/>
+i.e. anytime you have more than 3 or 4 states it becomes a pain in the ass to maintain/figure out all the transitions and
+may god have mercy on your soul if you try to add a 5th state.</p>
+<br/>
+<p>Looking for a better way you go back online searching and find <a href="https://www.youtube.com/watch?v=6VBCXvfNlCM" target="_blank">Behaviour Trees</a>.
+This one looks promising. It has the same so-called <em>states</em> but as <em>leaf nodes</em>
+and the so-called <em>transitions</em> here are in the form of traversing down a tree and hence everything seems self-contained.</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> enemyTree = <span class="hljs-title class_">Selector</span>([
+    <span class="hljs-title class_">Sequence</span>([
+        <span class="hljs-title class_">Condition</span>(<span class="hljs-function"><span class="hljs-params">enemy</span> =></span> enemy.<span class="hljs-property">health</span> &lt;= <span class="hljs-number">0</span>),
+        <span class="hljs-title class_">Action</span>(playDeathAnim)
+    ]),
+    <span class="hljs-title class_">Sequence</span>([
+        <span class="hljs-title class_">Condition</span>(<span class="hljs-function"><span class="hljs-params">enemy</span> =></span> enemy.<span class="hljs-property">gotHit</span>),
+        <span class="hljs-title class_">Action</span>(playHurtAnim)
+    ]),
+    <span class="hljs-title class_">Sequence</span>([
+        <span class="hljs-title class_">Condition</span>(<span class="hljs-function">(<span class="hljs-params">enemy, player</span>) =></span> <span class="hljs-title function_">inAttackRange</span>(enemy, player)),
+        <span class="hljs-title class_">Action</span>(attackPlayer)
+    ]),
+    <span class="hljs-title class_">Sequence</span>([
+        <span class="hljs-title class_">Condition</span>(<span class="hljs-function">(<span class="hljs-params">enemy, player</span>) =></span> <span class="hljs-title function_">canSeePlayer</span>(enemy, player)),
+        <span class="hljs-title class_">Action</span>(chasePlayer)
+    ]),
+    <span class="hljs-title class_">Action</span>(patrol)
+])
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">tick</span>(<span class="hljs-params">enemy, player</span>) {
+    enemyTree.<span class="hljs-title function_">run</span>(enemy, player)
+}
+</code></pre>
+<p>So you get to work rewriting your code again into nodes of a behaviour tree. You spend days creating your first few levels and then you finally play it.
+The first time you play the game it feels great but as you keep playing it over and over again, it starts to feel monotonous. The enemies start to feel predictable &amp; fixed
+and you just know someone online will whine about it.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a style="max-width: 300px;" class="pic"><img src="images/rogue-like-meme.webp" alt="Rogue like meme"/></a>
+<p>You search again online and this time find <a href="https://www.youtube.com/watch?v=tdBWk2OVCWc" target="_blank">Goal Oriented Action Planning (GOAP)</a>.
+The A* algorithm, heuristics, effects, conditions, etc feel a bit overkill but alright, you go along with it. Rewriting your code yet again you finally have a fun replayable level.</p>
+<p>Now the only thing remaining in your game is a good boss fight. While designing your boss you realize that the boss is not like other common enemies.
+A good boss AI doesn't just do 1 thing at a time, instead it does several things in parallel e.g. throwing bombs + shooting + dashing and bouncing all across the level map.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a class="pic"><img src="images/boss-example.gif" alt="Boss Example"/><span class="pic-subtext">Credit: The Messenger - Arcane Golem</span></a>
+<p>You go back online thinking surely someone must have come up with an elegant solution for this. You search and search but nope nothing shows up
+and you eventually accept that these are your only options while making a game.</p>
+<p>Everyone in game dev (including me) has experienced the same thing upto this point. But beyond this point is where my story deviates from other devs because
+I <em>refused</em> to accept that there is no other way to make games.</p>
+<br/>
+<h2 id="journey">Journey</h2>
+<p>I started off by wanting to make a design pattern which was intuitive, convenient and code friendly i.e. didn't require a whole separate UI to operate.</p>
+<p>I initially tried coming up with several different approaches at the same time which quickly devolved into pure madness.
+In hindsight I was diving headfirst into the problem without actually clarifying what the problem <em>was</em>.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a style="max-width: 400px;" class="pic"><img src="images/dive.gif" alt="Dive meme"/><span class="pic-subtext">Credit: Tom &amp; Jerry - Cruise Cat</span></a>
+<p>So I took a step back and compressed the problem down to one line:<br/>
+<strong>How do I manage multiple character behaviours?</strong></p>
+<p>The first thing I did was search up online if any other programming field other than game dev had come up with a solution I could port over, which is where I came across the <a href="https://refactoring.guru/design-patterns/mediator" target="_blank">mediator pattern</a>.
+It seemed simple enough so I came up with this:</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a class="pic"><img src="images/board-1.png" alt="Board 1"/></a>
+<p>Basically you would have certain self contained <code>actions</code> like jump, run, walk, idle, etc and each <code>action</code> would have certain condition <code>flags</code> associated with it.
+A <code>mediator</code> would iterate all actions from left to right and whosever <code>flags</code> were true was the current action.</p>
+<p>But I realized there were certain actions that would stop the entire iteration like damage or death so I added <code>blocking actions</code>
+i.e. actions that would interrupt &amp; block the <code>mediator</code> from iterating if their flags were true.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a class="pic"><img src="images/board-2.png" alt="Board 2"/></a>
+<p>It felt like an elegant solution at the time so I rolled with it.
+I started using it to make a game and soon enough a simple fact dawned on me: <em>no character actually ever does <strong>just</strong> one thing at a time</em>.
+Think about it, even in some of the oldest games like <a href="https://en.wikipedia.org/wiki/Metroid_(video_game)" target="_blank">Metroid (NES)</a>
+you could walk and shoot around at the same time.</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a style="max-width: 450px;" class="pic"><img src="images/metroid.gif" alt="Metroid Example"/><span class="pic-subtext">Credit: Metroid (NES)</span></a>
+<p>Immediately I realized the question was incomplete and instead it should have been:<br/>
+<strong>How do I manage multiple character behaviours <em>in parallel?</em></strong></p>
+<p>Those 2 additional words changed my entire perspective. I dived back into the madness for months and eventually took inspiration from nature itself
+while also salvaging what other game design patterns did right:</p>
+<ol>
+<li><strong>State Machine</strong>: &quot;Entering&quot; &amp; &quot;Exiting&quot; from a state felt intuitive.</li>
+<li><strong>Behaviour Tree</strong>: The condition node &amp; sequence node were easy to use.</li>
+<li><strong>GOAP</strong>: The principle that some actions need to come before others also felt right.</li>
+</ol>
+<p>I tossed in a little blocking system of my own in there &amp; renamed <code>actions</code> to <code>acts</code>
+and <em>badabing badaboom</em> the first prototype was ready:</p>
+<link rel="stylesheet" href="/static/css/pic.css"/><a class="pic"><img src="images/board-3.png" alt="Board 3"/></a>
+<blockquote>
+<p>Also, can we take a moment to appreciate the naming convention?<br/>
+Since I took <a href="https://en.wikipedia.org/wiki/Act_(drama)" target="_blank">theatrical acts</a> as reference the terminology came along so intuitively:<br/>
+<em>&quot;Performing an act...&quot;</em>, <em>&quot;Prologue acts...&quot;</em>, etc.</p>
+</blockquote>
+<p>Now I could have just stopped here and it would have been almost done but nOoOoO I <em>had</em> to overdo it 🙄.</p>
+<br/>
+<h2 id="the-over-shooting">The Over Shooting</h2>
+<p>I will admit I got carried away trying to solve the problem and went too deep down the rabbit hole and tried to solve for <strong>true parallelism</strong>.
+What do I mean by that? Usually in video games most of the code does not actually run in parallel and therefore everything has a fixed deterministic order.
+In true parallelism there is no guarantee of order like in <a href="https://en.wikipedia.org/wiki/Multiprocessing" target="_blank">multiprocessing</a>.</p>
+<p>I wanted to incorporate the &quot;non fixed order&quot; into the blocking mechanism.
+Since it's impossible by default, I gave each act a block priority, treated acts as vertices &amp; blocks as edges in a directed acyclic graph
+and accidentally ended up reinventing <a href="https://www.youtube.com/watch?v=cIBFEhD77b4" target="_blank">Kahn's algorithm</a> (was going to call it Makde's algorithm but he beat me to it by ~64 years lmao).</p>
+<p>But inevitably the complexity of the code got to me and common sense caught up,
+so I revert back and did plenty of modifications &amp; testing, eventually making it what it is today.</p>
+<br/>
+<h2 id="conclusion">Conclusion</h2>
+<p>I feel like all of the other design patterns had parts of the right answer and were just waiting to be unified.
+Also, when pointed out it's so obvious that everything naturally works in parallel but at the same time a very difficult conclusion to reach on your own.</p>
+<p>And I'll be honest with you I have no idea what to categorize this as. Is it a design pattern? A programming pattern? A framework? An architecture?
+Idk but I settled for design pattern for now. Let me know if there's a better way to classify it since I'm still a novice at semantics.</p>
+<p>So far I've been having a blast using the act pattern in pretty much everything and it really makes making games <em>actually</em> fun and intuitive again.
+However it is still in alpha version and remains to be seen if it will stand the test of time or if it was just a clever workaround.</p>
+<p>Feel free to play around with it and let me know your thoughts on it. I'll also try periodically updating this article to keep everyone updated on how it's going but fingers crossed for now 🤞.</p></article><link rel="stylesheet" href="/static/css/footer.css"/><footer id="site-footer"><div id="site-contacts"><a id="github-contact" target="_blank" href="https://github.com/ManasMakde"></a><a id="stackoverflow-contact" target="_blank" href="https://stackoverflow.com/users/22302305/manas-r-makde"></a><a id="linkedin-contact" target="_blank" href="https://www.linkedin.com/in/manas-makde/"></a><a id="instagram-contact" target="_blank" href="https://www.instagram.com/manas_makde/"></a><a id="email-contact" target="_blank" href="mailto:manasmakde@gmail.com"></a><a id="buymeacoffee" target="_blank" href="https://buymeacoffee.com/manas_makde"></a></div><div id="site-footer-note">Scraping data for AI training is strictly prohibited. <a href="/terms#ai-data-scraping-policy" style="text-decoration:underline">View Terms</a></div></footer></body></html>
